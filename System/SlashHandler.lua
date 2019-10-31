@@ -37,6 +37,24 @@ function DMW:ChatCommand(Input)
             else
                 DMW.UI.Debug.Frame:Hide()
             end
+        elseif Commands[1] == "REPAIR" then
+            local Target = DMW.Player.Target
+            if Target then
+                SetDurabilityVendor(UnitName(Target.Pointer), Target.PosX, Target.PosY, Target.PosZ)
+                print('Repair vendor has been set.')
+            else
+                print('You need a target to set repair vendor.')
+            end
+        elseif Commands[1] == "FOOD" then
+            local Target = DMW.Player.Target
+            if Target then
+                SetFoodVendor(UnitName(Target.Pointer), Target.PosX, Target.PosY, Target.PosZ)
+                print('Food vendor has been set.')
+            else
+                print('You need a target to set Food Vendor.')
+            end
+        elseif Commands[1] == "CLEAR" then
+            ClearHotSpot()
         else
             LibStub("AceConfigCmd-3.0").HandleCommand(DMW, "dmw", "DMW", Input)
         end

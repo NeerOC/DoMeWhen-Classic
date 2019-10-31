@@ -9,6 +9,7 @@ DMW.Plugins = {}
 DMW.UI = {}
 DMW.Settings = {}
 DMW.Helpers = {}
+DMW.Bot = {}
 DMW.Timers = {
     OM = {},
     QuestieHelper = {},
@@ -95,7 +96,7 @@ f:SetScript(
                     end
                 end
             end
-            DMW.Helpers.Navigation:Pulse()
+            DMW.Bot.Grindbot:Pulse()
             DMW.Timers.OM.Total = DMW.Timers.OM.Total and (DMW.Timers.OM.Total + DMW.Timers.OM.Last) or DMW.Timers.OM.Last
             DMW.Timers.QuestieHelper.Total = DMW.Timers.QuestieHelper.Total and (DMW.Timers.QuestieHelper.Total + DMW.Timers.QuestieHelper.Last) or DMW.Timers.QuestieHelper.Last
             DMW.Timers.Trackers.Total = DMW.Timers.Trackers.Total and (DMW.Timers.Trackers.Total + DMW.Timers.Trackers.Last) or DMW.Timers.Trackers.Last

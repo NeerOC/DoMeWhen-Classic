@@ -59,7 +59,12 @@ Helpers\Queue.lua
 Helpers\Rotation.lua
 Helpers\Dump.lua
 Helpers\Swing.lua
-Helpers\Navigation.lua
+
+Bot\Log.lua
+Bot\Navigation.lua
+Bot\Vendor.lua
+Bot\Grindbot.lua
+
 
 Enums\Spells\Global.lua
 Enums\Spells\Druid.lua

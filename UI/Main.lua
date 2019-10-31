@@ -850,6 +850,254 @@ local Options = {
                     end
                 }
             }
+        },
+        GrindBotTab = {
+            name = "Grindbot",
+            type = "group",
+            order = 6,
+            args = {
+                GeneralHeader = {
+                    type = "header",
+                    order = 1,
+                    name = "General"
+                },
+                MountName = {
+                    type = "input",
+                    order = 2,
+                    name = "Mount Name",
+                    desc = "Name of the item used to summon your mount.",
+                    width = 0.9,
+                    get = function()
+                        return DMW.Settings.profile.Grind.MountName
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.MountName = value
+                    end
+                },
+                UseMount = {
+                    type = "toggle",
+                    order = 3,
+                    name = "Use Mount",
+                    desc = "Do you wanna use the mount specified in Mount Name?",
+                    width = 0.6,
+                    get = function()
+                        return DMW.Settings.profile.Grind.UseMount
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.UseMount = value
+                    end
+                },
+                CombatHeader = {
+                    type = "header",
+                    order = 4,
+                    name = "Combat"
+                },
+                RestHealth = {
+                    type = "range",
+                    order = 5,
+                    name = "Rest Health",
+                    desc = "We will only Grind above this health and eat below.",
+                    width = "full",
+                    min = 20,
+                    max = 95,
+                    step = 5,
+                    get = function()
+                        return DMW.Settings.profile.Grind.RestHP
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.RestHP = value
+                    end
+                },
+                RestMana = {
+                    type = "range",
+                    order = 6,
+                    name = "Rest Mana",
+                    desc = "We will drink below this mana",
+                    width = "full",
+                    min = 20,
+                    max = 95,
+                    step = 5,
+                    get = function()
+                        return DMW.Settings.profile.Grind.RestMana
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.RestMana = value
+                    end
+                },
+                PullDistance = {
+                    type = "range",
+                    order = 7,
+                    name = "Combat Range",
+                    desc = "At what range can you attack the mobs?",
+                    width = "full",
+                    min = 5,
+                    max = 30,
+                    step = 1,
+                    get = function()
+                        return DMW.Settings.profile.Grind.CombatDistance
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.CombatDistance = value
+                    end
+                },
+                RoamDistance = {
+                    type = "range",
+                    order = 8,
+                    name = "Roam Distance",
+                    desc = "How far away from the Hotspot can we go?",
+                    width = "full",
+                    min = 30,
+                    max = 100,
+                    step = 10,
+                    get = function()
+                        return DMW.Settings.profile.Grind.RoamDistance
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.RoamDistance = value
+                    end
+                },
+                VendorHeader = {
+                    type = "header",
+                    order = 9,
+                    name = "Vendor"
+                },
+                FoodName = {
+                    type = "input",
+                    order = 10,
+                    name = "Food Name",
+                    desc = "Food to eat",
+                    width = "full",
+                    get = function()
+                        return DMW.Settings.profile.Grind.FoodName
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.FoodName = value
+                    end
+                },
+                FoodAmount = {
+                    type = "range",
+                    order = 11,
+                    name = "Food Amount",
+                    desc = "How much food do we want in our bags?",
+                    width = "full",
+                    min = 60,
+                    max = 400,
+                    step = 20,
+                    get = function()
+                        return DMW.Settings.profile.Grind.FoodAmount
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.FoodAmount = value
+                    end
+                },
+                WaterName = {
+                    type = "input",
+                    order = 12,
+                    name = "Water Name",
+                    desc = "Water to drink",
+                    width = "full",
+                    get = function()
+                        return DMW.Settings.profile.Grind.WaterName
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.WaterName = value
+                    end
+                },
+                WaterAmount = {
+                    type = "range",
+                    order = 13,
+                    name = "Water Amount",
+                    desc = "How much water do we want in our bags?",
+                    width = "full",
+                    min = 60,
+                    max = 400,
+                    step = 20,
+                    get = function()
+                        return DMW.Settings.profile.Grind.WaterAmount
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.WaterAmount = value
+                    end
+                },
+                VendorSpacer = {
+                    type = "header",
+                    order = 14,
+                    name = ""
+                },
+                RepairPercent = {
+                    type = "range",
+                    order = 15,
+                    name = "Repair Threshold",
+                    desc = "When below this percent the bot will go repair and sell.",
+                    width = "full",
+                    min = 15,
+                    max = 80,
+                    step = 5,
+                    get = function()
+                        return DMW.Settings.profile.Grind.RepairPercent
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.RepairPercent = value
+                    end
+                },
+                MinFreeSlots = {
+                    type = "range",
+                    order = 16,
+                    name = "Minimum Bagslots",
+                    desc = "When we have less than this amount of bagslots we go to vendor and sell.",
+                    width = "full",
+                    min = 1,
+                    max = 120,
+                    step = 1,
+                    get = function()
+                        return DMW.Settings.profile.Grind.MinFreeSlots
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.MinFreeSlots = value
+                    end
+                },
+                MaximumVendorRarity = {
+                    type = "select",
+                    order = 17,
+                    name = "Maximum Rarity",
+                    desc = "Maximum Rarity Of Item To Sell",
+                    width = "",
+                    values = {"|cffa9a9a9Grey", "White", "|cff00FF00Green", "|cff0000ffBlue", "|cff800080Purple"},
+                    style = "dropdown",
+                    get = function()
+                        return DMW.Settings.profile.Grind.MaximumVendorRarity
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.MaximumVendorRarity = value
+                    end
+                },
+                BuyFood = {
+                    type = "toggle",
+                    order = 18,
+                    name = "Buy Food",
+                    desc = "Buy Food from vendor",
+                    width = 0.5,
+                    get = function()
+                        return DMW.Settings.profile.Grind.BuyFood
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.BuyFood = value
+                    end
+                },
+                BuyWater = {
+                    type = "toggle",
+                    order = 19,
+                    name = "Buy Water",
+                    desc = "Buy Water from vendor",
+                    width = 0.55,
+                    get = function()
+                        return DMW.Settings.profile.Grind.BuyWater
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.BuyWater = value
+                    end
+                }
+            }
         }
     }
 }
@@ -897,7 +1145,7 @@ end
 
 function UI.Init()
     LibStub("AceConfig-3.0"):RegisterOptionsTable("DMW", Options)
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize("DMW", 400, 750)
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize("DMW", 455, 780)
     LibStub("AceConfig-3.0"):RegisterOptionsTable("TrackerConfig", TrackingOptionsTable)
     LibStub("AceConfigDialog-3.0"):SetDefaultSize("TrackerConfig", 400, 350)
     if not TrackingFrame then
@@ -975,7 +1223,7 @@ function UI.AddRange(Name, Desc, Min, Max, Step, Default, FullWidth)
 end
 
 function UI.AddDropdown(Name, Desc, Values, Default, FullWidth)
-    local Width = FullWidth and "full" or 0.9
+    local Width = FullWidth and "full"
     Options.args.RotationTab.args[Name] = {
         type = "select",
         order = RotationOrder,
