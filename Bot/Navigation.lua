@@ -194,7 +194,7 @@ function Navigation:Movement()
 end
 
 function Navigation:MoveTo(toX, toY, toZ)
-    if NavPath or (toX == EndX or toY == EndY) then return end
+    if (toX == EndX and toY == EndY) then return end
 
     pathIndex = 1
     NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, true)

@@ -451,7 +451,7 @@ local GrindbotOptionsTable = {
                     type = "toggle",
                     order = 3,
                     name = "Skip Aggro",
-                    desc = "Do you wanna ignore monsters attacking while mounted?",
+                    desc = "Do you wanna ignore monsters attacking while mounted? ( If we are outside of grinding area )",
                     width = 0.6,
                     get = function()
                         return DMW.Settings.profile.Grind.SkipCombatWhileMounted

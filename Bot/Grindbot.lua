@@ -306,6 +306,7 @@ function Grindbot:GetLoot()
     if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) > 2 then
         Navigation:MoveTo(lx, ly, lz)
     else
+        if IsMounted() then Dismount() end
         if not PauseFlags.Interacting then
             ObjectInteract(LootUnit)
             PauseFlags.Interacting = true
