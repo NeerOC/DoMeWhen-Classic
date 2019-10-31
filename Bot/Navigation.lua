@@ -3,15 +3,14 @@ local LibDraw = LibStub("LibDraw-1.0")
 DMW.Bot.Navigation = {}
 local Navigation = DMW.Bot.Navigation
 local Grindbot = DMW.Bot.Grindbot
-local Path = nil
-local PathIndex = 1
+local NavPath = nil
+local pathIndex = 1
 local HotSpotIndex = 1
-local DestX, DestY, DestZ
 local lastX, lastY, lastZ = 0, 0, 0
+local DestX, DestY, DestZ
 local EndX, EndY, EndZ
 local PathUpdated = false
 local stuckCount = 0
-local initNavigation = false
 
 local ObsDistance = 4
 local ObsFlags = bit.bor(0x1, 0x10)
@@ -125,13 +124,13 @@ function Navigation:DrawVisuals()
     LibDraw.SetWidth(4)
     LibDraw.SetColorRaw(0, 128, 128, 100)
 
-    if Path then
-        for i = PathIndex, #Path do
-            if i == PathIndex then
-                LibDraw.Line(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, Path[i][1], Path[i][2], Path[i][3])
+    if NavPath then
+        for i = pathIndex, #NavPath do
+            if i == pathIndex then
+                LibDraw.Line(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, NavPath[i][1], NavPath[i][2], NavPath[i][3])
             end
-            if Path[i + 1] then
-                LibDraw.Line(Path[i][1], Path[i][2], Path[i][3], Path[i + 1][1], Path[i + 1][2], Path[i][3])
+            if NavPath[i + 1] then
+                LibDraw.Line(NavPath[i][1], NavPath[i][2], NavPath[i][3], NavPath[i + 1][1], NavPath[i + 1][2], NavPath[i + 1][3])
             end
         end
     end
@@ -148,61 +147,46 @@ function Navigation:DrawVisuals()
     end
 end
 
+function Navigation:GetActualGround(x, y, z)
+    local HitX, HitY, HitZ = TraceLine (x, y, z + 0.5, x, y, z - 5 , bit.bor(0x30151))
+    return HitZ
+end
+
 function Navigation:Movement()
-    --[[
-    if IsMounted() and not Movement.GotMountPath then Movement.NeedMountPath = true Path = nil end
-    if not IsMounted() and Movement.NeedMountPath then Movement.NeedMountPath = false Movement.GotMountPath = false Path = nil end
-    if self:CanMount() and Path and self:CalcPathDistance(Path) > 80 then self:Mount() return end
+    if NavPath then
+        DestX = NavPath[pathIndex][1]
+        DestY = NavPath[pathIndex][2]
+        DestZ = NavPath[pathIndex][3]
 
-    if Path ~= nil then
-        local PlayerX, PlayerY, PlayerZ = ObjectPosition("Player");
-        DestX = Path[PathIndex][1]
-        DestY = Path[PathIndex][2]
-        DestZ = Path[PathIndex][3]
+        if self:CalcPathDistance(NavPath) > 80 and self:CanMount() then
+            self:Mount()
+            return
+        end
 
-        
-        local Distance = GetDistanceBetweenPositions(PlayerX,PlayerY,PlayerZ,DestX,DestY,DestZ)
-        --local Distance = sqrt(((DestX - PlayerX) ^ 2) + ((DestY - PlayerY) ^ 2))
+       local Distance = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DestX, DestY, DestZ)
+        --local Distance = sqrt((DestX - DMW.Player.PosX) ^ 2) + ((DestY - DMW.Player.PosY) ^ 2)
+
         if Distance < 1 then
-            PathIndex = PathIndex + 1
-            if PathIndex > #Path then
-                PathIndex = 1
-                Path = nil
-            end
-        else
-            if lastX == PlayerX and lastY == PlayerY and lastZ == PlayerZ then
-                stuckCount = stuckCount + 1
-                if stuckCount > 65 then
-                    MoveForwardStart()
-                    JumpOrAscendStart()
-                    MoveForwardStop()
-                    self:Unstuck()
-                    stuckCount = 0
-                end
-            end
-            MoveTo(DestX, DestY, DestZ, true)
-            lastX = PlayerX
-            lastY = PlayerY
-            lastZ = PlayerZ
-        end
-    end--]]
-    local NoMoveFlags = bit.bor(DMW.Enums.UnitFlags.Stunned, DMW.Enums.UnitFlags.Confused, DMW.Enums.UnitFlags.Pacified, DMW.Enums.UnitFlags.Feared)
-        if Path and not DMW.Player:HasFlag(NoMoveFlags) and not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Root) then
-            DestX = Path[PathIndex][1]
-            DestY = Path[PathIndex][2]
-            DestZ = Path[PathIndex][3]
-            if sqrt(((DestX - DMW.Player.PosX) ^ 2) + ((DestY - DMW.Player.PosY) ^ 2)) < 1 and math.abs(DestZ - DMW.Player.PosZ) < 4 then
-                PathIndex = PathIndex + 1
-                if PathIndex > #Path then
-                    PathIndex = 1
-                    Path = nil
-                    return
-                end
-            elseif not DMW.Player.Moving or PathUpdated then
-                PathUpdated = false
-                MoveTo(DestX, DestY, DestZ, true)
+            pathIndex = pathIndex + 1
+            if pathIndex > #NavPath then
+                pathIndex = 1
+                NavPath = nil
             end
         end
+
+        MoveTo(DestX, DestY, DestZ, true)
+    end
+end
+
+function Navigation:MoveTo(toX, toY, toZ)
+    if NavPath or (toX == EndX or toY == EndY) then return end
+
+    pathIndex = 1
+    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, false, true)
+
+    if NavPath then
+        EndX, EndY, EndZ = toX, toY, toZ
+    end
 end
 
 function Navigation:Roam()
@@ -213,14 +197,11 @@ function Navigation:Roam()
         HotSpotIndex = 1
     else
         if distance < 5 then
-            print('hop')
             HotSpotIndex = HotSpotIndex + 1
         end
     end
 
-
     self:MoveTo(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z)
-
 end
 
 function Navigation:CanMount()
@@ -253,17 +234,10 @@ function Navigation:CalcPathDistance(peff)
     return total_distance
 end
 
-function Navigation:AddYardToPos(x, y, z, yrd)
-    local facing = ObjectFacing('player')
-    local fx, fy, fz = x + yrd * math.cos(facing), y + yrd * math.sin(facing), z
-    fx, fy, fz = GetGroundZ(fx, fy, 0x100)
-    return fx, fy, fz
-end
-
 function Navigation:ResetPath()
-    if Path ~= nil then
-        Path = nil
-        PathIndex = 1
+    if NavPath ~= nil then
+        NavPath = nil
+        pathIndex = 1
         DestX = nil 
         DestY = nil
         DestZ = nil
@@ -274,42 +248,12 @@ function Navigation:ResetPath()
     end
 end
 
-function Navigation:MoveTo(toX, toY, toZ)
-    --if toX == EndX and toY == EndY and toZ == EndZ then return end
-    --PathIndex = 1
-    --local PlayerX, PlayerY, PlayerZ = ObjectPosition("Player");
-    --Path = CalculatePath(GetMapId(), PlayerX, PlayerY,PlayerZ, toX, toY, toZ, false)
-    --if Path then
-     --   EndX, EndY, EndZ = toX, toY, toZ
-    --end
-    PathIndex = 1
-    Path = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, false)
-    if Path then
-        EndX, EndY, EndZ = toX, toY, toZ
-        PathUpdated = true
-        return true
-    end
-    return false
-
-    
-    --[[
-    if Movement.NeedMountPath then
-        Path = CalculatePath(GetMapId(), PlayerX, PlayerY, PlayerZ, toX, toY, toZ, true, false, 6)
-        Movement.GotMountPath = true
-    else
-        Path = CalculatePath(GetMapId(), PlayerX, PlayerY, PlayerZ, toX, toY, toZ, false, false, 6)
-    end
-    --]]
-
-
-    --]]
-end
 
 function Navigation:MoveToCorpse()
     if not UnitIsGhost('player') then RepopMe() return end
     if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() then
         StaticPopup1Button1:Click()
-        Path = nil
+        NavPath = nil
         return
     end
     local PosX, PosY, PosZ = GetCorpsePosition()

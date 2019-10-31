@@ -9,6 +9,7 @@ local LoadSettings = false
 local VendorTask = false
 
 local PauseFlags = {
+    Nav = false,
     Interacting = false,
     Hotspotting = false,
     Information = false
@@ -215,11 +216,12 @@ function Grindbot:Pulse()
             return
         end
 
+        -- Call movement Update.
+        Navigation:Movement()
+
         -- This sets our state
         self:SwapMode()
-
-        -- Call the movement!
-        Navigation:Movement()
+        
 
         -- Do whatever our mode says.
         if Grindbot.Mode == Modes.Dead then
@@ -251,7 +253,6 @@ function Grindbot:Pulse()
         end
     else
         if not PauseFlags.Hotspotting then self:Hotspotter() end
-
         Navigation:ResetPath()
     end
 end
@@ -272,7 +273,6 @@ function Grindbot:GetLoot()
 end
 
 
-
 function Grindbot:SearchAttackable()
     local Table = {}
     for _, Unit in pairs(DMW.Units) do
@@ -289,7 +289,7 @@ function Grindbot:SearchAttackable()
 
     -- First get line of sight units if none exist, return the closest one. (Also make sure to priortize hostile enemies)
     for _, Unit in ipairs(Table) do
-        if GoodUnit(Unit.Pointer) and Unit:LineOfSight() and UnitReaction(Unit.Pointer, 'player') then
+        if GoodUnit(Unit.Pointer) and Unit:LineOfSight() and UnitReaction(Unit.Pointer, 'player') < 4 then
             return true, Unit
         end
     end
@@ -383,14 +383,12 @@ function Grindbot:InitiateAttack(Unit)
         Dismount()
     end
 
-    if not DMW.Player.Moving and not Path and DMW.Player.Target and DMW.Player.Target.ValidEnemy and not UnitIsFacing('player', Unit.Pointer, 60) then
+    if not DMW.Player.Moving and not NavPath and DMW.Player.Target and DMW.Player.Target.ValidEnemy and not UnitIsFacing('player', Unit.Pointer, 60) then
         FaceDirection(Unit.Pointer, true)
     end
 end
 
 function Grindbot:SwapMode()
-    --local Vendor = DMW.Bot.Vendor
-
     if UnitIsDeadOrGhost('player') then
         Grindbot.Mode = Modes.Dead
         return
@@ -413,7 +411,6 @@ function Grindbot:SwapMode()
 
     if (Vendor:GetDurability() <= Settings.RepairPercent or self:GetFreeSlots() < Settings.MinFreeSlots) then
         Grindbot.Mode = Modes.Vendor
-        print('durafree')
         if not VendorTask then VendorTask = true end
         return
     end
