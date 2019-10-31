@@ -422,7 +422,7 @@ function Grindbot:InitiateAttack(Unit)
         Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
     end
 
-    if Unit.Distance < 7 and IsMounted() then
+    if Unit.Distance < 9 and IsMounted() then
         Dismount()
     end
 

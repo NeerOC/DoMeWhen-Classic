@@ -143,6 +143,7 @@ function Navigation:DrawVisuals()
                 if HotSpots[i] then
                     local x, y, z = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
                     LibDraw.Text("x", "GameFontNormalLarge", x, y, z)
+                    if DMW.Settings.profile.Grind.drawCircles then LibDraw.Circle(x, y, z, DMW.Settings.profile.Grind.RoamDistance) end
                 end
             end
         end
