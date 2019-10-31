@@ -9,3 +9,9 @@ Rotations are installed as seperate addons, so when you find a rotation you want
 
 ## Usage In-game
 Config can be opened either by clicking the minimap icon, or typing /DMW in chat window.
+
+## Grindbot
+Target repair vendor and type /DMW Repair to set repair vendor
+Target food vendor and type /DMW Food to set Food vendor.
+ALT + CLICK While bot is Disabled marks the location you clicked as a hotspot.
+ALT + SHIFT + CLICK Will remove the hotspot closest to the position you clicked.
