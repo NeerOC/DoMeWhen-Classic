@@ -124,7 +124,7 @@ function Navigation:DrawVisuals()
     LibDraw.SetWidth(4)
     LibDraw.SetColorRaw(0, 128, 128, 100)
 
-    if NavPath then
+    if NavPath and DMW.Settings.profile.Grind.drawPath then
         for i = pathIndex, #NavPath do
             if i == pathIndex then
                 LibDraw.Line(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, NavPath[i][1], NavPath[i][2], NavPath[i][3])
@@ -135,13 +135,15 @@ function Navigation:DrawVisuals()
         end
     end
 
-    local HotSpots = DMW.Settings.profile.Grind.HotSpots
-    LibDraw.SetColorRaw(76, 0, 153, 100)
-    if #HotSpots > 0 then
-        for i = 1, #HotSpots do
-            if HotSpots[i] then
-                local x, y, z = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
-                LibDraw.Text("x", "GameFontNormalLarge", x, y, z)
+    if DMW.Settings.profile.Grind.drawHotspots then
+        local HotSpots = DMW.Settings.profile.Grind.HotSpots
+        LibDraw.SetColorRaw(76, 0, 153, 100)
+        if #HotSpots > 0 then
+            for i = 1, #HotSpots do
+                if HotSpots[i] then
+                    local x, y, z = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
+                    LibDraw.Text("x", "GameFontNormalLarge", x, y, z)
+                end
             end
         end
     end
@@ -218,7 +220,7 @@ function Navigation:Roam()
 end
 
 function Navigation:CanMount()
-    return DMW.Settings.profile.Grind.UseMount and not IsIndoors() and not IsMounted() and GetDistanceBetweenPositions(mountBlackList.x, mountBlackList.y, mountBlackList.z, DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ) > 8
+    return DMW.Settings.profile.Grind.UseMount and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and GetDistanceBetweenPositions(mountBlackList.x, mountBlackList.y, mountBlackList.z, DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ) > 8
 end
 
 function Navigation:Mount()

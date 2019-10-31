@@ -5,7 +5,7 @@ local Vendor = DMW.Bot.Vendor
 local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 
-local LoadSettings = false
+local Throttle = false
 local VendorTask = false
 
 local PauseFlags = {
@@ -62,7 +62,11 @@ local function NearHotspot(unit)
 end
 
 function GoodUnit(unit)
+    local minLvl = UnitLevel('player') - DMW.Settings.profile.Grind.minNPCLevel
+    local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
+
     local Flags = {
+        isLevel = UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
         isPVP = not UnitIsPVP(unit),
         inRange = NearHotspot(unit),
         notDead = not UnitIsDeadOrGhost(unit),
@@ -80,6 +84,7 @@ function GoodUnit(unit)
 
     return true
 end
+
 
 local function CanLoot()
     if Grindbot:GetFreeSlots() == 0 then return false end
@@ -138,6 +143,41 @@ function Grindbot:HasItem(itemname)
     return false
 end
 
+function Grindbot:DeleteTask()
+    -- Deletes quest items so we dont get stuck looting the same shit.
+    for BagID = 0, 4 do
+        for BagSlot = 1, GetContainerNumSlots(BagID) do
+            CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
+            if CurrentItemLink then
+                name = GetItemInfo(CurrentItemLink)
+                if string.find(name, 'Distress') then
+                    PickupContainerItem(bag,slot); 
+                    DeleteCursorItem();
+                end
+            end
+        end
+    end
+end
+
+function Grindbot:ClamTask()
+    for BagID = 0, 4 do
+        for BagSlot = 1, GetContainerNumSlots(BagID) do
+            CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
+            if CurrentItemLink then
+                name = GetItemInfo(CurrentItemLink)
+                if (string.find(name, 'Clam') or string.find(name, 'clam') and not IsUsableItem(CurrentItemLink)) then
+                    PickupContainerItem(bag,slot); 
+                    DeleteCursorItem();
+                end
+
+                if (string.find(name, 'Clam') or string.find(name, "clam")) and IsUsableItem(CurrentItemLink) then
+                    UseContainerItem(BagID, BagSlot)
+                end
+            end
+        end
+    end
+end
+
 function Grindbot:Hotspotter()
     if IsForeground() then
         local cx, cy, cz, ctype = GetLastClickInfo()
@@ -193,13 +233,15 @@ end
 
 function Grindbot:Pulse()
     -- < Do Stuff With Timer
-    if not LoadSettings then
+    if not Throttle then
         self:LoadSettings()
-        LoadSettings = DMW.Time
+        if DMW.Settings.profile.Grind.openClams then self:ClamTask() end
+        self:DeleteTask()
+        Throttle = DMW.Time
     end
 
-    if LoadSettings and (DMW.Time - LoadSettings > 0.1) then
-        LoadSettings = false
+    if Throttle and (DMW.Time - Throttle > 0.1) then
+        Throttle = false
     end
     -- Do stuff with timer end />
 
@@ -391,6 +433,11 @@ end
 function Grindbot:SwapMode()
     if UnitIsDeadOrGhost('player') then
         Grindbot.Mode = Modes.Dead
+        return
+    end
+
+    if not DMW.Settings.profile.Grind.SkipCombatWhileMounted and self:SearchEnemy() then
+        Grindbot.Mode = Modes.Combat
         return
     end
 
