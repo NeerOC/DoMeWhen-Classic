@@ -178,7 +178,7 @@ function Navigation:Movement()
         else
         if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and lastZ == DMW.Player.PosZ then
             stuckCount = stuckCount + 1
-            if stuckCount > 65 then
+            if stuckCount > 100 then
                 MoveForwardStart()
                 JumpOrAscendStart()
                 MoveForwardStop()
@@ -198,7 +198,7 @@ function Navigation:MoveTo(toX, toY, toZ)
     if (toX == EndX and toY == EndY) then return end
 
     pathIndex = 1
-    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, true)
+    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, false, true)
 
     if NavPath then
         EndX, EndY, EndZ = toX, toY, toZ
