@@ -421,10 +421,16 @@ function Grindbot:SwapMode()
         return
     end
 
-    if self:SearchEnemy() and not IsMounted() then
+    if not NearHotspot(GetActivePlayer()) then
+        Grindbot.Mode = Modes.Roaming
+        return
+    end
+
+    if self:SearchEnemy() and (not IsMounted() or NearHotspot(GetActivePlayer()))  then
         Grindbot.Mode = Modes.Combat
         return
     end
+
 
     if DMW.Player.HP < Settings.RestHP or DMW.Player.PowerPct < Settings.RestMana then
         Grindbot.Mode = Modes.Resting

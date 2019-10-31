@@ -172,9 +172,22 @@ function Navigation:Movement()
                 pathIndex = 1
                 NavPath = nil
             end
+        else
+        if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and lastZ == DMW.Player.PosZ then
+            stuckCount = stuckCount + 1
+            if stuckCount > 65 then
+                MoveForwardStart()
+                JumpOrAscendStart()
+                MoveForwardStop()
+                self:Unstuck()
+                stuckCount = 0
+            end
         end
-
+    end
         MoveTo(DestX, DestY, DestZ, true)
+        lastX = DMW.Player.PosX
+        lastY = DMW.Player.PosY
+        lastZ = DMW.Player.PosZ
     end
 end
 
@@ -182,7 +195,7 @@ function Navigation:MoveTo(toX, toY, toZ)
     if NavPath or (toX == EndX or toY == EndY) then return end
 
     pathIndex = 1
-    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, false, true)
+    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, true)
 
     if NavPath then
         EndX, EndY, EndZ = toX, toY, toZ
