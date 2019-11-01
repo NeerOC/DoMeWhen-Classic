@@ -151,7 +151,7 @@ function Grindbot:DeleteTask()
             if CurrentItemLink then
                 name = GetItemInfo(CurrentItemLink)
                 if string.find(name, 'Distress') then
-                    PickupContainerItem(bag,slot); 
+                    PickupContainerItem(BagID, BagSlot); 
                     DeleteCursorItem();
                 end
             end
