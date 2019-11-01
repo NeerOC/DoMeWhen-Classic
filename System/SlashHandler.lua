@@ -43,7 +43,8 @@ function DMW:ChatCommand(Input)
                 SetDurabilityVendor(UnitName(Target.Pointer), Target.PosX, Target.PosY, Target.PosZ)
                 print('Repair vendor has been set.')
             else
-                print('You need a target to set repair vendor.')
+                SetDurabilityVendor('', nil, nil, nil)
+                print('Repair vendor has been cleared (No Target)')
             end
         elseif Commands[1] == "FOOD" then
             local Target = DMW.Player.Target
@@ -51,7 +52,8 @@ function DMW:ChatCommand(Input)
                 SetFoodVendor(UnitName(Target.Pointer), Target.PosX, Target.PosY, Target.PosZ)
                 print('Food vendor has been set.')
             else
-                print('You need a target to set Food Vendor.')
+                SetFoodVendor('', nil, nil, nil)
+                print('Food vendor has been cleared (No Target)')
             end
         elseif Commands[1] == "CLEAR" then
             ClearHotSpot()

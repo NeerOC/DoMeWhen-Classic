@@ -3,6 +3,7 @@ local LibDraw = LibStub("LibDraw-1.0")
 DMW.Bot.Navigation = {}
 local Navigation = DMW.Bot.Navigation
 local Grindbot = DMW.Bot.Grindbot
+local Log = DMW.Bot.Log
 local NavPath = nil
 local pathIndex = 1
 local HotSpotIndex = 1
@@ -156,7 +157,7 @@ function Navigation:GetActualGround(x, y, z)
 end
 
 function Navigation:Movement()
-    if NavPath then
+    if NavPath and not DMW.Player.Casting then
         DestX = NavPath[pathIndex][1]
         DestY = NavPath[pathIndex][2]
         DestZ = NavPath[pathIndex][3]
@@ -166,39 +167,38 @@ function Navigation:Movement()
             return
         end
 
-       local Distance = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DestX, DestY, DestZ)
-        --local Distance = sqrt((DestX - DMW.Player.PosX) ^ 2) + ((DestY - DMW.Player.PosY) ^ 2)
+        local pX, pY, pZ = ObjectPosition('player')
+       --local Distance = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DestX, DestY, DestZ)
+        local Distance = sqrt((DestX - pX) ^ 2) + ((DestY - pY) ^ 2) 
 
-        if Distance < 1 then
+        if Distance <= 1 then
             pathIndex = pathIndex + 1
             if pathIndex > #NavPath then
                 pathIndex = 1
                 NavPath = nil
             end
         else
-        if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and lastZ == DMW.Player.PosZ then
-            stuckCount = stuckCount + 1
-            if stuckCount > 100 then
-                MoveForwardStart()
-                JumpOrAscendStart()
-                MoveForwardStop()
-                self:Unstuck()
-                stuckCount = 0
+            if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and lastZ == DMW.Player.PosZ then
+                stuckCount = stuckCount + 1
+                if stuckCount > 100 then
+                    JumpOrAscendStart()
+                    self:Unstuck()
+                    stuckCount = 0
+                end
             end
+            MoveTo(DestX, DestY, DestZ)
+            lastX = DMW.Player.PosX
+            lastY = DMW.Player.PosY
+            lastZ = DMW.Player.PosZ
         end
-    end
-        MoveTo(DestX, DestY, DestZ, true)
-        lastX = DMW.Player.PosX
-        lastY = DMW.Player.PosY
-        lastZ = DMW.Player.PosZ
     end
 end
 
 function Navigation:MoveTo(toX, toY, toZ)
-    if (toX == EndX and toY == EndY) then return end
+    if EndX and GetDistanceBetweenPositions(toX, toY, toZ, EndX, EndY, EndZ) < 1 then return end
 
     pathIndex = 1
-    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, false, true)
+    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, false)
 
     if NavPath then
         EndX, EndY, EndZ = toX, toY, toZ
@@ -227,7 +227,7 @@ end
 function Navigation:Mount()
     if not DMW.Player.Casting and not IsMounted() then
         if DMW.Player.Moving then
-            MoveTo(ObjectPosition('player'))
+            self:StopMoving()
             return
         else
             UseItemByName(DMW.Settings.profile.Grind.MountName)
@@ -277,18 +277,21 @@ function Navigation:MoveToCorpse()
 end
 
 function Navigation:StopMoving()
-    local px, py, pz = ObjectPosition('player')
-    MoveTo(px, py, pz, true)
+    if DMW.Player.Moving then
+        pX, pY, pZ = ObjectPosition('player')
+        MoveTo(pX,pY,pZ, true)
+        --MoveForwardStart()
+        --MoveForwardStop()
+        self:ResetPath()
+    end
 end
 
 function Navigation:Unstuck()
-    local px, py, pz = ObjectPosition('player')
     local left, leftcount = GameObjectLeft()
     local right, rightcount = GameObjectRight()
     local front, frontcount = GameObjectInfront()
 
     print('|cffff0000Unstuck!')
-    MoveTo(px, py, pz, true)
     if left and right then
         if leftcount > rightcount then
             StrafeLeftStart()

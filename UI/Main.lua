@@ -353,7 +353,7 @@ local GrindbotOptionsTable = {
                     name = "Combat Range",
                     desc = "At what range can you attack the mobs?",
                     width = "full",
-                    min = 5,
+                    min = 3,
                     max = 30,
                     step = 1,
                     get = function()
@@ -451,7 +451,7 @@ local GrindbotOptionsTable = {
                     type = "toggle",
                     order = 3,
                     name = "Skip Aggro",
-                    desc = "Do you wanna ignore monsters attacking while mounted? ( If we are outside of grinding area )",
+                    desc = "Do you wanna ignore monsters if we need to do vendor task?",
                     width = 0.6,
                     get = function()
                         return DMW.Settings.profile.Grind.SkipCombatWhileMounted

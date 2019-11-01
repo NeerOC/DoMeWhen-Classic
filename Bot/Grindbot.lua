@@ -259,7 +259,7 @@ function Grindbot:Pulse()
         end
 
         -- Call movement Update.
-        Navigation:Movement()
+        --Navigation:Movement()
 
         -- This sets our state
         self:SwapMode()
@@ -303,14 +303,17 @@ function Grindbot:GetLoot()
     local hasLoot, LootUnit = CanLoot()
     local px, py, pz = ObjectPosition('player')
     local lx, ly, lz = ObjectPosition(LootUnit)
-    if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) > 2 then
+    if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) >= 3 then
         Navigation:MoveTo(lx, ly, lz)
     else
         if IsMounted() then Dismount() end
         if not PauseFlags.Interacting then
             ObjectInteract(LootUnit)
             PauseFlags.Interacting = true
-            C_Timer.After(0.1, function() PauseFlags.Interacting = false end)
+            C_Timer.After(0.7, function() PauseFlags.Interacting = false end)
+        end
+        for i = GetNumLootItems(), 1, -1 do
+            LootSlot(i)
         end
     end
 end
@@ -384,7 +387,20 @@ function Grindbot:SearchEnemy()
 end
 
 function Grindbot:Rest()
-    -- REST FUNC
+    local Eating = AuraUtil.FindAuraByName('Food', 'player')
+    local Drinking = AuraUtil.FindAuraByName('Drink', 'player')
+
+    if Settings.FoodName ~= '' then
+        if DMW.Player.HP < Settings.RestHP and not Eating then
+            UseItemByName(Settings.FoodName)
+        end
+    end
+
+    if Settings.WaterName ~= '' then
+        if UnitPower('player', 0) / UnitPowerMax('player', 0) * 100 < Settings.RestMana and not Drinking then
+            UseItemByName(Settings.WaterName)
+        end
+    end
 end
 
 function Grindbot:Grinding()
@@ -408,25 +424,21 @@ function Grindbot:AttackCombat()
 end
 
 function Grindbot:InitiateAttack(Unit)
-    if Unit then
-        if DMW.Player.Target ~= Unit then
-            TargetUnit(Unit.Pointer)
+    if (DistanceToUnit(Unit.Pointer) >= Settings.CombatDistance or not Unit:LineOfSight()) then
+        Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
+    else
+        if DMW.Player.Moving then
+            Navigation:StopMoving()
         end
     end
 
-    if Unit and DMW.Player.Moving and DistanceToUnit(Unit.Pointer) < Settings.CombatDistance and Unit:LineOfSight() then
-        Navigation:StopMoving()
-    end
-
-    if Unit and (DistanceToUnit(Unit.Pointer) >= Settings.CombatDistance or not Unit:LineOfSight()) then
-        Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
-    end
+    if not UnitIsUnit(Unit.Pointer, "target") then TargetUnit(Unit.Pointer) end
 
     if Unit.Distance < 9 and IsMounted() then
         Dismount()
     end
 
-    if not DMW.Player.Moving and not NavPath and DMW.Player.Target and DMW.Player.Target.ValidEnemy and not UnitIsFacing('player', Unit.Pointer, 60) then
+    if not UnitIsFacing('player', Unit.Pointer, 60) and DistanceToUnit(Unit.Pointer) < Settings.CombatDistance and Unit:LineOfSight() then
         FaceDirection(Unit.Pointer, true)
     end
 end
@@ -435,6 +447,13 @@ function Grindbot:SwapMode()
     if UnitIsDeadOrGhost('player') then
         Grindbot.Mode = Modes.Dead
         return
+    end
+
+    if not DMW.Player:Standing() and (DMW.Player.HP < 95 or  UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95) then
+        Grindbot.Mode = Modes.Resting
+        return
+    else
+        if not DMW.Player:Standing() then DoEmote('STAND') end
     end
 
     if not DMW.Settings.profile.Grind.SkipCombatWhileMounted and self:SearchEnemy() then
@@ -474,13 +493,13 @@ function Grindbot:SwapMode()
         return
     end
 
-    if self:SearchEnemy() and (not IsMounted() or NearHotspot(GetActivePlayer()))  then
+    if self:SearchEnemy()  then
         Grindbot.Mode = Modes.Combat
         return
     end
 
 
-    if DMW.Player.HP < Settings.RestHP or DMW.Player.PowerPct < Settings.RestMana then
+    if DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana then
         Grindbot.Mode = Modes.Resting
         return
     end
@@ -490,7 +509,7 @@ function Grindbot:SwapMode()
         return
     end
 
-    if not self:SearchAttackable() then
+    if not DMW.Player.Combat and not self:SearchAttackable() then
         Grindbot.Mode = Modes.Roaming
     end
 end

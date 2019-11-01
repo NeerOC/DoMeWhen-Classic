@@ -64,6 +64,7 @@ Bot\Log.lua
 Bot\Navigation.lua
 Bot\Vendor.lua
 Bot\Grindbot.lua
+Bot\AutoGear.lua
 
 
 Enums\Spells\Global.lua
