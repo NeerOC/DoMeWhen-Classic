@@ -291,7 +291,7 @@ function Navigation:Unstuck()
     local right, rightcount = GameObjectRight()
     local front, frontcount = GameObjectInfront()
 
-    print('|cffff0000Unstuck!')
+    Log:SevereInfo('Unstuck!')
     if left and right then
         if leftcount > rightcount then
             StrafeLeftStart()

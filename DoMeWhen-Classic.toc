@@ -1,4 +1,4 @@
-## Interface: 11320
+## Interface: 99999
 ## Author: Fisker
 ## Version: 1
 ## Title: DoMeWhen Classic
