@@ -166,7 +166,7 @@ function Grindbot:ClamTask()
             if CurrentItemLink then
                 name = GetItemInfo(CurrentItemLink)
                 if (string.find(name, 'Clam') or string.find(name, 'clam') and not IsUsableItem(CurrentItemLink)) then
-                    PickupContainerItem(bag,slot); 
+                    PickupContainerItem(BagID,BagSlot); 
                     DeleteCursorItem();
                 end
 
