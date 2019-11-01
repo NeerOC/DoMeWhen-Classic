@@ -209,7 +209,7 @@ function Navigation:Roam()
 end
 
 function Navigation:CanMount()
-    return DMW.Settings.profile.Grind.UseMount and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and GetDistanceBetweenPositions(mountBlackList.x, mountBlackList.y, mountBlackList.z, DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ) > 8
+    return DMW.Settings.profile.Grind.UseMount and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and GetDistanceBetweenPositions(mountBlackList.x, mountBlackList.y, mountBlackList.z, DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ) > 15
 end
 
 function Navigation:Mount()
@@ -222,7 +222,7 @@ function Navigation:Mount()
             if Spell.SummonMount and Spell.SummonMount:IsReady() and not Mounting then
                 Spell.SummonMount:Cast(DMW.Player)
                 Mounting = true
-                C_Timer.After(5, function() Mounting = false end)
+                C_Timer.After(3, function() Mounting = false end)
             else
                 UseItemByName(DMW.Settings.profile.Grind.MountName)
             end
