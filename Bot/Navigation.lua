@@ -10,7 +10,7 @@ local HotSpotIndex = 1
 local lastX, lastY, lastZ = 0, 0, 0
 local DestX, DestY, DestZ
 local EndX, EndY, EndZ
-local PathUpdated = false
+local Mounting = false
 local stuckCount = 0
 
 local ObsDistance = 4
@@ -20,19 +20,6 @@ local mountBlackList = {
     x = 0,
     y = 0,
     z = 0
-}
-
-local Movement = {
-    DistanceTraveled = 0,
-    StartX,
-    StartY,
-    StartZ,
-    MoveStartTimer = 0,
-    MoveSpentTimer = 0,
-    WeAreStuck = false,
-    Unstucking = false,
-    NeedMountPath = false,
-    GotMountPath = false
 }
 
 -- Movement check functions
@@ -186,10 +173,11 @@ function Navigation:Movement()
                     stuckCount = 0
                 end
             end
-            MoveTo(DestX, DestY, DestZ)
-            lastX = DMW.Player.PosX
-            lastY = DMW.Player.PosY
-            lastZ = DMW.Player.PosZ
+            if DestX then MoveTo(DestX, DestY, DestZ)
+                lastX = DMW.Player.PosX
+                lastY = DMW.Player.PosY
+                lastZ = DMW.Player.PosZ end
+            
         end
     end
 end
@@ -231,8 +219,10 @@ function Navigation:Mount()
             self:StopMoving()
             return
         else
-            if Spell.SummonMount and Spell.SummonMount:IsReady() then
+            if Spell.SummonMount and Spell.SummonMount:IsReady() and not Mounting then
                 Spell.SummonMount:Cast(DMW.Player)
+                Mounting = true
+                C_Timer.After(5, function() Mounting = false end)
             else
                 UseItemByName(DMW.Settings.profile.Grind.MountName)
             end

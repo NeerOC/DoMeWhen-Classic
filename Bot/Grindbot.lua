@@ -445,7 +445,10 @@ function Grindbot:SwapMode()
         return
     end
 
-    if not DMW.Player:Standing() and (DMW.Player.HP < 95 or  UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95) then
+    local Eating = AuraUtil.FindAuraByName('Food', 'player')
+    local Drinking = AuraUtil.FindAuraByName('Drink', 'player')
+
+    if not DMW.Player:Standing() and (DMW.Player.HP < 95 and Eating or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95 and Drinking) then
         Grindbot.Mode = Modes.Resting
         return
     else
@@ -484,16 +487,10 @@ function Grindbot:SwapMode()
         return
     end
 
-    if not NearHotspot(GetActivePlayer()) then
-        Grindbot.Mode = Modes.Roaming
-        return
-    end
-
     if self:SearchEnemy()  then
         Grindbot.Mode = Modes.Combat
         return
     end
-
 
     if DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana then
         Grindbot.Mode = Modes.Resting
