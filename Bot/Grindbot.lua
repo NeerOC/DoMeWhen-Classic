@@ -320,7 +320,7 @@ function Grindbot:GetLoot()
             if not PauseFlags.Interacting then
                 ObjectInteract(LootUnit)
                 PauseFlags.Interacting = true
-                C_Timer.After(0.7, function() PauseFlags.Interacting = false end)
+                C_Timer.After(0.05, function() PauseFlags.Interacting = false end)
             end
         end
     end
@@ -470,7 +470,7 @@ function Grindbot:SwapMode()
     local Eating = AuraUtil.FindAuraByName('Food', 'player')
     local Drinking = AuraUtil.FindAuraByName('Drink', 'player')
 
-    if not DMW.Player:Standing() and (DMW.Player.HP < 95 and Eating or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95 and Drinking) then
+    if not UnitAffectingCombat('player') and not DMW.Player:Standing() and (DMW.Player.HP < 95 and Eating or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95 and Drinking) then
         Grindbot.Mode = Modes.Resting
         return
     else
