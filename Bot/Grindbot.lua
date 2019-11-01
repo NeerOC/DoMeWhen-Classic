@@ -415,10 +415,6 @@ end
 function Grindbot:AttackCombat()
     local hasEnemy, theEnemy = self:SearchEnemy()
     if hasEnemy then
-        if DMW.Player.Target and DMW.Player.Target ~= theEnemy then
-                ClearTarget()
-                SpellStopCasting()
-            end
         self:InitiateAttack(theEnemy)
     end
 end
@@ -432,7 +428,7 @@ function Grindbot:InitiateAttack(Unit)
         end
     end
 
-    if not UnitIsUnit(Unit.Pointer, "target") then TargetUnit(Unit.Pointer) end
+    if not UnitIsUnit(Unit.Pointer, "target") then SpellStopCasting() TargetUnit(Unit.Pointer) end
 
     if Unit.Distance < 9 and IsMounted() then
         Dismount()
