@@ -89,6 +89,7 @@ end
 local function CanLoot()
     if Grindbot:GetFreeSlots() == 0 then return false end
     if DMW.Player.Casting then return false end
+
         local Table = {}
         for _, Unit in pairs(DMW.Units) do
             if Unit.Dead and UnitCanBeLooted(Unit.Pointer) then
@@ -178,9 +179,7 @@ function Grindbot:ClamTask()
         end
     end
 
-    for i = GetNumLootItems(), 1, -1 do
-        LootSlot(i)
-    end
+    LootSlots()
 end
 
 function Grindbot:Hotspotter()
@@ -308,21 +307,27 @@ function Grindbot:GetLoot()
     local hasLoot, LootUnit = CanLoot()
     local px, py, pz = ObjectPosition('player')
     local lx, ly, lz = ObjectPosition(LootUnit)
-    if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) >= 3 then
-        Navigation:MoveTo(lx, ly, lz)
-    else
-        if IsMounted() then Dismount() end
-        if not PauseFlags.Interacting then
-            ObjectInteract(LootUnit)
-            PauseFlags.Interacting = true
-            C_Timer.After(0.7, function() PauseFlags.Interacting = false end)
-        end
-        for i = GetNumLootItems(), 1, -1 do
-            LootSlot(i)
+    if LootUnit then
+        if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) >= 3 then
+            Navigation:MoveTo(lx, ly, lz)
+        else
+            if IsMounted() then Dismount() end
+            if not PauseFlags.Interacting then
+                ObjectInteract(LootUnit)
+                PauseFlags.Interacting = true
+                C_Timer.After(0.7, function() PauseFlags.Interacting = false end)
+            end
         end
     end
+
+    self:LootSlots()
 end
 
+function Grindbot:LootSlots()
+    for i = GetNumLootItems(), 1, -1 do
+        LootSlot(i)
+    end
+end
 
 function Grindbot:SearchAttackable()
     local Table = {}
