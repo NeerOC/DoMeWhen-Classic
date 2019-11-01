@@ -42,7 +42,7 @@ local Settings = {
 
 
 -- < GRIND BOT FUNCTION
-function ClearHotSpot()
+function ClearHotspot()
     for k in pairs (DMW.Settings.profile.Grind.HotSpots) do
         DMW.Settings.profile.Grind.HotSpots [k] = nil
     end

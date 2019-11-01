@@ -30,14 +30,30 @@ local Bools = {
 }
 
 --//Global functions.
-function SetDurabilityVendor(name, x, y, z)
-    DMW.Settings.profile.Grind.RepairVendorX, DMW.Settings.profile.Grind.RepairVendorY, DMW.Settings.profile.Grind.RepairVendorZ = x, y, z
-    DMW.Settings.profile.Grind.RepairVendorName = name
+function SetDurabilityVendor()
+    local Target = DMW.Player.Target
+    if Target then
+        DMW.Settings.profile.Grind.RepairVendorX, DMW.Settings.profile.Grind.RepairVendorY, DMW.Settings.profile.Grind.RepairVendorZ = Target.PosX, Target.PosY, Target.PosZ
+        DMW.Settings.profile.Grind.RepairVendorName = Target.Name
+        Log:DebugInfo('Repair vendor has been set.')
+    else
+        DMW.Settings.profile.Grind.RepairVendorX, DMW.Settings.profile.Grind.RepairVendorY, DMW.Settings.profile.Grind.RepairVendorZ = nil, nil, nil
+        DMW.Settings.profile.Grind.RepairVendorName = ''
+        Log:DebugInfo('Repair vendor has been cleared (No Target)')
+    end
 end
 
-function SetFoodVendor(name, x, y, z)
-    DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ = x, y, z
-    DMW.Settings.profile.Grind.FoodVendorName = name
+function SetFoodVendor()
+    local Target = DMW.Player.Target
+    if Target then
+        DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ = Target.PosX, Target.PosY, Target.PosZ
+        DMW.Settings.profile.Grind.FoodVendorName = Target.Name
+        Log:DebugInfo('Food vendor has been set.')
+    else
+        DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ = nil, nil, nil
+        DMW.Settings.profile.Grind.FoodVendorName = ''
+        Log:DebugInfo('Food vendor has been cleared (No Target)')
+    end
 end
 --Global functions//
 
@@ -51,13 +67,27 @@ function Vendor:CanSell(maxrarity)
             CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
             if CurrentItemLink then
                 name, void, Rarity, void, void, itype, void, void, void, void, ItemPrice = GetItemInfo(CurrentItemLink)
-                if not string.find(name, 'Golden Pearl') and not string.find(name, 'Black Pearl') and Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
+                if  name ~= 'Golden Pearl' and name ~= 'Black Pearl' and Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
                     return true
                 end
             end
         end
     end
     return false
+end
+
+function Vendor:SellAll(maxrarity)
+    for BagID = 0, 4 do
+        for BagSlot = 1, GetContainerNumSlots(BagID) do
+            CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
+            if CurrentItemLink then
+                name, void, Rarity, void, void, itype, void, void, void, void, ItemPrice = GetItemInfo(CurrentItemLink)
+                if name ~= 'Golden Pearl' and name ~= 'Black Pearl' and Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
+                    UseContainerItem(BagID, BagSlot)
+                end
+            end
+        end
+    end
 end
 
 function Vendor:BuyItemWithName(name, count)
@@ -134,20 +164,6 @@ function Vendor:GetDurability()
     end
     
     return totalDurability
-end
-
-function Vendor:SellAll(maxrarity)
-    for BagID = 0, 4 do
-        for BagSlot = 1, GetContainerNumSlots(BagID) do
-            CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
-            if CurrentItemLink then
-                name, void, Rarity, void, void, itype, void, void, void, void, ItemPrice = GetItemInfo(CurrentItemLink)
-                if not string.find(name, 'Golden Pearl') and not string.find(name, 'Black Pearl') and Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
-                    UseContainerItem(BagID, BagSlot)
-                end
-            end
-        end
-    end
 end
 
 function Vendor:DoTask()

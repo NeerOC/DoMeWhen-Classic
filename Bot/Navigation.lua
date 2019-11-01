@@ -225,12 +225,17 @@ function Navigation:CanMount()
 end
 
 function Navigation:Mount()
+    local Spell = DMW.Player.Spells
     if not DMW.Player.Casting and not IsMounted() then
         if DMW.Player.Moving then
             self:StopMoving()
             return
         else
-            UseItemByName(DMW.Settings.profile.Grind.MountName)
+            if Spell.SummonMount and Spell.SummonMount:IsReady() then
+                Spell.SummonMount:Cast(DMW.Player)
+            else
+                UseItemByName(DMW.Settings.profile.Grind.MountName)
+            end
         end
     end
 end

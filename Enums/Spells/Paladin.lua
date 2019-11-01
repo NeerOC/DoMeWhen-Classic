@@ -34,7 +34,8 @@ Spells.PALADIN = {
         DivineShield = {Ranks = {642}},
         Cleanse = {Ranks = {4987}},
         HammerWrath = {Ranks = {24275, 24274, 24239}},
-        HolyLight = {Ranks = {635, 639, 647, 1026, 1042, 3472, 10328, 10329, 25929}}
+        HolyLight = {Ranks = {635, 639, 647, 1026, 1042, 3472, 10328, 10329, 25929}},
+        SummonMount = {Ranks = {13819, 23214}}
     },
     Buffs = {
         SealOfRight = {Ranks = {21084, 20287, 20288, 20289, 20290, 20291, 20292, 20293}},
