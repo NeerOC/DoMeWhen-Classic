@@ -428,7 +428,7 @@ function Grindbot:InitiateAttack(Unit)
         end
     end
 
-    if not UnitIsUnit(Unit.Pointer, "target") then SpellStopCasting() TargetUnit(Unit.Pointer) end
+    if not UnitIsUnit(Unit.Pointer, "target") then ClearTarget() SpellStopCasting() TargetUnit(Unit.Pointer) end
 
     if Unit.Distance < 9 and IsMounted() then
         Dismount()
