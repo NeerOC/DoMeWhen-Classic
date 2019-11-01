@@ -1,11 +1,11 @@
-#DoMeWhen Grindbot
+## DoMeWhen Grindbot
 
 READ THIS SHIT!
 
-##OBS
+## OBS
 Clean your WTF folder if you have any previous installations of DoMeWhen!
 
-##Installation of the navigation
+## Installation of the navigation
 Download the files from https://mega.nz/#!g0U2xI4a!aoJICAY34DLvMnWPqgIqygDWIy_91tuoyXz4J3rg9dM
 Put that folder (mmaps) inside the EWT folder. (WHERE FIREFOX/CHROME) is.
 
