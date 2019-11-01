@@ -88,6 +88,7 @@ end
 
 local function CanLoot()
     if Grindbot:GetFreeSlots() == 0 then return false end
+    if DMW.Player.Casting then return false end
         local Table = {}
         for _, Unit in pairs(DMW.Units) do
             if Unit.Dead and UnitCanBeLooted(Unit.Pointer) then
@@ -176,7 +177,7 @@ function Grindbot:ClamTask()
             end
         end
     end
-    
+
     for i = GetNumLootItems(), 1, -1 do
         LootSlot(i)
     end

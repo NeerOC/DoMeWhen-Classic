@@ -241,7 +241,7 @@ function Navigation:Mount()
             if Spell.SummonMount and Spell.SummonMount:IsReady() and not Mounting then
                 Spell.SummonMount:Cast(DMW.Player)
                 Mounting = true
-                C_Timer.After(3, function() Mounting = false end)
+                C_Timer.After(4, function() Mounting = false end)
             else
                 UseItemByName(DMW.Settings.profile.Grind.MountName)
             end
