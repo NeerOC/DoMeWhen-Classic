@@ -12,5 +12,5 @@ Put that folder (mmaps) inside the EWT folder. (WHERE FIREFOX/CHROME) is.
 ## Grindbot
 Target repair vendor and type /DMW Repair to set repair vendor
 Target food vendor and type /DMW Food to set Food vendor.
-ALT + CLICK WHILE BOT IS DISABLED marks the location you clicked as a hotspot.
+SHIFT + CLICK WHILE BOT IS DISABLED marks the location you clicked as a hotspot.
 ALT + SHIFT + CLICK Will remove the hotspot closest to the position you clicked.

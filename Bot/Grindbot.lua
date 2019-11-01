@@ -46,7 +46,7 @@ function ClearHotSpot()
     for k in pairs (DMW.Settings.profile.Grind.HotSpots) do
         DMW.Settings.profile.Grind.HotSpots [k] = nil
     end
-    print('HotSpots Cleared!')
+    Log:DebugInfo('Hotspots Cleared!')
 end
 
 local function NearHotspot(unit)
@@ -186,11 +186,11 @@ function Grindbot:Hotspotter()
         local leftmousedown, leftmousetoggle = GetKeyState(0x01)
         local rightmousedown, rightmousetoggle = GetKeyState(0x02)
         
-        if altdown and shiftdown and leftmousedown and ctype == 1 then
+        if shiftdown and altdown and leftmousedown and ctype then
             self:RemoveClickSpot(cx, cy, cz)
         end
 
-        if altdown and not shiftdown and leftmousedown and ctype == 1 then
+        if shiftdown and not altdown and leftmousedown and ctype then
             self:AddClickSpot(cx, cy, cz)
         end
     end
