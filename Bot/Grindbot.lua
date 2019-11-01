@@ -332,6 +332,7 @@ function Grindbot:LootSlots()
     for i = GetNumLootItems(), 1, -1 do
         LootSlot(i)
     end
+    CloseLoot()
 end
 
 function Grindbot:SearchAttackable()
