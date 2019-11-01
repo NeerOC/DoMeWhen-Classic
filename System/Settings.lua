@@ -66,7 +66,8 @@ local defaults = {
             drawPath = true,
             drawHotspots = true,
             drawCircles = false,
-            openClams = false
+            openClams = false,
+            MountBlacklist = {}
         },
         Tracker = {
             Herbs = false,

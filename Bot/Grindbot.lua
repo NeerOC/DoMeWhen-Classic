@@ -176,6 +176,10 @@ function Grindbot:ClamTask()
             end
         end
     end
+    
+    for i = GetNumLootItems(), 1, -1 do
+        LootSlot(i)
+    end
 end
 
 function Grindbot:Hotspotter()
@@ -372,14 +376,14 @@ function Grindbot:SearchEnemy()
     -- First check if any of the mobs have mana (indicator of a caster) otherwise kill the one with lowest hp
     for _, Unit in ipairs(Table) do
         local PowerType = UnitPowerType(Unit.Pointer)
-        if Unit.Distance <= 30 and (Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) and PowerType == 0 then
+        if Unit.Distance < 80 and (Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) and PowerType == 0 then
             return true, Unit
         end
     end
 
     for _, Unit in ipairs(Table) do
         local PowerType = UnitPowerType(Unit.Pointer)
-        if Unit.Distance <= 30 and (Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
+        if Unit.Distance < 80 and (Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
             return true, Unit
         end
     end

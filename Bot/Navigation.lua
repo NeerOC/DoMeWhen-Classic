@@ -16,12 +16,6 @@ local stuckCount = 0
 local ObsDistance = 4
 local ObsFlags = bit.bor(0x1, 0x10)
 
-local mountBlackList = {
-    x = 0,
-    y = 0,
-    z = 0
-}
-
 -- Movement check functions
 function GameObjectInfront()
     local px, py, pz = ObjectPosition('player')
@@ -99,8 +93,33 @@ end
 -- Movement check functions/>
 
 -- Misc
-function SetMountBlackList()
-    mountBlackList.x, mountBlackList.y, mountBlackList.z = ObjectPosition('player')
+function AddMountBlackList()
+    local pX, pY, pZ = ObjectPosition('player')
+    local Spot = {x = pX, y = pY, z = pZ}
+    
+    for k in pairs (DMW.Settings.profile.Grind.MountBlacklist) do
+        local bx, by, bz = DMW.Settings.profile.Grind.MountBlacklist[k].x, DMW.Settings.profile.Grind.MountBlacklist[k].y, DMW.Settings.profile.Grind.MountBlacklist[k].z
+        local dist = GetDistanceBetweenPositions(pX, pY, pZ, bx, by, bz)
+        if dist < 15 then
+            return
+        end
+    end
+
+    table.insert(DMW.Settings.profile.Grind.MountBlacklist, Spot)
+    Log:DebugInfo('Added spot to mount Blacklist.')
+end
+
+function Navigation:NearBlacklist()
+    local pX, pY, pZ = ObjectPosition('player')
+
+    for k in pairs (DMW.Settings.profile.Grind.MountBlacklist) do
+        local bx, by, bz = DMW.Settings.profile.Grind.MountBlacklist[k].x, DMW.Settings.profile.Grind.MountBlacklist[k].y, DMW.Settings.profile.Grind.MountBlacklist[k].z
+        local dist = GetDistanceBetweenPositions(pX, pY, pZ, bx, by, bz)
+        if dist < 15 then
+            return true
+        end
+    end
+    return false
 end
 
 local function GetDistanceToPosition(x, y, z)
@@ -209,7 +228,7 @@ function Navigation:Roam()
 end
 
 function Navigation:CanMount()
-    return DMW.Settings.profile.Grind.UseMount and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and GetDistanceBetweenPositions(mountBlackList.x, mountBlackList.y, mountBlackList.z, DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ) > 15
+    return DMW.Settings.profile.Grind.UseMount and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist()
 end
 
 function Navigation:Mount()
