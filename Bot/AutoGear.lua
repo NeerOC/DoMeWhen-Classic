@@ -88,7 +88,7 @@ if (IsClassic) then
 		local highestPointsSpent = nil
 		local numTalentTabs = GetNumTalentTabs()
 		if (not numTalentTabs) or (numTalentTabs < 2) then
-			Log:NormalInfo("numTalentTabs in AutoGearGetSpec() is "..tostring(numTalentTabs),0)
+			--Log:NormalInfo("numTalentTabs in AutoGearGetSpec() is "..tostring(numTalentTabs),0)
 		end
 		for i = 1, numTalentTabs do
 			local spec, _, pointsSpent = GetTalentTabInfo(i)

@@ -24,7 +24,8 @@ local slots = {
 local Bools = {
     Interacted = false,
     Selling = false,
-    Buying = false,
+    BuyingFood = false,
+    BuyingWater = false,
     Talking = false,
     Repairing = false
 }
@@ -225,8 +226,8 @@ function Vendor:DoTask()
             return
         else
             -- We are close to vendor, do shit.
-            if MerchantFrame:IsVisible() and NeedFoodCount >= 10 and not Bools.Buying then
-                self:BuyItemWithName(FoodName, NeedFoodCount) Bools.Buying = true C_Timer.After(4, function() Bools.Buying = false end)
+            if MerchantFrame:IsVisible() and NeedFoodCount >= 10 and not Bools.BuyingFood then
+                self:BuyItemWithName(FoodName, NeedFoodCount) Bools.BuyingFood = true C_Timer.After(15, function() Bools.BuyingFood = false end)
             end
 
             if GossipFrame:IsVisible() and not Bools.Talking then
@@ -250,8 +251,8 @@ function Vendor:DoTask()
             return
         else
             -- We are close to vendor, do shit.
-            if MerchantFrame:IsVisible() and NeedWaterCount >= 10 and not Bools.Buying then
-                self:BuyItemWithName(WaterName, NeedWaterCount) Bools.Buying = true C_Timer.After(4, function() Bools.Buying = false end)
+            if MerchantFrame:IsVisible() and NeedWaterCount >= 10 and not Bools.BuyingWater then
+                self:BuyItemWithName(WaterName, NeedWaterCount) Bools.BuyingWater = true C_Timer.After(15, function() Bools.Buying = falseWater end)
             end
 
             if GossipFrame:IsVisible() and not Bools.Talking then

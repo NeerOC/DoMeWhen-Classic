@@ -7,6 +7,7 @@ local Log = DMW.Bot.Log
 
 local Throttle = false
 local VendorTask = false
+local InformationOutput = false
 
 local PauseFlags = {
     Nav = false,
@@ -262,12 +263,15 @@ function Grindbot:Pulse()
             return
         end
 
-        -- Call movement Update.
-        --Navigation:Movement()
+        if not InformationOutput then
+            Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]') 
+            Log:NormalInfo('Repair Vendor [' .. DMW.Settings.profile.Grind.RepairVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.RepairVendorX, DMW.Settings.profile.Grind.RepairVendorY, DMW.Settings.profile.Grind.RepairVendorZ)) .. ' Yrds]')
+            Log:NormalInfo('Number of hotspots: ' .. #DMW.Settings.profile.Grind.HotSpots)
+            InformationOutput = true
+        end
 
         -- This sets our state
         self:SwapMode()
-        
 
         -- Do whatever our mode says.
         if Grindbot.Mode == Modes.Dead then
@@ -300,6 +304,7 @@ function Grindbot:Pulse()
     else
         if not PauseFlags.Hotspotting then self:Hotspotter() end
         Navigation:ResetPath()
+        if InformationOutput then InformationOutput = false end
     end
 end
 
@@ -471,7 +476,7 @@ function Grindbot:SwapMode()
         if not DMW.Player:Standing() then DoEmote('STAND') end
     end
 
-    if not DMW.Settings.profile.Grind.SkipCombatWhileMounted and self:SearchEnemy() then
+    if not DMW.Settings.profile.Grind.SkipCombatWhileMounted and not IsMounted() and self:SearchEnemy() then
         Grindbot.Mode = Modes.Combat
         return
     end
@@ -503,7 +508,7 @@ function Grindbot:SwapMode()
         return
     end
 
-    if self:SearchEnemy()  then
+    if not IsMounted() and self:SearchEnemy()  then
         Grindbot.Mode = Modes.Combat
         return
     end
