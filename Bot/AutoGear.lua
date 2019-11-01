@@ -36,7 +36,7 @@ local tUpdate = 0
 local dataAvailable = nil
 local shouldPrintHelp = false
 local maxPlayerLevel = MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
-
+local Log = DMW.Bot.Log
 --initialize table for storing saved variables
 if (not AutoGearDB) then AutoGearDB = {} end
 
@@ -62,12 +62,7 @@ function InitializeAutoGearDB(defaults, reset)
 end
 
 --printing function to check allowed verbosity level
-function AutoGearPrint(text, verbosity)
-	if verbosity == nil then verbosity = 0 end
-	if (AutoGearDB.AllowedVerbosity == nil) or (verbosity <= AutoGearDB.AllowedVerbosity) then
-		print(text)
-	end
-end
+
 
 --names of verbosity levels
 local function GetAllowedVerbosityName(allowedverbosity)
@@ -93,7 +88,7 @@ if (IsClassic) then
 		local highestPointsSpent = nil
 		local numTalentTabs = GetNumTalentTabs()
 		if (not numTalentTabs) or (numTalentTabs < 2) then
-			AutoGearPrint("AutoGear: numTalentTabs in AutoGearGetSpec() is "..tostring(numTalentTabs),0)
+			Log:NormalInfo("numTalentTabs in AutoGearGetSpec() is "..tostring(numTalentTabs),0)
 		end
 		for i = 1, numTalentTabs do
 			local spec, _, pointsSpent = GetTalentTabInfo(i)
@@ -143,17 +138,17 @@ AutoGearDBDefaults = {
 	AutoLootRoll = true,
 	RollOnNonGearLoot = true,
 	AutoConfirmBinding = true,
-	AutoAcceptQuests = true,
-	AutoAcceptPartyInvitations = true,
+	AutoAcceptQuests = false,
+	AutoAcceptPartyInvitations = false,
 	ScoreInTooltips = true,
 	ReasonsInTooltips = false,
 	AlwaysCompareGear = GetCVarBool("alwaysCompareItems"),
 	UsePawn = false,
 	OverridePawnScale = true,
 	PawnScale = "",
-	AutoSellGreys = true,
-	AutoRepair = true,
-	AllowedVerbosity = 2
+	AutoSellGreys = false,
+	AutoRepair = false,
+	AllowedVerbosity = 1
 }
 
 InitializeAutoGearDB(AutoGearDBDefaults)
@@ -1372,7 +1367,7 @@ function AutoGearSetStatWeights()
 	local class, spec = AutoGearGetClassAndSpec()
 	weighting = AutoGearDefaultWeights[class][spec] or nil
 	weapons = weighting.weapons or "any"
-	AutoGearPrint("AutoGear: Stat weights set for \""..class..": "..spec.."\". Weapons: "..weapons, 3)
+	--Log:NormalInfo("Stat weights set for \""..class..": "..spec.."\". Weapons: "..weapons, 3)
 end
 
 local function newCheckbox(dbname, label, description, onClick, optionsMenu)
@@ -1412,7 +1407,7 @@ local function OptionsSetup(optionsMenu)
 				SetCVar(v["cvar"], value and 1 or 0)
 			end
 			AutoGearDB[v["option"]] = value
-			AutoGearPrint("AutoGear: "..(AutoGearDB[v["option"]] and v["toggleDescriptionTrue"] or v["toggleDescriptionFalse"]), 3)
+			Log:NormalInfo(""..(AutoGearDB[v["option"]] and v["toggleDescriptionTrue"] or v["toggleDescriptionFalse"]), 3)
 		end
 		
 		--function to run when toggling this option via command-line interface
@@ -1424,7 +1419,7 @@ local function OptionsSetup(optionsMenu)
 				AutoGearDB[v["option"]] = (not AutoGearDB[v["option"]])
 			end
 			if v["cvar"] then SetCVar(v["cvar"], force or (GetCVarBool(v["cvar"]) and 0 or 1)) end
-			AutoGearPrint("AutoGear: "..(AutoGearDB[v["option"]] and v["toggleDescriptionTrue"] or v["toggleDescriptionFalse"]), 0)
+			Log:NormalInfo(""..(AutoGearDB[v["option"]] and v["toggleDescriptionTrue"] or v["toggleDescriptionFalse"]), 0)
 			if _G["AutoGear"..v["option"].."CheckButton"] == nil then return end
 			_G["AutoGear"..v["option"].."CheckButton"]:SetChecked(v["cvar"] and GetCVarBool(v["cvar"]) or AutoGearDB[v["option"]])
 		end
@@ -1764,7 +1759,7 @@ SlashCmdList["AutoGear"] = function(msg)
 	elseif (param1 == "scan") then
 		AutoGearScan()
 	elseif (param1 == "spec") then
-		AutoGearPrint("AutoGear: Looks like you are "..AutoGearGetSpec().."."..((AutoGearDB.UsePawn or AutoGearDB.Override) and ("  However, AutoGear is using "..(AutoGearDB.UsePawn and "Pawn" or "\""..AutoGearDB.OverrideSpec.."\"").." for gear evaluation due to the \""..(AutoGearDB.UsePawn and "use Pawn to evaluate upgrades" or "override specialization").."\" option.") or ""), 0)
+		Log:NormalInfo("Looks like you are "..AutoGearGetSpec().."."..((AutoGearDB.UsePawn or AutoGearDB.Override) and ("  However, AutoGear is using "..(AutoGearDB.UsePawn and "Pawn" or "\""..AutoGearDB.OverrideSpec.."\"").." for gear evaluation due to the \""..(AutoGearDB.UsePawn and "use Pawn to evaluate upgrades" or "override specialization").."\" option.") or ""), 0)
 	elseif (param1 == "verbosity") or (param1 == "allowedverbosity") then
 		SetAllowedVerbosity(param2)
 	elseif ((param1 == "setspec") or
@@ -1773,12 +1768,12 @@ SlashCmdList["AutoGear"] = function(msg)
 	(param1 == "specoverride")) then
 		local params = param2..(string.len(param3)>0 and " "..param3 or "")..(string.len(param4)>0 and " "..param4 or "")..(string.len(param5)>0 and " "..param5 or "")
 		local localizedClassName, spec = string.match(params, "^\"?([^:\"]-): ([^:\"]+)\"?$")
-		--AutoGearPrint("AutoGear: param2 == \""..tostring(param2).."\"",3)
-		--AutoGearPrint("AutoGear: param3 == \""..tostring(param3).."\"",3)
-		--AutoGearPrint("AutoGear: param4 == \""..tostring(param4).."\"",3)
-		--AutoGearPrint("AutoGear: params == \""..tostring(params).."\"",3)
-		AutoGearPrint("AutoGear: localizedClassName == \""..tostring(localizedClassName).."\"",3)
-		AutoGearPrint("AutoGear: spec == \""..tostring(spec).."\"",3)
+		--Log:NormalInfo("param2 == \""..tostring(param2).."\"",3)
+		--Log:NormalInfo("param3 == \""..tostring(param3).."\"",3)
+		--Log:NormalInfo("param4 == \""..tostring(param4).."\"",3)
+		--Log:NormalInfo("params == \""..tostring(params).."\"",3)
+		Log:NormalInfo("localizedClassName == \""..tostring(localizedClassName).."\"",3)
+		Log:NormalInfo("spec == \""..tostring(spec).."\"",3)
 		local class = AutoGearReverseClassList[localizedClassName]
 		if class and AutoGearDefaultWeights[class][spec] then
 			local overridespec = localizedClassName..": "..spec
@@ -1786,9 +1781,9 @@ SlashCmdList["AutoGear"] = function(msg)
 			if AutoGearOverrideSpecDropdown then
 				AutoGearOverrideSpecDropdown:SetValue(overridespec)
 			end
-			AutoGearPrint("AutoGear: "..(AutoGearDB.Override and "" or "While \"Override specialization\" is enabled, ").."AutoGear will now use "..overridespec.." weights to evaluate gear.",0)
+			Log:NormalInfo(""..(AutoGearDB.Override and "" or "While \"Override specialization\" is enabled, ").."AutoGear will now use "..overridespec.." weights to evaluate gear.",0)
 		else
-			AutoGearPrint("AutoGear: Unrecognized command. Usage: \"/ag overridespec [class]: [spec]\" (example: \"/ag overridespec Hunter: Beast Mastery\")",0)
+			Log:NormalInfo("Unrecognized command. Usage: \"/ag overridespec [class]: [spec]\" (example: \"/ag overridespec Hunter: Beast Mastery\")",0)
 		end
 	elseif ((param1 == "pawnscale") or
 	(param1 == "setpawnscale") or
@@ -1797,18 +1792,18 @@ SlashCmdList["AutoGear"] = function(msg)
 		if PawnIsReady ~= nil and PawnIsReady() then
 			local ScaleName = param2..(string.len(param3)>0 and " "..param3 or "")..(string.len(param4)>0 and " "..param4 or "")..(string.len(param5)>0 and " "..param5 or "")
 			if string.len(ScaleName) == 0 then
-				AutoGearPrint("AutoGear: Usage: \"/ag pawnscale [Pawn scale name]\" (example: \"/ag pawnscale Hunter: Beast Mastery\")",0)
+				Log:NormalInfo("Usage: \"/ag pawnscale [Pawn scale name]\" (example: \"/ag pawnscale Hunter: Beast Mastery\")",0)
 			elseif PawnDoesScaleExist(ScaleName) then
 				AutoGearDB.PawnScale = ScaleName
 				if AutoGearPawnScaleDropdown then
 					UIDropDownMenu_SetText(AutoGearPawnScaleDropdown, AutoGearDB.PawnScale)
 				end
-				AutoGearPrint("AutoGear: "..(AutoGearDB.UsePawn and "" or "While using Pawn is enabled, ").."AutoGear will now use the \""..PawnGetScaleColor(AutoGearDB.PawnScale)..AutoGearDB.PawnScale..FONT_COLOR_CODE_CLOSE.."\" Pawn scale to evaluate gear.",0)
+				Log:NormalInfo(""..(AutoGearDB.UsePawn and "" or "While using Pawn is enabled, ").."AutoGear will now use the \""..PawnGetScaleColor(AutoGearDB.PawnScale)..AutoGearDB.PawnScale..FONT_COLOR_CODE_CLOSE.."\" Pawn scale to evaluate gear.",0)
 			else
-				AutoGearPrint("AutoGear: According to Pawn, a Pawn scale named \""..ScaleName.."\" does not exist.",0)
+				Log:NormalInfo("According to Pawn, a Pawn scale named \""..ScaleName.."\" does not exist.",0)
 			end
 		else
-			AutoGearPrint("AutoGear: Pawn is either not installed or not ready yet.",0)
+			Log:NormalInfo("Pawn is either not installed or not ready yet.",0)
 		end
 	elseif (param1 == "") then
 		InterfaceOptionsFrame_OpenToCategory(optionsMenu)
@@ -1818,41 +1813,41 @@ SlashCmdList["AutoGear"] = function(msg)
 end
 
 function AutoGearPrintHelp()
-	AutoGearPrint("AutoGear: "..((param1 == "help") and "" or "Unrecognized command.  ").."Recognized commands:", 0)
-	AutoGearPrint("AutoGear:    '/ag': options menu", 0)
-	AutoGearPrint("AutoGear:    '/ag help': command line help", 0)
-	AutoGearPrint("AutoGear:    '/ag scan': scan all bags for gear upgrades", 0)
-	AutoGearPrint("AutoGear:    '/ag spec': get name of current talent specialization", 0)
-	AutoGearPrint("AutoGear:    '/ag [gear/toggle]/[enable/on/start]/[disable/off/stop]': toggle automatic gearing", 0)
-	AutoGearPrint("AutoGear:    '/ag roll [enable/on/start]/[disable/off/stop]': toggle automatic loot rolling", 0)
-	AutoGearPrint("AutoGear:    '/ag bind [enable/on/start]/[disable/off/stop]': toggle automatic soul-binding confirmation", 0)
-	AutoGearPrint("AutoGear:    '/ag quest [enable/on/start]/[disable/off/stop]': toggle automatic quest handling", 0)
-	AutoGearPrint("AutoGear:    '/ag party [enable/on/start]/[disable/off/stop]': toggle automatic acceptance of party invitations", 0)
-	AutoGearPrint("AutoGear:    '/ag tooltip [toggle/show/hide]': toggle showing score in item tooltips", 0)
-	AutoGearPrint("AutoGear:    '/ag reasons [toggle/show/hide]': toggle showing won't-auto-equip reasons in item tooltips", 0)
-	AutoGearPrint("AutoGear:    '/ag compare [enable/on/start]/[disable/off/stop]': toggle always comparing gear", 0)
-	AutoGearPrint("AutoGear:    '/ag override [enable/on/start]/[disable/off/stop]': toggle specialization override", 0)
-	AutoGearPrint("AutoGear:    '/ag overridespec [class]: [spec]': set override spec to \"[class]: [spec]\"",0)
-	AutoGearPrint("AutoGear:    '/ag pawn [enable/on/start]/[disable/off/stop]': toggle using Pawn scales", 0)
-	AutoGearPrint("AutoGear:    '/ag pawnscale [Pawn scale name]': set Pawn scale override to the specifed Pawn scale", 0)
-	AutoGearPrint("AutoGear:    '/ag sell [enable/on/start]/[disable/off/stop]': toggle automatic selling of grey items", 0)
-	AutoGearPrint("AutoGear:    '/ag repair [enable/on/start]/[disable/off/stop]': toggle automatic repairing", 0)
-	AutoGearPrint("AutoGear:    '/ag verbosity [0/1/2/3]': set allowed verbosity level; valid levels are: 0 ("..GetAllowedVerbosityName(0).."), 1 ("..GetAllowedVerbosityName(1).."), 2 ("..GetAllowedVerbosityName(2).."), 3 ("..GetAllowedVerbosityName(3)..")", 0)
+	Log:NormalInfo(""..((param1 == "help") and "" or "Unrecognized command.  ").."Recognized commands:", 0)
+	Log:NormalInfo("   '/ag': options menu", 0)
+	Log:NormalInfo("   '/ag help': command line help", 0)
+	Log:NormalInfo("   '/ag scan': scan all bags for gear upgrades", 0)
+	Log:NormalInfo("   '/ag spec': get name of current talent specialization", 0)
+	Log:NormalInfo("   '/ag [gear/toggle]/[enable/on/start]/[disable/off/stop]': toggle automatic gearing", 0)
+	Log:NormalInfo("   '/ag roll [enable/on/start]/[disable/off/stop]': toggle automatic loot rolling", 0)
+	Log:NormalInfo("   '/ag bind [enable/on/start]/[disable/off/stop]': toggle automatic soul-binding confirmation", 0)
+	Log:NormalInfo("   '/ag quest [enable/on/start]/[disable/off/stop]': toggle automatic quest handling", 0)
+	Log:NormalInfo("   '/ag party [enable/on/start]/[disable/off/stop]': toggle automatic acceptance of party invitations", 0)
+	Log:NormalInfo("   '/ag tooltip [toggle/show/hide]': toggle showing score in item tooltips", 0)
+	Log:NormalInfo("   '/ag reasons [toggle/show/hide]': toggle showing won't-auto-equip reasons in item tooltips", 0)
+	Log:NormalInfo("   '/ag compare [enable/on/start]/[disable/off/stop]': toggle always comparing gear", 0)
+	Log:NormalInfo("   '/ag override [enable/on/start]/[disable/off/stop]': toggle specialization override", 0)
+	Log:NormalInfo("   '/ag overridespec [class]: [spec]': set override spec to \"[class]: [spec]\"",0)
+	Log:NormalInfo("   '/ag pawn [enable/on/start]/[disable/off/stop]': toggle using Pawn scales", 0)
+	Log:NormalInfo("   '/ag pawnscale [Pawn scale name]': set Pawn scale override to the specifed Pawn scale", 0)
+	Log:NormalInfo("   '/ag sell [enable/on/start]/[disable/off/stop]': toggle automatic selling of grey items", 0)
+	Log:NormalInfo("   '/ag repair [enable/on/start]/[disable/off/stop]': toggle automatic repairing", 0)
+	Log:NormalInfo("   '/ag verbosity [0/1/2/3]': set allowed verbosity level; valid levels are: 0 ("..GetAllowedVerbosityName(0).."), 1 ("..GetAllowedVerbosityName(1).."), 2 ("..GetAllowedVerbosityName(2).."), 3 ("..GetAllowedVerbosityName(3)..")", 0)
 end
 
 function SetAllowedVerbosity(allowedverbosity)
 	allowedverbosity = tonumber(allowedverbosity)
 	if type(allowedverbosity) ~= "number" then
-		AutoGearPrint("AutoGear: The current allowed verbosity level is "..tostring(AutoGearDB.AllowedVerbosity).." ("..GetAllowedVerbosityName(AutoGearDB.AllowedVerbosity).."). Valid levels are: 0 ("..GetAllowedVerbosityName(0).."), 1 ("..GetAllowedVerbosityName(1).."), 2 ("..GetAllowedVerbosityName(2).."), 3 ("..GetAllowedVerbosityName(3)..").", 0)
+		Log:NormalInfo("The current allowed verbosity level is "..tostring(AutoGearDB.AllowedVerbosity).." ("..GetAllowedVerbosityName(AutoGearDB.AllowedVerbosity).."). Valid levels are: 0 ("..GetAllowedVerbosityName(0).."), 1 ("..GetAllowedVerbosityName(1).."), 2 ("..GetAllowedVerbosityName(2).."), 3 ("..GetAllowedVerbosityName(3)..").", 0)
 		return
 	end
 
 	if allowedverbosity < 0 or allowedverbosity > 3 then
-		AutoGearPrint("AutoGear: That is an invalid allowed verbosity level. Valid levels are: 0 ("..GetAllowedVerbosityName(0).."), 1 ("..GetAllowedVerbosityName(1).."), 2 ("..GetAllowedVerbosityName(2).."), 3 ("..GetAllowedVerbosityName(3)..").", 0)
+		Log:NormalInfo("That is an invalid allowed verbosity level. Valid levels are: 0 ("..GetAllowedVerbosityName(0).."), 1 ("..GetAllowedVerbosityName(1).."), 2 ("..GetAllowedVerbosityName(2).."), 3 ("..GetAllowedVerbosityName(3)..").", 0)
 		return
 	else
 		AutoGearDB.AllowedVerbosity = allowedverbosity
-		AutoGearPrint("AutoGear: Allowed verbosity level is now: "..tostring(AutoGearDB.AllowedVerbosity).." ("..GetAllowedVerbosityName(AutoGearDB.AllowedVerbosity)..").", 0)
+		Log:NormalInfo("Allowed verbosity level is now: "..tostring(AutoGearDB.AllowedVerbosity).." ("..GetAllowedVerbosityName(AutoGearDB.AllowedVerbosity)..").", 0)
 	end
 end
 
@@ -1889,7 +1884,7 @@ AutoGearFrame:RegisterEvent("GOSSIP_ENTER_CODE")            --Fires when the pla
 AutoGearFrame:RegisterEvent("GOSSIP_SHOW")                  --Fires when an NPC gossip interaction begins
 AutoGearFrame:RegisterEvent("UNIT_QUEST_LOG_CHANGED")       --Fires when a unit's quests change (accepted/objective progress/abandoned/completed)
 AutoGearFrame:SetScript("OnEvent", function (this, event, arg1, arg2, arg3, arg4, ...)
-	--AutoGearPrint("AutoGear: "..event..(arg1 and " "..tostring(arg1) or "")..(arg2 and " "..tostring(arg2) or "")..(arg3 and " "..tostring(arg3) or "")..(arg4 and " "..tostring(arg4) or ""), 0)
+	--Log:NormalInfo(""..event..(arg1 and " "..tostring(arg1) or "")..(arg2 and " "..tostring(arg2) or "")..(arg3 and " "..tostring(arg3) or "")..(arg4 and " "..tostring(arg4) or ""), 0)
 
 	if (AutoGearDB.AutoAcceptQuests) then
 		if (event == "QUEST_ACCEPT_CONFIRM") then --another group member starts a quest (like an escort)
@@ -1951,7 +1946,7 @@ AutoGearFrame:SetScript("OnEvent", function (this, event, arg1, arg2, arg3, arg4
 				questRewardID = {}
 				for i = 1, rewards do
 					local itemLink = GetQuestItemLink("choice", i)
-					if (not itemLink) then AutoGearPrint("AutoGear: No item link received from the server.", 0) end
+					if (not itemLink) then Log:NormalInfo("No item link received from the server.", 0) end
 					local _, _, Color, Ltype, id, Enchant, Gem1, Gem2, Gem3, Gem4, Suffix, Unique, LinkLvl, Name = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
 					questRewardID[i] = id
 				end
@@ -1963,7 +1958,7 @@ AutoGearFrame:SetScript("OnEvent", function (this, event, arg1, arg2, arg3, arg4
 
 	if (AutoGearDB.AutoAcceptPartyInvitations) then
 		if (event == "PARTY_INVITE_REQUEST") then
-			AutoGearPrint("AutoGear: Automatically accepting party invite.", 1)
+			Log:NormalInfo("Automatically accepting party invite.", 1)
 			AcceptGroup()
 			AutoGearFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 		elseif (event == "GROUP_ROSTER_UPDATE") then --for closing the invite window once I have joined the group
@@ -1975,8 +1970,8 @@ AutoGearFrame:SetScript("OnEvent", function (this, event, arg1, arg2, arg3, arg4
 	if (event == "PLAYER_SPECIALIZATION_CHANGED" and arg1 == "player") then
 		--make sure this doesn't happen as part of logon
 		if (dataAvailable ~= nil) then
-			--AutoGearPrint("AutoGear: event: \""..event.."\"; arg1: \""..arg1.."\"", 0)
-			AutoGearPrint("AutoGear: Talent specialization changed.  Scanning bags for gear that's better suited for this spec.", 2)
+			--Log:NormalInfo("event: \""..event.."\"; arg1: \""..arg1.."\"", 0)
+			Log:NormalInfo("Talent specialization changed.  Scanning bags for gear that's better suited for this spec.", 2)
 			AutoGearScanBags()
 		end
 	elseif (event == "START_LOOT_ROLL") then
@@ -1990,17 +1985,17 @@ AutoGearFrame:SetScript("OnEvent", function (this, event, arg1, arg2, arg3, arg4
 			local rollItemInfo = ReadItemInfo(nil, arg1)
 			local _, _, _, _, _, canNeed, canGreed, canDisenchant = GetLootRollItemInfo(arg1);
 			if ((AutoGearDB.RollOnNonGearLoot == false) and (not rollItemInfo.Slot)) then
-				AutoGearPrint("AutoGear: This loot is not gear and \"Roll on non-gear loot\" is disabled, so not rolling.", 3)
+				Log:NormalInfo("This loot is not gear and \"Roll on non-gear loot\" is disabled, so not rolling.", 3)
 				--local roll is nil, so no roll
 			elseif (wouldNeed and canNeed) then
 				roll = 1 --need
 			else
 				roll = 2 --greed
 				if (wouldNeed and not canNeed) then
-					AutoGearPrint("AutoGear: I would roll NEED, but NEED is not an option for this item.", 1)
+					Log:NormalInfo("I would roll NEED, but NEED is not an option for this item.", 1)
 				end
 			end
-			if (not rollItemInfo.Usable) then AutoGearPrint("AutoGear: This item cannot be worn.  "..reason, 1) end
+			if (not rollItemInfo.Usable) then Log:NormalInfo("This item cannot be worn.  "..reason, 1) end
 			if (roll) then
 				local newAction = {}
 				newAction.action = "roll"
@@ -2011,14 +2006,14 @@ AutoGearFrame:SetScript("OnEvent", function (this, event, arg1, arg2, arg3, arg4
 				table.insert(futureAction, newAction)
 			end
 		else
-			AutoGearPrint("AutoGear: No weighting set for this class.", 0)
+			Log:NormalInfo("No weighting set for this class.", 0)
 		end
 	elseif (event == "CONFIRM_LOOT_ROLL") then
 		ConfirmLootRoll(arg1, arg2)
 	elseif (event == "CONFIRM_DISENCHANT_ROLL") then
 		ConfirmLootRoll(arg1, arg2)
 	elseif (event == "ITEM_PUSH") then
-		--AutoGearPrint("AutoGear: Received an item.  Checking for gear upgrades.")
+		--Log:NormalInfo("Received an item.  Checking for gear upgrades.")
 		--make sure a fishing pole isn't replaced while fishing
 		if (GetMainHandType() ~= "Fishing Pole") then
 			--check if there's already a scan action in queue
@@ -2064,7 +2059,7 @@ AutoGearFrame:SetScript("OnEvent", function (this, event, arg1, arg2, arg3, arg4
 				end
 			end
 			if (soldSomething) then
-				AutoGearPrint("AutoGear: Sold all grey items for "..CashToString(totalSellValue)..".", 1)
+				Log:NormalInfo("Sold all grey items for "..CashToString(totalSellValue)..".", 1)
 			end
 		end
 		if (AutoGearDB.AutoRepair == true) then
@@ -2076,17 +2071,17 @@ AutoGearFrame:SetScript("OnEvent", function (this, event, arg1, arg2, arg3, arg4
 						RepairAllItems(1) --guild repair
 						--fix this.  it doesn't see 0 yet, even if it repaired
 						if (GetRepairAllCost() == 0) then
-							AutoGearPrint("AutoGear: Repaired all items for "..cashString.." using guild funds.", 1)
+							Log:NormalInfo("Repaired all items for "..cashString.." using guild funds.", 1)
 						end
 					end
 				end
 			end
 			if (GetRepairAllCost() > 0) then
 				if (GetRepairAllCost() <= GetMoney()) then
-					AutoGearPrint("AutoGear: Repaired all items for "..cashString..".", 1)
+					Log:NormalInfo("Repaired all items for "..cashString..".", 1)
 					RepairAllItems()
 				elseif (GetRepairAllCost() > GetMoney()) then
-					AutoGearPrint("AutoGear: Not enough money to repair all items ("..cashString..").", 0)
+					Log:NormalInfo("Not enough money to repair all items ("..cashString..").", 0)
 				end
 			end
 		end
@@ -2094,7 +2089,6 @@ AutoGearFrame:SetScript("OnEvent", function (this, event, arg1, arg2, arg3, arg4
 		dataAvailable = 1
 		AutoGearFrame:UnregisterEvent(event)
 	elseif (event ~= "ADDON_LOADED") then
-		AutoGearPrint("AutoGear: event fired: "..event, 3)
 	end
 end)
 
@@ -2202,7 +2196,7 @@ function AutoGearScanBags(lootRollItemID, lootRollID, questRewardID)
 				equippedInfo = ReadItemInfo(i)
 				equippedScore = DetermineItemScore(equippedInfo, weighting)
 				if ((not best[i].equipped) and best[i].score > equippedScore) then
-					AutoGearPrint("AutoGear: "..(best[i].info.Name or "nothing").." ("..string.format("%.2f", best[i].score)..") was determined to be better than "..(equippedInfo.Name or "nothing").." ("..string.format("%.2f", equippedScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
+					Log:NormalInfo(""..(best[i].info.Name or "nothing").." ("..string.format("%.2f", best[i].score)..") was determined to be better than "..(equippedInfo.Name or "nothing").." ("..string.format("%.2f", equippedScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
 					PrintItem(best[i].info)
 					PrintItem(equippedInfo)
 					anythingBetter = 1
@@ -2252,7 +2246,7 @@ function AutoGearScanBags(lootRollItemID, lootRollID, questRewardID)
 					if (IsTwoHandEquipped()) then
 						local equippedMain = ReadItemInfo(16)
 						local mainScore = DetermineItemScore(equippedMain, weighting)
-						AutoGearPrint("AutoGear: "..(best[16].info.Name or "nothing").." ("..string.format("%.2f", best[16].score)..") combined with "..(best[17].info.Name or "nothing").." ("..string.format("%.2f", best[17].score)..") was determined to be better than "..(equippedMain.Name or "nothing").." ("..string.format("%.2f", mainScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
+						Log:NormalInfo(""..(best[16].info.Name or "nothing").." ("..string.format("%.2f", best[16].score)..") combined with "..(best[17].info.Name or "nothing").." ("..string.format("%.2f", best[17].score)..") was determined to be better than "..(equippedMain.Name or "nothing").." ("..string.format("%.2f", mainScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
 						PrintItem(best[16].info)
 						PrintItem(best[17].info)
 						PrintItem(equippedMain)
@@ -2261,7 +2255,7 @@ function AutoGearScanBags(lootRollItemID, lootRollID, questRewardID)
 						local mainScore = DetermineItemScore(equippedMain, weighting)
 						local equippedOff = ReadItemInfo(17)
 						local offScore = DetermineItemScore(equippedOff, weighting)
-						AutoGearPrint("AutoGear: "..(best[16].info.Name or "nothing").." ("..string.format("%.2f", best[16].score)..") combined with "..(best[17].info.Name or "nothing").." ("..string.format("%.2f", best[17].score)..") was determined to be better than "..(equippedMain.Name or "nothing").." ("..string.format("%.2f", mainScore)..") combined with "..(equippedOff.Name or "nothing").." ("..string.format("%.2f", offScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
+						Log:NormalInfo(""..(best[16].info.Name or "nothing").." ("..string.format("%.2f", best[16].score)..") combined with "..(best[17].info.Name or "nothing").." ("..string.format("%.2f", best[17].score)..") was determined to be better than "..(equippedMain.Name or "nothing").." ("..string.format("%.2f", mainScore)..") combined with "..(equippedOff.Name or "nothing").." ("..string.format("%.2f", offScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
 						PrintItem(best[16].info)
 						PrintItem(best[17].info)
 						PrintItem(equippedMain)
@@ -2272,7 +2266,7 @@ function AutoGearScanBags(lootRollItemID, lootRollID, questRewardID)
 					if (offSwap) then i = 17 end
 					local equippedInfo = ReadItemInfo(i)
 					local equippedScore = DetermineItemScore(equippedInfo, weighting)
-					AutoGearPrint("AutoGear: "..(best[i].info.Name or "nothing").." ("..string.format("%.2f", best[i].score)..") was determined to be better than "..(equippedInfo.Name or "nothing").." ("..string.format("%.2f", equippedScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
+					Log:NormalInfo(""..(best[i].info.Name or "nothing").." ("..string.format("%.2f", best[i].score)..") was determined to be better than "..(equippedInfo.Name or "nothing").." ("..string.format("%.2f", equippedScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
 					PrintItem(best[i].info)
 					PrintItem(equippedInfo)
 				end
@@ -2283,7 +2277,7 @@ function AutoGearScanBags(lootRollItemID, lootRollID, questRewardID)
 				local mainScore = DetermineItemScore(equippedMain, weighting)
 				local equippedOff = ReadItemInfo(17)
 				local offScore = DetermineItemScore(equippedOff, weighting)
-				AutoGearPrint("AutoGear: "..(best[19].info.Name or "nothing").." ("..string.format("%.2f", best[19].score)..") was determined to be better than "..(equippedMain.Name or "nothing").." ("..string.format("%.2f", mainScore)..") combined with "..(equippedOff.Name or "nothing").." ("..string.format("%.2f", offScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
+				Log:NormalInfo(""..(best[19].info.Name or "nothing").." ("..string.format("%.2f", best[19].score)..") was determined to be better than "..(equippedMain.Name or "nothing").." ("..string.format("%.2f", mainScore)..") combined with "..(equippedOff.Name or "nothing").." ("..string.format("%.2f", offScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
 				PrintItem(best[19].info)
 				PrintItem(equippedMain)
 				PrintItem(equippedOff)
@@ -2396,10 +2390,10 @@ function GetMainHandType()
 end
 
 function PrintItem(info)
-	if (info and info.Name) then AutoGearPrint("AutoGear:     "..info.Name..":", 2) end
+	if (info and info.Name) then Log:NormalInfo("    "..info.Name..":", 2) end
 	for k,v in pairs(info) do
 		if (k ~= "Name" and weighting[k]) then
-			AutoGearPrint("AutoGear:         "..k..": "..string.format("%.2f", v).." * "..weighting[k].." = "..string.format("%.2f", v * weighting[k]), 2)
+			Log:NormalInfo("        "..k..": "..string.format("%.2f", v).." * "..weighting[k].." = "..string.format("%.2f", v * weighting[k]), 2)
 		end
 	end
 end
@@ -2436,7 +2430,7 @@ function ReadItemInfo(inventoryID, lootRollID, container, slot, questRewardIndex
 				if (info.Name == "Retrieving item information") then
 					cannotUse = 1
 					reason = "(this item's tooltip is not yet available)"
-					--AutoGearPrint("AutoGear: Item's name says \"Retrieving item information\"; cannotUse: "..tostring(cannotUse), 0)
+					--Log:NormalInfo("Item's name says \"Retrieving item information\"; cannotUse: "..tostring(cannotUse), 0)
 				end
 			end
 			local multiplier = 1.0
@@ -2656,7 +2650,7 @@ function ReadItemInfo(inventoryID, lootRollID, container, slot, questRewardIndex
 		if PawnItemData then
 			info.PawnScaleName = AutoGearGetPawnScaleName()
 			info.PawnItemValue = PawnGetSingleValueFromItem(PawnItemData, info.PawnScaleName)
-		--else AutoGearPrint("AutoGear: PawnItemData was nil in ReadItemInfo", 3)
+		--else Log:NormalInfo("PawnItemData was nil in ReadItemInfo", 3)
 		end
 	end
 	
@@ -2668,7 +2662,7 @@ function ReadItemInfo(inventoryID, lootRollID, container, slot, questRewardIndex
 		reason = "(info.Slot was nil)"
 	end
 
-	--if (cannotUse) then AutoGearPrint("Cannot use "..(info.Name or (inventoryID and "inventoryID "..inventoryID or "(nil)")).." "..reason, 3) end
+	--if (cannotUse) then Log:NormalInfo("Cannot use "..(info.Name or (inventoryID and "inventoryID "..inventoryID or "(nil)")).." "..reason, 3) end
 	info.reason = reason
 	return info
 end
@@ -2905,12 +2899,12 @@ end
 function AutoGearScan()
 	if (not weighting) then AutoGearSetStatWeights() end
 	if (not weighting) then
-		AutoGearPrint("AutoGear: No weighting set for this class.", 0)
+		Log:NormalInfo("No weighting set for this class.", 0)
 		return
 	end
-	AutoGearPrint("AutoGear: Scanning bags for upgrades.", 2)
+	Log:NormalInfo("Scanning bags for upgrades.", 2)
 	if (not AutoGearScanBags()) then
-		AutoGearPrint("AutoGear: Nothing better was found", 1)
+		Log:NormalInfo("Nothing better was found", 1)
 	end
 end
 
@@ -2937,7 +2931,7 @@ function AutoGearTooltipHook(tooltip)
 	if (not weighting) then AutoGearSetStatWeights() end
 	local name, link = tooltip:GetItem()
 	if not link then
-		AutoGearPrint("AutoGear: No item link for "..name.." on "..tooltip:GetName(),3)
+		Log:NormalInfo("No item link for "..name.." on "..tooltip:GetName(),3)
 		return
 	end
 	local tooltipItemInfo = ReadItemInfo(nil,nil,nil,nil,nil,link)
@@ -2956,12 +2950,12 @@ function AutoGearTooltipHook(tooltip)
 		score = math.floor(score * 1000) / 1000
 		if (not comparing) then
 			equippedScore = math.floor(equippedScore * 1000) / 1000
-			tooltip:AddDoubleLine((tooltipItemInfo.PawnScaleName and "AutoGear: Pawn \""..PawnGetScaleColor(tooltipItemInfo.PawnScaleName)..tooltipItemInfo.PawnScaleName..FONT_COLOR_CODE_CLOSE.."\"" or "AutoGear").." score".." (equipped):",
+			tooltip:AddDoubleLine((tooltipItemInfo.PawnScaleName and "Pawn \""..PawnGetScaleColor(tooltipItemInfo.PawnScaleName)..tooltipItemInfo.PawnScaleName..FONT_COLOR_CODE_CLOSE.."\"" or "AutoGear").." score".." (equipped):",
 			equippedScore or "nil",
 			HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b,
 			HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
 		end
-		tooltip:AddDoubleLine((tooltipItemInfo.PawnScaleName and "AutoGear: Pawn \""..PawnGetScaleColor(tooltipItemInfo.PawnScaleName)..tooltipItemInfo.PawnScaleName..FONT_COLOR_CODE_CLOSE.."\"" or "AutoGear").." score"..(comparing and "" or " (this)")..":",
+		tooltip:AddDoubleLine((tooltipItemInfo.PawnScaleName and "Pawn \""..PawnGetScaleColor(tooltipItemInfo.PawnScaleName)..tooltipItemInfo.PawnScaleName..FONT_COLOR_CODE_CLOSE.."\"" or "AutoGear").." score"..(comparing and "" or " (this)")..":",
 		(((tooltipItemInfo.Usable == 1) and "" or (RED_FONT_COLOR_CODE.."(won't equip) "..FONT_COLOR_CODE_CLOSE))..score) or "nil",
 		HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b,
 		scoreColor.r, scoreColor.g, scoreColor.b)
@@ -2973,8 +2967,8 @@ function AutoGearTooltipHook(tooltip)
 		end
 		--[[
 		if AutoGearDB.AllowedVerbosity >= 3 then
-			AutoGearPrint("AutoGear: The score of the item in the current tooltip is "..tostring(score),3)
-			AutoGearPrint("AutoGear: Tooltip item info:",3)
+			Log:NormalInfo("The score of the item in the current tooltip is "..tostring(score),3)
+			Log:NormalInfo("Tooltip item info:",3)
 			AutoGearRecursivePrint(tooltipItemInfo)
 		end
 		]]
@@ -2993,9 +2987,9 @@ function AutoGearMain()
 			if (curAction.action == "roll") then
 				if (GetTime() > curAction.t) then
 					if (curAction.rollType == 1) then
-						AutoGearPrint("AutoGear: "..((AutoGearDB.AutoLootRoll == true) and "Rolling " or "If automatic loot rolling was enabled, would roll ").."NEED on "..curAction.info.Name..".", 1)
+						Log:NormalInfo(""..((AutoGearDB.AutoLootRoll == true) and "Rolling " or "If automatic loot rolling was enabled, would roll ").."NEED on "..curAction.info.Name..".", 1)
 					elseif (curAction.rollType == 2) then
-						AutoGearPrint("AutoGear: "..((AutoGearDB.AutoLootRoll == true) and "Rolling " or "If automatic loot rolling was enabled, would roll ").."GREED on "..curAction.info.Name..".", 1)
+						Log:NormalInfo(""..((AutoGearDB.AutoLootRoll == true) and "Rolling " or "If automatic loot rolling was enabled, would roll ").."GREED on "..curAction.info.Name..".", 1)
 					end
 					if ((AutoGearDB.AutoLootRoll ~= nil) and (AutoGearDB.AutoLootRoll == true)) then
 						RollOnLoot(curAction.rollID, curAction.rollType)
@@ -3006,23 +3000,23 @@ function AutoGearMain()
 				if (GetTime() > curAction.t) then
 					if ((AutoGearDB.Enabled ~= nil) and (AutoGearDB.Enabled == true)) then
 						if (not curAction.messageAlready) then
-							AutoGearPrint("AutoGear: Equipping "..curAction.info.Name..".", 2)
+							Log:NormalInfo("Equipping "..curAction.info.Name..".", 2)
 							curAction.messageAlready = 1
 						end
 						if (curAction.removeMainHandFirst) then
 							if (GetAllBagsNumFreeSlots() > 0) then
-								AutoGearPrint("AutoGear: Removing the two-hander to equip the off-hand", 1)
+								Log:NormalInfo("Removing the two-hander to equip the off-hand", 1)
 								PickupInventoryItem(GetInventorySlotInfo("MainHandSlot"))
 								PutItemInEmptyBagSlot()
 								curAction.removeMainHandFirst = nil
 								curAction.waitingOnEmptyMainHand = 1
 							else
-								AutoGearPrint("AutoGear: Cannot equip the off-hand because bags are too full to remove the two-hander", 0)
+								Log:NormalInfo("Cannot equip the off-hand because bags are too full to remove the two-hander", 0)
 								table.remove(futureAction, i)
 							end
 						elseif (curAction.waitingOnEmptyMainHand and GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot"))) then
 						elseif (curAction.waitingOnEmptyMainHand and not GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot"))) then
-							AutoGearPrint("AutoGear: Main hand detected to be clear.  Equipping now.", 1)
+							Log:NormalInfo("Main hand detected to be clear.  Equipping now.", 1)
 							curAction.waitingOnEmptyMainHand = nil
 						elseif (curAction.ensuringEquipped) then
 							if (GetInventoryItemID("player", curAction.replaceSlot) == GetContainerItemID(curAction.container, curAction.slot)) then
