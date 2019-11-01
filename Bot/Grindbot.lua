@@ -430,8 +430,14 @@ function Grindbot:InitiateAttack(Unit)
 
     if not UnitIsUnit(Unit.Pointer, "target") then ClearTarget() SpellStopCasting() TargetUnit(Unit.Pointer) end
 
-    if Unit.Distance < 9 and IsMounted() then
-        Dismount()
+    if Settings.CombatDistance > 9 then
+        if Unit.Distance <= Settings.CombatDistance and IsMounted() then
+            Dismount()
+        end
+    else
+        if Unit.Distance <= 9 then
+            Dismount()
+        end
     end
 
     if not UnitIsFacing('player', Unit.Pointer, 60) and DistanceToUnit(Unit.Pointer) < Settings.CombatDistance and Unit:LineOfSight() then
