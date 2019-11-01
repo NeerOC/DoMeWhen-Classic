@@ -32,8 +32,7 @@ function frame:Reader(event, ...)
         timeStamp, param, hideCaster, source, sourceName, sourceFlags, sourceRaidFlags, destination, destName, destFlags, destRaidFlags, spell, spellName, _, spellType = ...
         Locals()
         if spellType == "You can't mount here" then
-            SetMountBlackList()
-            print('Set mount blacklist')
+            AddMountBlackList()
         end
         DMW.Functions.AuraCache.Event(...)
         if source == Player.GUID or destination == Player.GUID then
