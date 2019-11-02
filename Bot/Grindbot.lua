@@ -297,7 +297,7 @@ function Grindbot:GetLoot()
     local px, py, pz = ObjectPosition('player')
     local lx, ly, lz = ObjectPosition(LootUnit)
     if LootUnit then
-        if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) >= 4 then
+        if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) >= 2 then
             Navigation:MoveTo(lx, ly, lz)
         else
             if IsMounted() then Dismount() end

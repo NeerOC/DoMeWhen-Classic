@@ -84,8 +84,9 @@ function LocalPlayer:GetEnemies(Yards)
         end
         return Table, Count
     end
+
     for _, v in ipairs(DMW.Enemies) do
-        if v.Distance <= Yards then
+        if v.Distance <= Yards and UnitCreatureTypeID(v.Pointer) ~= 11 then
             table.insert(Table, v)
             Count = Count + 1
         end
