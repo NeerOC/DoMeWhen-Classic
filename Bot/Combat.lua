@@ -7,6 +7,13 @@ local Log = DMW.Bot.Log
 
 local Juggling = false
 
+function Combat:CanSeeUnit(unit)
+    local los1 = TraceLine(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ + 1, unit.PosX, unit.PosY, unit.PosZ + 1, 0x100111)
+    local los1 = TraceLine(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ + 1.5, unit.PosX, unit.PosY, unit.PosZ + 1.5, 0x100111)
+    local los1 = TraceLine(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ + 2, unit.PosX, unit.PosY, unit.PosZ + 2, 0x100111)
+    return los1 == nil and los2 == nil and los3 == nil
+end
+
 function Combat:UnitNearHotspot(unit)
     local HotSpots = DMW.Settings.profile.Grind.HotSpots
     local ux, uy, uz = ObjectPosition(unit)
@@ -160,6 +167,8 @@ function Combat:InitiateAttack(Unit)
 
     if DMW.Settings.profile.Grind.CombatDistance > 9 then
         -- This is for ranged attackers
+        if DMW.Settings.profile.Grind.beHuman and self:DistanceToUnit(Unit.Pointer) > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 then JumpOrAscendStart() end end
+
         if not UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) < DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             FaceDirection(Unit.Pointer, true)
         end
@@ -169,11 +178,13 @@ function Combat:InitiateAttack(Unit)
         end
     else
         -- This is for melee attackers
+        if DMW.Settings.profile.Grind.beHuman and self:DistanceToUnit(Unit.Pointer) > DMW.Settings.profile.Grind.CombatDistance + 3 and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 then JumpOrAscendStart() end end
+
         if not UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             FaceDirection(Unit.Pointer, true)
         elseif UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             -- If random is true then if theres not adds around us, juggle the enemy(Strafe) 
-            if math.random(1, 1000) < 4 then
+            if math.random(1, 1000) < 4 and DMW.Settings.profile.Grind.beHuman then
                 if #DMW.Player:GetAttackable(20) <= 2 then self:JuggleEnemy() end
             end
         end

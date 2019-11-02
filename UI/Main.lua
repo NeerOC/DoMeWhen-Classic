@@ -160,6 +160,19 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.openClams = value
                     end
                 },
+                beHuman = {
+                    type = "toggle",
+                    order = 5,
+                    name = "Be Human",
+                    desc = "Will strafe and jump with good conditions.",
+                    width = 0.7,
+                    get = function()
+                        return DMW.Settings.profile.Grind.beHuman
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.beHuman = value
+                    end
+                }
             }
         },
         SecondTab = {
