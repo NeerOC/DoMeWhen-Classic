@@ -348,7 +348,7 @@ function Grindbot:SwapMode()
     end
 
     -- Loot out of combat?
-    if self:CanLoot() and not DMW.Player.Combat then
+    if self:CanLoot() and not Combat:SearchEnemy() then
         Grindbot.Mode = Modes.Looting
         return
     end
