@@ -354,6 +354,8 @@ function Grindbot:SwapMode()
 
     local Eating = AuraUtil.FindAuraByName('Food', 'player')
     local Drinking = AuraUtil.FindAuraByName('Drink', 'player')
+    local hasEnemy, theEnemy = Combat:SearchEnemy()
+    local hasAttackable, theAttackable = Combat:SearchAttackable()
 
     -- If we arent in combat and we arent standing (if our health is less than 95 percent and we currently have the eating buff or we are a caster and our mana iss less than 95 and we have the drinking buff) then set mode to rest.
     if not DMW.Player.Combat and not DMW.Player:Standing() and (DMW.Player.HP < 95 and Eating or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95 and Drinking) then
@@ -365,19 +367,19 @@ function Grindbot:SwapMode()
     end
 
     -- if we dont have skip aggro enabled in pathing and we arent mounted and we are in combat, fight back.
-    if not DMW.Settings.profile.Grind.SkipCombatOnTransport and not IsMounted() and Combat:SearchEnemy() then
+    if not DMW.Settings.profile.Grind.SkipCombatOnTransport and not IsMounted() and hasEnemy then
         Grindbot.Mode = Modes.Combat
         return
     end
 
     -- Loot out of combat?
-    if self:CanLoot() and not Combat:SearchEnemy() then
+    if self:CanLoot() and not hasEnemy then
         Grindbot.Mode = Modes.Looting
         return
     end
 
-    -- If we got dismounted and we are near hotspot and we have an enemy, attack it.
-    if not IsMounted() and Navigation:NearHotspot(150) and Combat:SearchEnemy() then
+    -- If we got dismounted and we are near hotspot and we have an enemy and its closer than 10 yrds, attack it.
+    if not IsMounted() and Navigation:NearHotspot(150) and hasEnemy and theEnemy.Distance < 10 then
         Grindbot.Mode = Modes.Combat
         return
     end
@@ -409,7 +411,7 @@ function Grindbot:SwapMode()
     end
 
     -- if we are in combat and we are near hotspot, set to combat mode.
-    if Combat:SearchEnemy() and Navigation:NearHotspot(150) then
+    if hasEnemy and Navigation:NearHotspot(150) then
         Grindbot.Mode = Modes.Combat
         return
     end
@@ -427,13 +429,13 @@ function Grindbot:SwapMode()
     end
 
     -- if we arent in combat and we arent casting and there are units around us, start grinding em.
-    if not DMW.Player.Combat and not DMW.Player.Casting and Combat:SearchAttackable() then
+    if not DMW.Player.Combat and not DMW.Player.Casting and hasAttackable then
         Grindbot.Mode = Modes.Grinding
         return
     end
 
     -- if there isnt anything to attack and we arent in combat then roam around till we find something.
-    if not Combat:SearchAttackable() and not DMW.Player.Combat then
+    if not hasAttackable and not DMW.Player.Combat then
         Grindbot.Mode = Modes.Roaming
     end
 end
