@@ -4,8 +4,10 @@ local Vendor = DMW.Bot.Vendor
 local Navigation = DMW.Bot.Navigation
 local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
-
 local TaskDone = false
+
+-- ETA: 2020
+local ItemSaveList = {'Black Pearl', 'Golden Pearl'}
 
 local slots = {
 	"RangedSlot",
