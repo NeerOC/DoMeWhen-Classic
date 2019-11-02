@@ -204,7 +204,7 @@ end
 function Grindbot:RotationToggle()
     if DMW.Settings.profile.Grind.SkipCombatOnTransport then
         -- if we have skip aggro enabled then if we are near hotspot(120 yards) enable rotation otherwise disable it.
-        if Navigation:NearHotspot(120) then
+        if Navigation:NearHotspot(200) then
             if DMW.Settings.profile.HUD.Rotation == 2 then
                 DMW.Settings.profile.HUD.Rotation = 1
             end
@@ -297,7 +297,7 @@ function Grindbot:GetLoot()
     local px, py, pz = ObjectPosition('player')
     local lx, ly, lz = ObjectPosition(LootUnit)
     if LootUnit then
-        if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) >= 5 then
+        if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) >= 4 then
             Navigation:MoveTo(lx, ly, lz)
         else
             if IsMounted() then Dismount() end
@@ -376,14 +376,15 @@ function Grindbot:SwapMode()
         return
     end
 
-    -- If we are on vendor task and the Vendor.lua has determined the task to be done then we set the vendor task to false.
-    if VendorTask and Vendor:TaskDone() then
-        VendorTask = false
+    -- If we got dismounted and we are near hotspot and we have an enemy, attack it.
+    if not IsMounted() and Navigation:NearHotspot(150) and Combat:SearchEnemy() then
+        Grindbot.Mode = Modes.Combat
         return
     end
 
-    if not IsMounted() and Navigation:NearHotspot(100) and Combat:SearchEnemy() then
-        Grindbot.Mode = Modes.Combat
+    -- If we are on vendor task and the Vendor.lua has determined the task to be done then we set the vendor task to false.
+    if VendorTask and Vendor:TaskDone() then
+        VendorTask = false
         return
     end
 
