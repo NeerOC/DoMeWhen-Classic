@@ -150,13 +150,15 @@ function Grindbot:Hotspotter()
         local rightmousedown, rightmousetoggle = GetKeyState(0x02)
         
         if shiftdown and altdown and leftmousedown and ctype then
-            self:RemoveClickSpot(cx, cy, cz)
-            Log:DebugInfo('Removed Hotspot [X] ' .. Round(cx) .. ' [Y] ' .. Round(cy) .. ' [Z] ' .. Round(cz) .. ' [Distance] ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)))
+            if self:RemoveClickSpot(cx, cy, cz) then
+                Log:DebugInfo('Removed Hotspot [X] ' .. Round(cx) .. ' [Y] ' .. Round(cy) .. ' [Z] ' .. Round(cz) .. ' [Distance] ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)))
+            end
         end
 
         if shiftdown and not altdown and leftmousedown and ctype then
-            self:AddClickSpot(cx, cy, cz)
-            Log:DebugInfo('Added Hotspot [X] ' .. Round(cx) .. ' [Y] ' .. Round(cy) .. ' [Z] ' .. Round(cz) .. ' [Distance] ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)))
+            if self:AddClickSpot(cx, cy, cz) then
+                Log:DebugInfo('Added Hotspot [X] ' .. Round(cx) .. ' [Y] ' .. Round(cy) .. ' [Z] ' .. Round(cz) .. ' [Distance] ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)))
+            end
         end
     end
 end
@@ -177,7 +179,9 @@ function Grindbot:RemoveClickSpot(x, y, z)
         C_Timer.After(0.3, function()
             PauseFlags.Hotspotting = false
         end)
+        return true
     end
+    return false
 end
 
 function Grindbot:AddClickSpot(xx, yy, zz)
@@ -186,7 +190,7 @@ function Grindbot:AddClickSpot(xx, yy, zz)
         local hx, hy, hz = DMW.Settings.profile.Grind.HotSpots[k].x, DMW.Settings.profile.Grind.HotSpots[k].y, DMW.Settings.profile.Grind.HotSpots[k].z
         local dist = GetDistanceBetweenPositions(xx, yy, zz, hx, hy, hz)
         if dist < DMW.Settings.profile.Grind.RoamDistance then
-            return
+            return false
         end
     end
     table.insert(DMW.Settings.profile.Grind.HotSpots, Spot)
@@ -194,6 +198,7 @@ function Grindbot:AddClickSpot(xx, yy, zz)
     C_Timer.After(0.3, function()
         PauseFlags.Hotspotting = false
     end)
+    return true
 end
 
 function Grindbot:Pulse()
