@@ -156,6 +156,7 @@ function Combat:InitiateAttack(Unit)
     if not UnitIsUnit(Unit.Pointer, "target") then ClearTarget() SpellStopCasting() TargetUnit(Unit.Pointer) end
 
     if DMW.Settings.profile.Grind.CombatDistance > 9 then
+        -- This is for ranged attackers
         if not UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) < DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             FaceDirection(Unit.Pointer, true)
         end
@@ -164,7 +165,8 @@ function Combat:InitiateAttack(Unit)
             Dismount()
         end
     else
-        if not UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) <= 9 and Unit:LineOfSight() then
+        -- This is for melee attackers
+        if not UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             FaceDirection(Unit.Pointer, true)
         end
         if self:DistanceToUnit(Unit.Pointer) <= 9 then
