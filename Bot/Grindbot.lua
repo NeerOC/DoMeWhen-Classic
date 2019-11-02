@@ -274,13 +274,13 @@ function Grindbot:GetLoot()
     local px, py, pz = ObjectPosition('player')
     local lx, ly, lz = ObjectPosition(LootUnit)
     if LootUnit then
-        if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) > 5 then
+        if GetDistanceBetweenPositions(px, py, pz, lx, ly, lz) >= 5 then
             Navigation:MoveTo(lx, ly, lz)
         else
             if IsMounted() then Dismount() end
             if not PauseFlags.Interacting then
                 for _, Unit in pairs(DMW.Units) do
-                    if Unit.Dead and Unit.Distance < 5 and UnitCanBeLooted(Unit.Pointer) then
+                    if Unit.Dead and Unit.Distance <= 5 and UnitCanBeLooted(Unit.Pointer) then
                         InteractUnit(Unit.Pointer)
                     end
                 end
