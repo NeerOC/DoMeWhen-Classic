@@ -5,6 +5,8 @@ local Navigation = DMW.Bot.Navigation
 local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 
+local Juggling = false
+
 function Combat:UnitNearHotspot(unit)
     local HotSpots = DMW.Settings.profile.Grind.HotSpots
     local ux, uy, uz = ObjectPosition(unit)
@@ -28,6 +30,7 @@ function Combat:IsGoodUnit(unit)
     local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
 
     local Flags = {
+        notPet = ObjectCreator(unit) == nil,
         noTargetOrMeOrPet = UnitTarget(unit) == nil or UnitIsUnit(UnitTarget(unit), 'player') or UnitIsUnit(UnitTarget(unit), 'pet'),
         isLevel = UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
         isPVP = not UnitIsPVP(unit),
@@ -168,9 +171,21 @@ function Combat:InitiateAttack(Unit)
         -- This is for melee attackers
         if not UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             FaceDirection(Unit.Pointer, true)
+        elseif UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
+            if math.random(1, 1000) < 4 then
+                self:JuggleEnemy()
+            end
         end
         if self:DistanceToUnit(Unit.Pointer) <= 9 then
             Dismount()
         end
+    end
+end
+
+function Combat:JuggleEnemy()
+    if not Juggling then
+        StrafeLeftStart()
+        C_Timer.After(math.random() + math.random(0.1, 0.3), function() StrafeLeftStop() StrafeRightStart() C_Timer.After(math.random() + math.random(0.1, 0.3), function() StrafeRightStop() Juggling = false end) end)
+        Juggling = true
     end
 end
