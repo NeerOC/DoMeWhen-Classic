@@ -121,7 +121,7 @@ function Combat:SearchEnemy()
     end
 
     for _, Unit in ipairs(Table) do
-        if Unit.Distance <= 10 and UnitAffectingCombat(Unit.Pointer) and string.find(Unit.Name, 'Totem') then
+        if Unit.Distance <= 8 and string.find(Unit.Name, 'Totem') then
             return true, Unit
         end
     end
