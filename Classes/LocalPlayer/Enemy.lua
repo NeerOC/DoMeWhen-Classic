@@ -78,7 +78,7 @@ function LocalPlayer:GetEnemies(Yards)
     local Table = {}
     local Count = 0
     if DMW.Settings.profile.HUD.Mode and DMW.Settings.profile.HUD.Mode == 2 then
-        if self.Target and self.Target.ValidEnemy and self.Target.Distance <= Yards then
+        if self.Target and self.Target.ValidEnemy and self.Target.Distance <= Yards and UnitCreatureTypeID(Unit.Pointer) ~= 11 then
             table.insert(Table, self.Target)
             Count = 1
         end
