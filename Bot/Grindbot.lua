@@ -2,6 +2,7 @@ local DMW = DMW
 DMW.Bot.Grindbot = {}
 local Navigation = DMW.Bot.Navigation
 local Vendor = DMW.Bot.Vendor
+local Combat = DMW.Bot.Combat
 local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 
@@ -10,10 +11,11 @@ local VendorTask = false
 local InformationOutput = false
 
 local PauseFlags = {
-    Nav = false,
     Interacting = false,
     Hotspotting = false,
-    Information = false
+    Information = false,
+    CantEat = false,
+    CantDrink = false
 }
 
 local Modes = {
@@ -31,10 +33,8 @@ Grindbot.Mode = 0
 local Settings = {
     RestHP = 60,
     RestMana = 50,
-    CombatDistance = 5,
     RepairPercent = 40,
     MinFreeSlots = 5,
-    RoamDistance = 100,
     BuyFood = false,
     BuyWater = false,
     FoodName = '',
@@ -42,52 +42,16 @@ local Settings = {
 }
 
 
--- < GRIND BOT FUNCTION
+-- < Global functions
 function ClearHotspot()
     for k in pairs (DMW.Settings.profile.Grind.HotSpots) do
         DMW.Settings.profile.Grind.HotSpots [k] = nil
     end
     Log:DebugInfo('Hotspots Cleared!')
 end
+-- Global functions />
 
-local function NearHotspot(unit)
-    local HotSpots = DMW.Settings.profile.Grind.HotSpots
-    local ux, uy, uz = ObjectPosition(unit)
-    for i = 1, #HotSpots do
-        local hx, hy, hz = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
-        if GetDistanceBetweenPositions(ux, uy, uz, hx, hy, hz) < Settings.RoamDistance then
-            return true
-        end
-    end
-    return false
-end
-
-function GoodUnit(unit)
-    local minLvl = UnitLevel('player') - DMW.Settings.profile.Grind.minNPCLevel
-    local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
-
-    local Flags = {
-        isLevel = UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
-        isPVP = not UnitIsPVP(unit),
-        inRange = NearHotspot(unit),
-        notDead = not UnitIsDeadOrGhost(unit),
-        notPlayer = not ObjectIsPlayer(unit),
-        canAttack = UnitCanAttack("player", unit),
-        givesExp = not UnitIsTapDenied(unit),
-        notPlayerPet = not ObjectIsPlayer(ObjectCreator(unit))
-    }
-
-    for k, v in pairs(Flags) do
-        if not v then
-            return false
-        end
-    end
-
-    return true
-end
-
-
-local function CanLoot()
+function Grindbot:CanLoot()
     if Grindbot:GetFreeSlots() == 0 then return false end
     if DMW.Player.Casting then return false end
 
@@ -114,13 +78,6 @@ local function CanLoot()
         end
     return false
 end
-
-local function DistanceToUnit(unit)
-    local px, py, pz = ObjectPosition('player')
-    local tx, ty, tz = ObjectPosition(unit)
-    return GetDistanceBetweenPositions(px,py,pz,tx,ty,tz)
-end
--- GRIND BOT FUNCTIONS />
 
 function Grindbot:GetFreeSlots()
 local totalfree=0
@@ -163,6 +120,7 @@ function Grindbot:DeleteTask()
 end
 
 function Grindbot:ClamTask()
+    -- instantly opens clams and deletes meat
     for BagID = 0, 4 do
         for BagSlot = 1, GetContainerNumSlots(BagID) do
             CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
@@ -244,15 +202,11 @@ function Grindbot:Pulse()
         self:LoadSettings()
         if DMW.Settings.profile.Grind.openClams then self:ClamTask() end
         self:DeleteTask()
-        Throttle = DMW.Time
-    end
-
-    if Throttle and (DMW.Time - Throttle > 0.1) then
-        Throttle = false
+        Throttle = true
+        C_Timer.After(0.1, function() Throttle = false end)
     end
     -- Do stuff with timer end />
 
-    --local Vendor = DMW.Bot.Vendor
     if DMW.Settings.profile.HUD.DrawVisuals == 1 then Navigation:DrawVisuals() end
 
     if DMW.Settings.profile.HUD.Grindbot == 1 then
@@ -281,7 +235,7 @@ function Grindbot:Pulse()
         end
 
         if Grindbot.Mode == Modes.Combat then
-            self:AttackCombat()
+            Combat:AttackCombat()
         end
 
         if Grindbot.Mode == Modes.Resting then
@@ -297,7 +251,7 @@ function Grindbot:Pulse()
         end
 
         if Grindbot.Mode == Modes.Grinding then
-            self:Grinding()
+            Combat:Grinding()
         end
 
         if Grindbot.Mode == Modes.Roaming then
@@ -311,7 +265,7 @@ function Grindbot:Pulse()
 end
 
 function Grindbot:GetLoot()
-    local hasLoot, LootUnit = CanLoot()
+    local hasLoot, LootUnit = self:CanLoot()
     local px, py, pz = ObjectPosition('player')
     local lx, ly, lz = ObjectPosition(LootUnit)
     if LootUnit then
@@ -337,137 +291,26 @@ function Grindbot:LootSlots()
     CloseLoot()
 end
 
-function Grindbot:SearchAttackable()
-    local Table = {}
-    for _, Unit in pairs(DMW.Units) do
-        table.insert(Table, Unit)
-    end
-    if #Table > 1 then
-        table.sort(
-            Table,
-            function(x, y)
-                return x.Distance < y.Distance
-            end
-        )
-    end
-
-    -- First get line of sight units if none exist, return the closest one. (Also make sure to priortize hostile enemies)
-    for _, Unit in ipairs(Table) do
-        if GoodUnit(Unit.Pointer) and Unit:LineOfSight() and UnitReaction(Unit.Pointer, 'player') < 4 then
-            return true, Unit
-        end
-    end
-
-    for _, Unit in ipairs(Table) do
-        if GoodUnit(Unit.Pointer) and Unit:LineOfSight() then
-            return true, Unit
-        end
-    end
-
-    for _, Unit in ipairs(Table) do
-        if GoodUnit(Unit.Pointer) then
-            return true, Unit
-        end
-    end
-    
-end
-
-function Grindbot:SearchEnemy()
-    local Table = {}
-    for _, Unit in pairs(DMW.Attackable) do
-        table.insert(Table, Unit)
-    end
-
-    if #Table > 1 then
-        table.sort(
-            Table,
-            function(x, y)
-                return x.HP < y.HP
-            end
-        )
-    end
-
-    -- First check if any of the mobs have mana (indicator of a caster) otherwise kill the one with lowest hp
-
-    for _, Unit in ipairs(Table) do
-        local PowerType = UnitPowerType(Unit.Pointer)
-        if Unit.Distance < 80 and (Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) and PowerType == 0 then
-            return true, Unit
-        end
-    end
-
-    if UnitExists('pet') then
-        for _, Unit in ipairs(Table) do
-            if Unit.Distance < 80 and ((Unit.Target == 'pet' and UnitAffectingCombat('pet')) or Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
-                return true, Unit
-            end
-        end
-    end
-
-    for _, Unit in ipairs(Table) do
-        if Unit.Distance < 80 and (Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
-            return true, Unit
-        end
-    end
-    
-end
-
 function Grindbot:Rest()
     local Eating = AuraUtil.FindAuraByName('Food', 'player')
     local Drinking = AuraUtil.FindAuraByName('Drink', 'player')
 
+    if DMW.Player.Moving then Navigation:StopMoving() end
+
     if Settings.FoodName ~= '' then
-        if DMW.Player.HP < Settings.RestHP and not Eating then
+        if DMW.Player.HP < Settings.RestHP and not Eating and not PauseFlags.CantEat then
             UseItemByName(Settings.FoodName)
+            PauseFlags.CantEat = true
+            C_Timer.After(0.3, function() PauseFlags.CantEat = false end)
         end
     end
 
     if Settings.WaterName ~= '' then
-        if UnitPower('player', 0) / UnitPowerMax('player', 0) * 100 < Settings.RestMana and not Drinking then
+        if UnitPower('player', 0) / UnitPowerMax('player', 0) * 100 < Settings.RestMana and not Drinking and not PauseFlags.CantDrink then
             UseItemByName(Settings.WaterName)
+            PauseFlags.CantDrink = true
+            C_Timer.After(0.3, function() PauseFlags.CantDrink = false end)
         end
-    end
-end
-
-function Grindbot:Grinding()
-    if not DMW.Player.Casting and not DMW.Player.Combat then
-        local hasEnemy, theEnemy = self:SearchAttackable()
-        if hasEnemy then 
-            self:InitiateAttack(theEnemy)
-        end
-    end
-end
-
-function Grindbot:AttackCombat()
-    local hasEnemy, theEnemy = self:SearchEnemy()
-    if hasEnemy then
-        self:InitiateAttack(theEnemy)
-    end
-end
-
-function Grindbot:InitiateAttack(Unit)
-    if (DistanceToUnit(Unit.Pointer) >= Settings.CombatDistance or not Unit:LineOfSight()) then
-        Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
-    else
-        if DMW.Player.Moving then
-            Navigation:StopMoving()
-        end
-    end
-
-    if not UnitIsUnit(Unit.Pointer, "target") then ClearTarget() SpellStopCasting() TargetUnit(Unit.Pointer) end
-
-    if Settings.CombatDistance > 9 then
-        if Unit.Distance <= Settings.CombatDistance and IsMounted() then
-            Dismount()
-        end
-    else
-        if Unit.Distance <= 9 then
-            Dismount()
-        end
-    end
-
-    if not UnitIsFacing('player', Unit.Pointer, 60) and DistanceToUnit(Unit.Pointer) < Settings.CombatDistance and Unit:LineOfSight() then
-        FaceDirection(Unit.Pointer, true)
     end
 end
 
@@ -490,13 +333,13 @@ function Grindbot:SwapMode()
     end
 
     -- if we dont have skip aggro enabled in pathing and we arent mounted and we are in combat, fight back.
-    if not DMW.Settings.profile.Grind.SkipCombatOnTransport and not IsMounted() and self:SearchEnemy() then
+    if not DMW.Settings.profile.Grind.SkipCombatOnTransport and not IsMounted() and Combat:SearchEnemy() then
         Grindbot.Mode = Modes.Combat
         return
     end
 
     -- Loot out of combat?
-    if CanLoot() and not DMW.Player.Combat then
+    if self:CanLoot() and not DMW.Player.Combat then
         Grindbot.Mode = Modes.Looting
         return
     end
@@ -528,7 +371,7 @@ function Grindbot:SwapMode()
     end
 
     -- if we are in combat and we are near hotspot, set to combat mode.
-    if self:SearchEnemy() and Navigation:NearHotspot(150) then
+    if Combat:SearchEnemy() and Navigation:NearHotspot(150) then
         Grindbot.Mode = Modes.Combat
         return
     end
@@ -546,13 +389,13 @@ function Grindbot:SwapMode()
     end
 
     -- if we arent in combat and we arent casting and there are units around us, start grinding em.
-    if not DMW.Player.Combat and not DMW.Player.Casting and self:SearchAttackable() then
+    if not DMW.Player.Combat and not DMW.Player.Casting and Combat:SearchAttackable() then
         Grindbot.Mode = Modes.Grinding
         return
     end
 
     -- if there isnt anything to attack and we arent in combat then roam around till we find something.
-    if not self:SearchAttackable() and not DMW.Player.Combat then
+    if not Combat:SearchAttackable() and not DMW.Player.Combat then
         Grindbot.Mode = Modes.Roaming
     end
 end
@@ -564,10 +407,6 @@ function Grindbot:LoadSettings()
 
     if Settings.BuyFood ~= DMW.Settings.profile.Grind.BuyFood then
         Settings.BuyFood = DMW.Settings.profile.Grind.BuyFood
-    end
-
-    if Settings.RoamDistance ~= DMW.Settings.profile.Grind.RoamDistance then
-        Settings.RoamDistance = DMW.Settings.profile.Grind.RoamDistance 
     end
 
     if Settings.RepairPercent ~= DMW.Settings.profile.Grind.RepairPercent then
@@ -584,10 +423,6 @@ function Grindbot:LoadSettings()
 
     if Settings.RestMana ~= DMW.Settings.profile.Grind.RestMana then
         Settings.RestMana = DMW.Settings.profile.Grind.RestMana
-    end
-
-    if Settings.CombatDistance ~= DMW.Settings.profile.Grind.CombatDistance then
-        Settings.CombatDistance = DMW.Settings.profile.Grind.CombatDistance
     end
 
     if Settings.FoodName ~= DMW.Settings.profile.Grind.FoodName then

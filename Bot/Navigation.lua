@@ -214,7 +214,7 @@ function Navigation:Movement()
 end
 
 function Navigation:MoveTo(toX, toY, toZ)
-    if EndX and GetDistanceBetweenPositions(toX, toY, toZ, EndX, EndY, EndZ) < 1 then return end
+    if EndX and GetDistanceBetweenPositions(toX, toY, toZ, EndX, EndY, EndZ) < 0.5 then return end
 
     pathIndex = 1
     NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, false)
@@ -251,10 +251,12 @@ function Navigation:Mount()
         else
             if Spell.SummonMount and Spell.SummonMount:IsReady() and not Mounting then
                 Spell.SummonMount:Cast(DMW.Player)
+                self:ResetPath()
                 Mounting = true
                 C_Timer.After(4, function() Mounting = false end)
             else
                 UseItemByName(DMW.Settings.profile.Grind.MountName)
+                self:ResetPath()
             end
         end
     end

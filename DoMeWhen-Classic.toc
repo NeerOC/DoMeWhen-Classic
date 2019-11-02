@@ -63,6 +63,7 @@ Helpers\Swing.lua
 Bot\Log.lua
 Bot\Navigation.lua
 Bot\Vendor.lua
+Bot\Combat.lua
 Bot\Grindbot.lua
 Bot\AutoGear.lua
 
