@@ -176,7 +176,9 @@ function Navigation:GetActualGround(x, y, z)
 end
 
 function Navigation:Movement()
-    if NavPath and not DMW.Player.Casting then
+    local NoMoveFlags = bit.bor(DMW.Enums.UnitFlags.Stunned, DMW.Enums.UnitFlags.Confused, DMW.Enums.UnitFlags.Pacified, DMW.Enums.UnitFlags.Feared)
+
+    if NavPath and not DMW.Player.Casting and not DMW.Player:HasFlag(NoMoveFlags) and not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Root) then
         DestX = NavPath[pathIndex][1]
         DestY = NavPath[pathIndex][2]
         DestZ = NavPath[pathIndex][3]

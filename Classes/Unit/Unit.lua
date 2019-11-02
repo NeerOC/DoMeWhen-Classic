@@ -133,6 +133,18 @@ function Unit:GetEnemies(Yards, TTD)
     return Table, Count
 end
 
+function Unit:GetAttackable(Yards)
+    local Table = {}
+    local Count = 0
+    for _, Unit in pairs(DMW.Attackable) do
+        if self:GetDistance(Unit) <= Yards then
+            table.insert(Table, Unit)
+            Count = Count + 1
+        end
+    end
+    return Table, Count
+end
+
 function Unit:GetFriends(Yards, HP)
     local Table = {}
     local Count = 0
