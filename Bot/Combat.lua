@@ -174,7 +174,7 @@ function Combat:InitiateAttack(Unit)
         elseif UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             -- If random is true then if theres not adds around us, juggle the enemy(Strafe) 
             if math.random(1, 1000) < 4 then
-                if #DMW.Player:GetAttackable(20) <= 1 then self:JuggleEnemy() end
+                if #DMW.Player:GetAttackable(20) <= 2 then self:JuggleEnemy() end
             end
         end
         if self:DistanceToUnit(Unit.Pointer) <= 9 then
