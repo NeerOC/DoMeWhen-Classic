@@ -201,6 +201,26 @@ function Grindbot:AddClickSpot(xx, yy, zz)
     return true
 end
 
+function Grindbot:RotationToggle()
+    if DMW.Settings.profile.Grind.SkipCombatOnTransport then
+        -- if we have skip aggro enabled then if we are near hotspot(120 yards) enable rotation otherwise disable it.
+        if Navigation:NearHotspot(120) then
+            if DMW.Settings.profile.HUD.Rotation == 2 then
+                DMW.Settings.profile.HUD.Rotation = 1
+            end
+        else
+            if DMW.Settings.profile.HUD.Rotation == 1 then
+                DMW.Settings.profile.HUD.Rotation = 2
+            end
+        end
+    else
+        -- If we dont have skip aggro then Enable rotation if its disabled
+        if DMW.Settings.profile.HUD.Rotation == 2 then
+            DMW.Settings.profile.HUD.Rotation = 1
+        end
+    end
+end
+
 function Grindbot:Pulse()
     -- < Do Stuff With Timer
     if not Throttle then
@@ -223,6 +243,9 @@ function Grindbot:Pulse()
             end
             return
         end
+
+        -- Call the enable and disable function of rotation when going to and from vendor.
+        self:RotationToggle()
 
         if not InformationOutput then
             Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]') 
@@ -359,7 +382,7 @@ function Grindbot:SwapMode()
         return
     end
 
-    if not IsMounted() and Navigation:NearHotspot(100) and self:SearchEnemy() then
+    if not IsMounted() and Navigation:NearHotspot(100) and Combat:SearchEnemy() then
         Grindbot.Mode = Modes.Combat
         return
     end
