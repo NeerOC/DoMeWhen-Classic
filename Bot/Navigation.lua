@@ -127,6 +127,19 @@ local function GetDistanceToPosition(x, y, z)
     return GetDistanceBetweenPositions(px, py, pz, x, y, z)
 end
 
+function Navigation:NearHotspot(yrds)
+    local HotSpots = DMW.Settings.profile.Grind.HotSpots
+    local px, py, pz = ObjectPosition('player')
+    for i = 1, #HotSpots do
+        local hx, hy, hz = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
+        if GetDistanceBetweenPositions(px, py, pz, hx, hy, hz) < yrds then
+            return true
+        end
+    end
+    return false
+end
+
+
 function Navigation:DrawVisuals()
     LibDraw.SetWidth(4)
     LibDraw.SetColorRaw(0, 128, 128, 100)
@@ -196,7 +209,6 @@ function Navigation:Movement()
                 lastX = DMW.Player.PosX
                 lastY = DMW.Player.PosY
                 lastZ = DMW.Player.PosZ end
-            
         end
     end
 end
@@ -223,12 +235,11 @@ function Navigation:Roam()
             HotSpotIndex = HotSpotIndex + 1
         end
     end
-
     self:MoveTo(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z)
 end
 
 function Navigation:CanMount()
-    return DMW.Settings.profile.Grind.UseMount and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist()
+    return DMW.Settings.profile.Grind.UseMount and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
 end
 
 function Navigation:Mount()

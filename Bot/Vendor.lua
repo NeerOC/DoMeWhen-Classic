@@ -207,7 +207,7 @@ function Vendor:DoTask()
 
             if GossipFrame:IsVisible() and not Bools.Talking then
                 SelectGossipOption(self:GetVendorOption()) Bools.Talking = true
-                C_Timer.After(2, function() Bools.Talking = false end)
+                C_Timer.After(2, function() Bools.Talking = false GossipFrameCloseButton:Click() end)
             end
 
             if not MerchantFrame:IsVisible() and not GossipFrame:IsVisible() and not Bools.Interacted and RepairNPC then
@@ -232,7 +232,7 @@ function Vendor:DoTask()
 
             if GossipFrame:IsVisible() and not Bools.Talking then
                 SelectGossipOption(self:GetVendorOption()) Bools.Talking = true
-                C_Timer.After(2, function() Bools.Talking = false end)
+                C_Timer.After(2, function() Bools.Talking = false GossipFrameCloseButton:Click() end)
             end
 
             if not MerchantFrame:IsVisible() and not GossipFrame:IsVisible() and not Bools.Interacted and FoodNPC then
@@ -257,7 +257,7 @@ function Vendor:DoTask()
 
             if GossipFrame:IsVisible() and not Bools.Talking then
                 SelectGossipOption(self:GetVendorOption()) Bools.Talking = true
-                C_Timer.After(2, function() Bools.Talking = false end)
+                C_Timer.After(2, function() Bools.Talking = false GossipFrameCloseButton:Click() end)
             end
 
             if not MerchantFrame:IsVisible() and not GossipFrame:IsVisible() and not Bools.Interacted and FoodNPC then

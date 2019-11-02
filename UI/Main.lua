@@ -451,13 +451,13 @@ local GrindbotOptionsTable = {
                     type = "toggle",
                     order = 3,
                     name = "Skip Aggro",
-                    desc = "Do you wanna ignore monsters if we need to do vendor task?",
+                    desc = "Do you wanna ignore monsters if we aren't near the designated hotspots?",
                     width = 0.6,
                     get = function()
-                        return DMW.Settings.profile.Grind.SkipCombatWhileMounted
+                        return DMW.Settings.profile.Grind.SkipCombatOnTransport
                     end,
                     set = function(info, value)
-                        DMW.Settings.profile.Grind.SkipCombatWhileMounted = value
+                        DMW.Settings.profile.Grind.SkipCombatOnTransport = value
                     end
                 },
                 GeneralHeader = {

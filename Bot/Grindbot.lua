@@ -320,7 +320,7 @@ function Grindbot:GetLoot()
             if not PauseFlags.Interacting then
                 ObjectInteract(LootUnit)
                 PauseFlags.Interacting = true
-                C_Timer.After(0.05, function() PauseFlags.Interacting = false end)
+                C_Timer.After(0.1, function() PauseFlags.Interacting = false end)
             end
         end
     end
@@ -386,6 +386,7 @@ function Grindbot:SearchEnemy()
     end
 
     -- First check if any of the mobs have mana (indicator of a caster) otherwise kill the one with lowest hp
+
     for _, Unit in ipairs(Table) do
         local PowerType = UnitPowerType(Unit.Pointer)
         if Unit.Distance < 80 and (Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) and PowerType == 0 then
@@ -393,8 +394,15 @@ function Grindbot:SearchEnemy()
         end
     end
 
+    if UnitExists('pet') then
+        for _, Unit in ipairs(Table) do
+            if Unit.Distance < 80 and ((Unit.Target == 'pet' and UnitAffectingCombat('pet')) or Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
+                return true, Unit
+            end
+        end
+    end
+
     for _, Unit in ipairs(Table) do
-        local PowerType = UnitPowerType(Unit.Pointer)
         if Unit.Distance < 80 and (Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
             return true, Unit
         end
@@ -470,61 +478,79 @@ function Grindbot:SwapMode()
     local Eating = AuraUtil.FindAuraByName('Food', 'player')
     local Drinking = AuraUtil.FindAuraByName('Drink', 'player')
 
-    if not UnitAffectingCombat('player') and not DMW.Player:Standing() and (DMW.Player.HP < 95 and Eating or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95 and Drinking) then
+    -- If we arent in combat and we arent standing (if our health is less than 95 percent and we currently have the eating buff or we are a caster and our mana iss less than 95 and we have the drinking buff) then set mode to rest.
+    if not DMW.Player.Combat and not DMW.Player:Standing() and (DMW.Player.HP < 95 and Eating or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95 and Drinking) then
         Grindbot.Mode = Modes.Resting
         return
     else
+        -- If the above is not true and we arent standing, we stand.
         if not DMW.Player:Standing() then DoEmote('STAND') end
     end
 
-    if not DMW.Settings.profile.Grind.SkipCombatWhileMounted and not IsMounted() and self:SearchEnemy() then
+    -- if we dont have skip aggro enabled in pathing and we arent mounted and we are in combat, fight back.
+    if not DMW.Settings.profile.Grind.SkipCombatOnTransport and not IsMounted() and self:SearchEnemy() then
         Grindbot.Mode = Modes.Combat
         return
     end
 
+    -- Loot out of combat?
     if CanLoot() and not DMW.Player.Combat then
         Grindbot.Mode = Modes.Looting
         return
     end
 
+    -- If we are on vendor task and the Vendor.lua has determined the task to be done then we set the vendor task to false.
     if VendorTask and Vendor:TaskDone() then
         VendorTask = false
         return
     end
 
+    -- Force vendor while vendor task is true, this is set in Vendor.lua file to make sure we complete it all.
     if VendorTask then
         Grindbot.Mode = Modes.Vendor
         return
     end
 
+    -- If our durability is less than we decided or our bag slots is less than decided, vendor task :)
     if (Vendor:GetDurability() <= Settings.RepairPercent or self:GetFreeSlots() < Settings.MinFreeSlots) then
         Grindbot.Mode = Modes.Vendor
         if not VendorTask then VendorTask = true end
         return
     end
 
+    -- if we chose to buy food and we dont have any food, if we chose to buy water and we dont have any water, Vendor task.
     if (Settings.BuyFood and not self:HasItem(Settings.FoodName)) or (Settings.BuyWater and not self:HasItem(Settings.WaterName)) then
         Grindbot.Mode = Modes.Vendor
         if not VendorTask then VendorTask = true end
         return
     end
 
-    if not IsMounted() and self:SearchEnemy()  then
+    -- if we are in combat and we are near hotspot, set to combat mode.
+    if self:SearchEnemy() and Navigation:NearHotspot(150) then
         Grindbot.Mode = Modes.Combat
         return
     end
 
-    if DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana then
+    -- If we are not in combat and not mounted and our health is less than we decided or if we use mana and its less than decided do the rest function.
+    if not DMW.Player.Combat and not IsMounted() and (DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana) then
         Grindbot.Mode = Modes.Resting
         return
     end
 
+    -- if we are not within 150 yards of the hotspots then walk to them no matter what. (IF WE CHOSE THE SKIP AGGRO SETTING)
+    if not Navigation:NearHotspot(150) and DMW.Settings.profile.Grind.SkipCombatOnTransport then
+        Grindbot.Mode = Modes.Roaming
+        return
+    end
+
+    -- if we arent in combat and we arent casting and there are units around us, start grinding em.
     if not DMW.Player.Combat and not DMW.Player.Casting and self:SearchAttackable() then
         Grindbot.Mode = Modes.Grinding
         return
     end
 
-    if not DMW.Player.Combat and not self:SearchAttackable() then
+    -- if there isnt anything to attack and we arent in combat then roam around till we find something.
+    if not self:SearchAttackable() and not DMW.Player.Combat then
         Grindbot.Mode = Modes.Roaming
     end
 end
