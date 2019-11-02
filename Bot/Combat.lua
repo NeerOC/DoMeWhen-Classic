@@ -109,29 +109,31 @@ function Combat:SearchEnemy()
     end
 
     -- First check if there are totems then any of the mobs have mana (indicator of a caster) otherwise kill the one with lowest hp
-    for _, Unit in ipairs(Table) do
-        if Unit.Distance <= 6 and UnitCreatureTypeID(Unit.Pointer) == 11 then
-            return true, Unit
-        end
-    end
-
-    for _, Unit in ipairs(Table) do
-        local PowerType = UnitPowerType(Unit.Pointer)
-        if Unit.Distance < 80 and (Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) and PowerType == 0 then
-            return true, Unit
-        end
-    end
-
-    if UnitExists('pet') then
+    if DMW.Player.Combat then
         for _, Unit in ipairs(Table) do
-            if Unit.Distance < 80 and ((Unit.Target == 'pet' and UnitAffectingCombat('pet')) or Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
+            if Unit.Distance <= 6 and UnitCreatureTypeID(Unit.Pointer) == 11 then
                 return true, Unit
             end
         end
     end
 
     for _, Unit in ipairs(Table) do
-        if Unit.Distance < 80 and (Unit:UnitThreatSituation() > 0 or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
+        local PowerType = UnitPowerType(Unit.Pointer)
+        if Unit.Distance < 80 and PowerType == 0 and (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
+            return true, Unit
+        end
+    end
+
+    if UnitExists('pet') then
+        for _, Unit in ipairs(Table) do
+            if Unit.Distance < 80 and ((UnitIsUnit(Unit.Target, 'pet') and UnitAffectingCombat('pet'))) then
+                return true, Unit
+            end
+        end
+    end
+
+    for _, Unit in ipairs(Table) do
+        if Unit.Distance < 80 and (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer)) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer)) then
             return true, Unit
         end
     end
