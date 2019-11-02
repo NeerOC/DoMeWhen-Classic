@@ -138,7 +138,7 @@ function Grindbot:ClamTask()
         end
     end
 
-    LootSlots()
+    self:LootSlots()
 end
 
 function Grindbot:Hotspotter()
