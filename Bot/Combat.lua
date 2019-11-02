@@ -111,7 +111,7 @@ function Combat:SearchEnemy()
     -- First check if there are totems then any of the mobs have mana (indicator of a caster) otherwise kill the one with lowest hp
     if DMW.Player.Combat then
         for _, Unit in ipairs(Table) do
-            if Unit.Distance <= 6 and UnitCreatureTypeID(Unit.Pointer) == 11 then
+            if Unit.Distance <= 8 and UnitCreatureTypeID(Unit.Pointer) == 11 then
                 return true, Unit
             end
         end
