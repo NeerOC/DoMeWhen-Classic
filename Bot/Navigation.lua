@@ -132,8 +132,10 @@ function Navigation:NearHotspot(yrds)
     local px, py, pz = ObjectPosition('player')
     for i = 1, #HotSpots do
         local hx, hy, hz = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
-        if GetDistanceBetweenPositions(px, py, pz, hx, hy, hz) < yrds then
-            return true
+        if hx then
+            if GetDistanceBetweenPositions(px, py, pz, hx, hy, hz) < yrds then
+                return true
+            end
         end
     end
     return false
