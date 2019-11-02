@@ -210,7 +210,7 @@ function Vendor:DoTask()
                 C_Timer.After(2, function() Bools.Talking = false GossipFrameCloseButton:Click() end)
             end
 
-            if not MerchantFrame:IsVisible() and not GossipFrame:IsVisible() and not Bools.Interacted and RepairNPC then
+            if not MerchantFrame:IsVisible() and not GossipFrame:IsVisible() and not Bools.Interacted and RepairNPC and not DMW.Player.Moving then
                 ObjectInteract(RepairNPC) Bools.Interacted = true
                 C_Timer.After(1, function() Bools.Interacted = false end)
             end
@@ -235,7 +235,7 @@ function Vendor:DoTask()
                 C_Timer.After(2, function() Bools.Talking = false GossipFrameCloseButton:Click() end)
             end
 
-            if not MerchantFrame:IsVisible() and not GossipFrame:IsVisible() and not Bools.Interacted and FoodNPC then
+            if not MerchantFrame:IsVisible() and not GossipFrame:IsVisible() and not Bools.Interacted and FoodNPC and not DMW.Player.Moving then
                 ObjectInteract(FoodNPC) Bools.Interacted = true
                 C_Timer.After(1, function() Bools.Interacted = false end)
             end
@@ -260,7 +260,7 @@ function Vendor:DoTask()
                 C_Timer.After(2, function() Bools.Talking = false GossipFrameCloseButton:Click() end)
             end
 
-            if not MerchantFrame:IsVisible() and not GossipFrame:IsVisible() and not Bools.Interacted and FoodNPC then
+            if not MerchantFrame:IsVisible() and not GossipFrame:IsVisible() and not Bools.Interacted and FoodNPC and not DMW.Player.Moving then
                 ObjectInteract(FoodNPC) Bools.Interacted = true
                 C_Timer.After(1, function() Bools.Interacted = false end)
             end
