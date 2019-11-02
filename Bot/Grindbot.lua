@@ -359,6 +359,11 @@ function Grindbot:SwapMode()
         return
     end
 
+    if not IsMounted() and Navigation:NearHotspot(100) and self:SearchEnemy() then
+        Grindbot.Mode = Modes.Combat
+        return
+    end
+
     -- Force vendor while vendor task is true, this is set in Vendor.lua file to make sure we complete it all.
     if VendorTask then
         Grindbot.Mode = Modes.Vendor
