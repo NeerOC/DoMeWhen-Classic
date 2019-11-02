@@ -125,7 +125,7 @@ function Unit:GetEnemies(Yards, TTD)
     local Count = 0
     TTD = TTD or 0
     for _, Unit in pairs(DMW.Enemies) do
-        if self:GetDistance(Unit) <= Yards and Unit.TTD >= TTD then
+        if self:GetDistance(Unit) <= Yards and Unit.TTD >= TTD and UnitCreatureTypeID(Unit.Pointer) ~= 11 then
             table.insert(Table, Unit)
             Count = Count + 1
         end
