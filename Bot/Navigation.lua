@@ -282,11 +282,10 @@ end
 function Navigation:MoveToCorpse()
     if not UnitIsGhost('player') then RepopMe() return end
 
-    if not StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() then
-        local PosX, PosY, PosZ = GetCorpsePosition()
-        self:MoveTo(PosX, PosY, PosZ)
-        return
-    else
+    local PosX, PosY, PosZ = GetCorpsePosition()
+    self:MoveTo(PosX, PosY, PosZ)
+
+    if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() then
         StaticPopup1Button1:Click()
         NavPath = nil
         return
