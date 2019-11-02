@@ -28,6 +28,7 @@ function Combat:IsGoodUnit(unit)
     local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
 
     local Flags = {
+        noTargetOrMeOrPet = UnitTarget(unit) == nil or UnitIsUnit(UnitTarget(unit), 'player') or UnitIsUnit(UnitTarget(unit), 'pet'),
         isLevel = UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
         isPVP = not UnitIsPVP(unit),
         inRange = self:UnitNearHotspot(unit),
@@ -97,7 +98,12 @@ function Combat:SearchEnemy()
         )
     end
 
-    -- First check if any of the mobs have mana (indicator of a caster) otherwise kill the one with lowest hp
+    -- First check if there are totems then any of the mobs have mana (indicator of a caster) otherwise kill the one with lowest hp
+    for _, Unit in ipairs(Table) do
+        if Unit.Distance <= 6 and UnitCreatureTypeID(Unit.Pointer) == 11 then
+            return true, Unit
+        end
+    end
 
     for _, Unit in ipairs(Table) do
         local PowerType = UnitPowerType(Unit.Pointer)
@@ -119,16 +125,10 @@ function Combat:SearchEnemy()
             return true, Unit
         end
     end
-
-    for _, Unit in ipairs(Table) do
-        if Unit.Distance <= 8 and string.find(Unit.Name, 'Totem') then
-            return true, Unit
-        end
-    end
 end
 
 function Combat:Grinding()
-    if not DMW.Player.Casting and not DMW.Player.Combat then
+    if not DMW.Player.Casting then
         local hasEnemy, theEnemy = self:SearchAttackable()
         if hasEnemy then 
             self:InitiateAttack(theEnemy)
