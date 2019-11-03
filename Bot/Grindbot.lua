@@ -322,6 +322,7 @@ end
 function Grindbot:LootSlots()
     for i = GetNumLootItems(), 1, -1 do
         LootSlot(i)
+        ConfirmLootSlot(i)
     end
     CloseLoot()
 end
