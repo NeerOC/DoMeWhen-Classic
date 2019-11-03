@@ -59,9 +59,9 @@ function SetFoodVendor()
     end
 end
 
-function ArrayContains(arr, value)
+function ArrayContains(arr, name)
     for key, value in pairs(arr) do
-        if value == value then 
+        if value == name then 
             return true end
      end
      return false
@@ -79,8 +79,10 @@ function Vendor:CanSell(maxrarity)
             CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
             if CurrentItemLink then
                 name, void, Rarity, void, void, itype, void, void, void, void, ItemPrice = GetItemInfo(CurrentItemLink)
-                if not ArrayContains(ItemSaveList, name) and Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
-                    return true
+                if Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
+                    if not ArrayContains(ItemSaveList, name) then
+                        return true
+                    end
                 end
             end
         end
@@ -94,8 +96,10 @@ function Vendor:SellAll(maxrarity)
             CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
             if CurrentItemLink then
                 name, void, Rarity, void, void, itype, void, void, void, void, ItemPrice = GetItemInfo(CurrentItemLink)
-                if not ArrayContains(ItemSaveList, name) and Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
-                    UseContainerItem(BagID, BagSlot)
+                if Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
+                    if not ArrayContains(ItemSaveList, name) then
+                        UseContainerItem(BagID, BagSlot)
+                    end
                 end
             end
         end

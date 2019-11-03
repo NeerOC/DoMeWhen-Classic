@@ -32,6 +32,7 @@ function Unit:Update()
         DMW.Tables.AuraUpdate[self.Pointer] = nil
     end
     self.Distance = self:GetDistance()
+    self.NavDistance = self:GetNavDistance()
     
     self.Dead = UnitIsDeadOrGhost(self.Pointer)
     if RealMobHealth_CreatureHealthCache and self.ObjectID and RealMobHealth_CreatureHealthCache[self.ObjectID .. "-" .. self.Level] then
