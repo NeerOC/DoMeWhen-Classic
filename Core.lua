@@ -96,8 +96,7 @@ f:SetScript(
                     end
                 end
             end
-            DMW.Bot.Grindbot:Pulse()
-            DMW.Bot.Navigation:Movement()
+            if InitializeNavigation then DMW.Bot.Grindbot:Pulse() end
             DMW.Timers.OM.Total = DMW.Timers.OM.Total and (DMW.Timers.OM.Total + DMW.Timers.OM.Last) or DMW.Timers.OM.Last
             DMW.Timers.QuestieHelper.Total = DMW.Timers.QuestieHelper.Total and (DMW.Timers.QuestieHelper.Total + DMW.Timers.QuestieHelper.Last) or DMW.Timers.QuestieHelper.Last
             DMW.Timers.Trackers.Total = DMW.Timers.Trackers.Total and (DMW.Timers.Trackers.Total + DMW.Timers.Trackers.Last) or DMW.Timers.Trackers.Last

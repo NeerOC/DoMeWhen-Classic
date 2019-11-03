@@ -60,8 +60,8 @@ function SetFoodVendor()
 end
 
 function ArrayContains(arr, value)
-    for key, value in pairs(tbl) do
-        if value == item then 
+    for key, value in pairs(arr) do
+        if value == value then 
             return true end
      end
      return false
