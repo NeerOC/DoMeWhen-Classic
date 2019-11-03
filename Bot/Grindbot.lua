@@ -73,7 +73,7 @@ function Grindbot:CanLoot()
     
         for _, Unit in ipairs(Table) do
             if Unit.Distance <= 50 then
-                return true, Unit.Pointer
+                return true, Unit
             end
         end
     return false
@@ -301,9 +301,8 @@ function Grindbot:GetLoot()
     local lx, ly, lz = ObjectPosition(LootUnit)
 
     if LootUnit then
-        local lootDistance = GetDistanceBetweenPositions(px, py, pz, lx, ly, lz)
-        if lootDistance >= 5 then
-            Navigation:MoveTo(lx, ly, lz)
+        if LootUnit.Distance >= 5 then
+            Navigation:MoveTo(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ)
         else
             if IsMounted() then Dismount() end
             if not PauseFlags.Interacting then

@@ -92,7 +92,9 @@ end
 function Combat:SearchEnemy()
     local Table = {}
     for _, Unit in pairs(DMW.Attackable) do
-        table.insert(Table, Unit)
+        if Unit.Distance < 50 then
+            table.insert(Table, Unit)
+        end
     end
 
     if #Table > 1 then
@@ -115,21 +117,21 @@ function Combat:SearchEnemy()
 
     for _, Unit in ipairs(Table) do
         local PowerType = UnitPowerType(Unit.Pointer)
-        if Unit.Distance < 80 and PowerType == 0 and (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
+        if PowerType == 0 and (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
             return true, Unit
         end
     end
 
     if UnitExists('pet') then
         for _, Unit in ipairs(Table) do
-            if Unit.Distance < 80 and ((UnitIsUnit(Unit.Target, 'pet') and UnitAffectingCombat('pet'))) then
+            if ((UnitIsUnit(Unit.Target, 'pet') and UnitAffectingCombat('pet'))) then
                 return true, Unit
             end
         end
     end
 
     for _, Unit in ipairs(Table) do
-        if Unit.Distance < 80 and (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer)) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer)) then
+        if (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer)) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer)) then
             return true, Unit
         end
     end
