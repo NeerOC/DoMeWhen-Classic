@@ -332,13 +332,13 @@ function Grindbot:Rest()
     local Eating = AuraUtil.FindAuraByName('Food', 'player')
     local Drinking = AuraUtil.FindAuraByName('Drink', 'player')
 
-    if DMW.Player.Moving then Navigation:StopMoving() end
+    if DMW.Player.Moving then Navigation:StopMoving() return end
 
     if Settings.FoodName ~= '' then
         if DMW.Player.HP < Settings.RestHP and not Eating and not PauseFlags.CantEat then
             UseItemByName(Settings.FoodName)
             PauseFlags.CantEat = true
-            C_Timer.After(0.3, function() PauseFlags.CantEat = false end)
+            C_Timer.After(1, function() PauseFlags.CantEat = false end)
         end
     end
 
@@ -346,7 +346,7 @@ function Grindbot:Rest()
         if UnitPower('player', 0) / UnitPowerMax('player', 0) * 100 < Settings.RestMana and not Drinking and not PauseFlags.CantDrink then
             UseItemByName(Settings.WaterName)
             PauseFlags.CantDrink = true
-            C_Timer.After(0.3, function() PauseFlags.CantDrink = false end)
+            C_Timer.After(1, function() PauseFlags.CantDrink = false end)
         end
     end
 end
