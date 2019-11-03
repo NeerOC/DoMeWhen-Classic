@@ -187,7 +187,6 @@ function Unit:HardCC()
 end
 
 function Unit:Interrupt()
-    local InterruptTarget = DMW.Settings.profile.Enemy.InterruptTarget
     local Settings = DMW.Settings.profile
     local StartTime, EndTime, SpellID, Type
     local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID = self:CastingInfo()

@@ -1186,21 +1186,6 @@ local Options = {
                     set = function(info, value)
                         DMW.Settings.profile.Enemy.InterruptDelay = value
                     end
-                },
-                InterruptTarget = {
-                    type = "select",
-                    order = 6,
-                    name = "Interrupt Target",
-                    desc = "Select desired target setting for interrupts",
-                    width = "full",
-                    values = {"Any", "Target"},
-                    style = "dropdown",
-                    get = function()
-                        return DMW.Settings.profile.Enemy.InterruptTarget
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Enemy.InterruptTarget = value
-                    end
                 }
             }
         },
