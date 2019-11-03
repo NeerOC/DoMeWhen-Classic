@@ -11,11 +11,6 @@ function Unit:GetDistance(OtherUnit)
     return Dist
 end
 
-function Unit:GetNavDistance(OtherUnit)
-    OtherUnit = OtherUnit or DMW.Player
-    
-end
-
 function Unit:AggroDistance()
     local maxRadius = 45 --.0 * sWorld->getRate(RATE_CREATURE_AGGRO));
     local minRadius = 5 --.0 * sWorld->getRate(RATE_CREATURE_AGGRO));
