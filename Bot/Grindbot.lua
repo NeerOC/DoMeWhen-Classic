@@ -155,7 +155,7 @@ function Grindbot:Hotspotter()
             end
         end
 
-        if shiftdown and not altdown and leftmousedown and ctype then
+        if altdown and not shiftdown and leftmousedown and ctype then
             if self:AddClickSpot(cx, cy, cz) then
                 Log:DebugInfo('Added Hotspot [X] ' .. Round(cx) .. ' [Y] ' .. Round(cy) .. ' [Z] ' .. Round(cz) .. ' [Distance] ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)))
             end
@@ -175,6 +175,7 @@ function Grindbot:RemoveClickSpot(x, y, z)
     end
     if keyremove then
         DMW.Settings.profile.Grind.HotSpots [keyremove] = nil
+        table.sort(DMW.Settings.profile.Grind.HotSpots)
         PauseFlags.Hotspotting = true
         C_Timer.After(0.3, function()
             PauseFlags.Hotspotting = false
@@ -194,6 +195,7 @@ function Grindbot:AddClickSpot(xx, yy, zz)
         end
     end
     table.insert(DMW.Settings.profile.Grind.HotSpots, Spot)
+    table.sort(DMW.Settings.profile.Grind.HotSpots)
     PauseFlags.Hotspotting = true
     C_Timer.After(0.3, function()
         PauseFlags.Hotspotting = false

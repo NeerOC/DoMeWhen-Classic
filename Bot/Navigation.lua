@@ -284,6 +284,7 @@ end
 function Navigation:ResetPath()
     if NavPath ~= nil then
         NavPath = nil
+        HotSpotIndex = 1
         pathIndex = 1
         DestX = nil 
         DestY = nil
