@@ -26,12 +26,6 @@ function Combat:UnitNearHotspot(unit)
     return false
 end
 
-function Combat:DistanceToUnit(unit)
-    local px, py, pz = ObjectPosition('player')
-    local tx, ty, tz = ObjectPosition(unit)
-    return GetDistanceBetweenPositions(px,py,pz,tx,ty,tz)
-end
-
 function Combat:IsGoodUnit(unit)
     local minLvl = UnitLevel('player') - DMW.Settings.profile.Grind.minNPCLevel
     local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
@@ -158,7 +152,7 @@ function Combat:AttackCombat()
 end
 
 function Combat:InitiateAttack(Unit)
-    if (self:DistanceToUnit(Unit.Pointer) > DMW.Settings.profile.Grind.CombatDistance or not Unit:LineOfSight()) then
+    if (Unit.Distance > DMW.Settings.profile.Grind.CombatDistance or not Unit:LineOfSight()) then
         Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
     else
         if DMW.Player.Moving then
@@ -171,28 +165,28 @@ function Combat:InitiateAttack(Unit)
 
     if DMW.Settings.profile.Grind.CombatDistance > 9 then
         -- This is for ranged attackers
-        if DMW.Settings.profile.Grind.beHuman and self:DistanceToUnit(Unit.Pointer) > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 then JumpOrAscendStart() end end
+        if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 then JumpOrAscendStart() end end
 
-        if not UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) < DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
+        if not UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance < DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             FaceDirection(Unit.Pointer, true)
         end
 
-        if self:DistanceToUnit(Unit.Pointer) <= DMW.Settings.profile.Grind.CombatDistance and IsMounted() then
+        if Unit.Distance <= DMW.Settings.profile.Grind.CombatDistance and IsMounted() then
             Dismount()
         end
     else
         -- This is for melee attackers
-        if DMW.Settings.profile.Grind.beHuman and self:DistanceToUnit(Unit.Pointer) > DMW.Settings.profile.Grind.CombatDistance + 3 and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 then JumpOrAscendStart() end end
+        if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance + 3 and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 then JumpOrAscendStart() end end
 
-        if not UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
+        if not UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             FaceDirection(Unit.Pointer, true)
-        elseif UnitIsFacing('player', Unit.Pointer, 60) and self:DistanceToUnit(Unit.Pointer) <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
+        elseif UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             -- If random is true then if theres not adds around us, juggle the enemy(Strafe) 
             if math.random(1, 1000) < 4 and DMW.Settings.profile.Grind.beHuman then
                 if #DMW.Player:GetAttackable(20) <= 2 then self:JuggleEnemy() end
             end
         end
-        if self:DistanceToUnit(Unit.Pointer) <= 9 then
+        if Unit.Distance <= 9 then
             Dismount()
         end
     end
