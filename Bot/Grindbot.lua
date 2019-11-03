@@ -308,7 +308,7 @@ function Grindbot:GetLoot()
             if IsMounted() then Dismount() end
             if not PauseFlags.Interacting then
                 for _, Unit in pairs(DMW.Units) do
-                    if Unit.Dead and GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, Unit.PosX, Unit.PosY, Unit.PosZ) < 5 and UnitCanBeLooted(Unit.Pointer) then
+                    if Unit.Dead and Unit.Distance < 5 and UnitCanBeLooted(Unit.Pointer) then
                         InteractUnit(Unit.Pointer)
                     end
                 end

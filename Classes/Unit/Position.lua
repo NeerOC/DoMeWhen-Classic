@@ -3,10 +3,8 @@ local Unit = DMW.Classes.Unit
 
 function Unit:GetDistance(OtherUnit)
     OtherUnit = OtherUnit or DMW.Player
-    if OtherUnit == DMW.Player and DMW.Enums.MeleeSpell[DMW.Player.Class] and IsSpellInRange(GetSpellInfo(DMW.Enums.MeleeSpell[DMW.Player.Class]), self.Pointer) == 1 then
-        return 0
-    end
-    local Dist = sqrt(((self.PosX - OtherUnit.PosX) ^ 2) + ((self.PosY - OtherUnit.PosY) ^ 2) + ((self.PosZ - OtherUnit.PosZ) ^ 2)) - ((self.CombatReach or 0) + (OtherUnit.CombatReach or 0))
+    local Dist = GetDistanceBetweenPositions(self.PosX, self.PosY, self.PosZ, OtherUnit.PosX, OtherUnit.PosY, OtherUnit.PosZ)
+    --local Dist = sqrt(((self.PosX - OtherUnit.PosX) ^ 2) + ((self.PosY - OtherUnit.PosY) ^ 2) + ((self.PosZ - OtherUnit.PosZ) ^ 2)) - ((self.CombatReach or 0) + (OtherUnit.CombatReach or 0))
     if Dist < 0 then
         return 0
     end
