@@ -202,7 +202,7 @@ function Navigation:Movement()
         DestY = NavPath[pathIndex][2]
         DestZ = NavPath[pathIndex][3]
 
-        if self:CalcPathDistance(NavPath) > 50 and self:CanMount() then
+        if self:CalcPathDistance(NavPath) > 60 and self:CanMount() then
             self:Mount()
             return
         end
