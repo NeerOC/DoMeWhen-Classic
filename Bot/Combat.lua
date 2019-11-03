@@ -61,7 +61,9 @@ end
 function Combat:SearchAttackable()
     local Table = {}
     for _, Unit in pairs(DMW.Units) do
-        table.insert(Table, Unit)
+        if UnitClassification(Unit.Pointer) == 'normal' then
+            table.insert(Table, Unit)
+        end
     end
     if #Table > 1 then
         table.sort(
