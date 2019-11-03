@@ -7,7 +7,7 @@ local Log = DMW.Bot.Log
 local TaskDone = false
 
 -- ETA: 2020
-local ItemSaveList = {'Black Pearl', 'Golden Pearl'}
+local ItemSaveList = {'Black Pearl', 'Golden Pearl', 'Felcloth'}
 
 local slots = {
 	"RangedSlot",
@@ -58,6 +58,15 @@ function SetFoodVendor()
         Log:DebugInfo('Food vendor has been cleared (No Target)')
     end
 end
+
+function ArrayContains(arr, value)
+    for key, value in pairs(tbl) do
+        if value == item then 
+            return true end
+     end
+     return false
+end
+
 --Global functions//
 
 function Vendor:TaskDone()
@@ -70,7 +79,7 @@ function Vendor:CanSell(maxrarity)
             CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
             if CurrentItemLink then
                 name, void, Rarity, void, void, itype, void, void, void, void, ItemPrice = GetItemInfo(CurrentItemLink)
-                if  name ~= 'Golden Pearl' and name ~= 'Black Pearl' and Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
+                if not ArrayContains(ItemSaveList, name) and Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
                     return true
                 end
             end
@@ -85,7 +94,7 @@ function Vendor:SellAll(maxrarity)
             CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
             if CurrentItemLink then
                 name, void, Rarity, void, void, itype, void, void, void, void, ItemPrice = GetItemInfo(CurrentItemLink)
-                if name ~= 'Golden Pearl' and name ~= 'Black Pearl' and Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
+                if not ArrayContains(ItemSaveList, name) and Rarity <= maxrarity and itype ~= "Consumable" and itype ~= "Container" and ItemPrice > 0 then
                     UseContainerItem(BagID, BagSlot)
                 end
             end
