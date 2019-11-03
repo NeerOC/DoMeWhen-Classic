@@ -109,6 +109,11 @@ function AddMountBlackList()
     Log:DebugInfo('Added spot to mount Blacklist.')
 end
 
+function Navigation:SortHotspots()
+    HotSpotIndex = 1
+    table.sort(DMW.Settings.profile.Grind.HotSpots, function(a,b) return sqrt((DMW.Player.PosX -a.x) ^ 2) + ((DMW.Player.PosY - a.y) ^ 2) < sqrt((DMW.Player.PosX - b.x) ^ 2) + ((DMW.Player.PosY - b.y) ^ 2)  end)
+end
+
 function Navigation:NearBlacklist()
     local pX, pY, pZ = ObjectPosition('player')
 
@@ -284,7 +289,6 @@ end
 function Navigation:ResetPath()
     if NavPath ~= nil then
         NavPath = nil
-        HotSpotIndex = 1
         pathIndex = 1
         DestX = nil 
         DestY = nil

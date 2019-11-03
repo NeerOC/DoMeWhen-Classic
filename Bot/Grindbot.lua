@@ -176,7 +176,7 @@ function Grindbot:RemoveClickSpot(x, y, z)
     if keyremove then
         DMW.Settings.profile.Grind.HotSpots [keyremove] = nil
         if #DMW.Settings.profile.Grind.HotSpots > 1 then
-            table.sort(DMW.Settings.profile.Grind.HotSpots, function(a,b) return sqrt((a.x - DMW.Player.PosX) ^ 2) + ((a.y - DMW.Player.PosY) ^ 2) < sqrt((b.x - DMW.Player.PosX) ^ 2) + ((b.y - DMW.Player.PosY) ^ 2)   end)
+            table.sort(DMW.Settings.profile.Grind.HotSpots, function(a,b) return sqrt((DMW.Player.PosX -a.x) ^ 2) + ((DMW.Player.PosY - a.y) ^ 2) < sqrt((DMW.Player.PosX - b.x) ^ 2) + ((DMW.Player.PosY - b.y) ^ 2)  end)
         end
         PauseFlags.Hotspotting = true
         C_Timer.After(0.3, function()
@@ -198,7 +198,7 @@ function Grindbot:AddClickSpot(xx, yy, zz)
     end
     table.insert(DMW.Settings.profile.Grind.HotSpots, Spot)
     if #DMW.Settings.profile.Grind.HotSpots > 1 then
-        table.sort(DMW.Settings.profile.Grind.HotSpots, function(a,b) return sqrt((a.x - DMW.Player.PosX) ^ 2) + ((a.y - DMW.Player.PosY) ^ 2) < sqrt((b.x - DMW.Player.PosX) ^ 2) + ((b.y - DMW.Player.PosY) ^ 2)   end)
+        table.sort(DMW.Settings.profile.Grind.HotSpots, function(a,b) return sqrt((DMW.Player.PosX -a.x) ^ 2) + ((DMW.Player.PosY - a.y) ^ 2) < sqrt((DMW.Player.PosX - b.x) ^ 2) + ((DMW.Player.PosY - b.y) ^ 2)  end)
     end
     PauseFlags.Hotspotting = true
     C_Timer.After(0.3, function()
@@ -294,6 +294,7 @@ function Grindbot:Pulse()
     else
         if not PauseFlags.Hotspotting then self:Hotspotter() end
         Navigation:ResetPath()
+        Navigation:SortHotspots()
         if InformationOutput then InformationOutput = false end
     end
 end
