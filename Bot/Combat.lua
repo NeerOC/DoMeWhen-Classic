@@ -116,7 +116,7 @@ function Combat:SearchEnemy()
     end
 
     for _, Unit in ipairs(Table) do
-        if Unit:CastingInfo() and (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
+        if Unit:Interrupt() and (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
             return true, Unit
         end
     end

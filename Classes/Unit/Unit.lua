@@ -188,9 +188,6 @@ end
 
 function Unit:Interrupt()
     local InterruptTarget = DMW.Settings.profile.Enemy.InterruptTarget
-    if DMW.Settings.profile.HUD.Interrupts == 2 or (InterruptTarget == 2 and not UnitIsUnit(self.Pointer, "target")) then
-        return false
-    end
     local Settings = DMW.Settings.profile
     local StartTime, EndTime, SpellID, Type
     local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID = self:CastingInfo()
