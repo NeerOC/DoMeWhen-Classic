@@ -93,6 +93,14 @@ end
 -- Movement check functions/>
 
 -- Misc
+function CleanNils(t)
+    local ans = {}
+    for _,v in pairs(t) do
+      ans[ #ans+1 ] = v
+    end
+    return ans
+end
+
 function AddMountBlackList()
     local pX, pY, pZ = ObjectPosition('player')
     local Spot = {x = pX, y = pY, z = pZ}
@@ -111,7 +119,11 @@ end
 
 function Navigation:SortHotspots()
     HotSpotIndex = 1
-    table.sort(DMW.Settings.profile.Grind.HotSpots, function(a,b) return sqrt((DMW.Player.PosX -a.x) ^ 2) + ((DMW.Player.PosY - a.y) ^ 2) < sqrt((DMW.Player.PosX - b.x) ^ 2) + ((DMW.Player.PosY - b.y) ^ 2)  end)
+    local FreshTable = CleanNils(DMW.Settings.profile.Grind.HotSpots)
+    DMW.Settings.profile.Grind.HotSpots = FreshTable
+    if #DMW.Settings.profile.Grind.HotSpots > 1 then
+        table.sort(DMW.Settings.profile.Grind.HotSpots, function(a,b) return sqrt((DMW.Player.PosX -a.x) ^ 2) + ((DMW.Player.PosY - a.y) ^ 2) < sqrt((DMW.Player.PosX - b.x) ^ 2) + ((DMW.Player.PosY - b.y) ^ 2)  end)
+    end
 end
 
 function Navigation:NearBlacklist()
