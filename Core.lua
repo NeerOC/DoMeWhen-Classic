@@ -39,11 +39,13 @@ local function Init()
     DMW.Player = DMW.Classes.LocalPlayer(ObjectPointer("player"))
     DMW.UI.InitQueue()
     Initialized = false
-    InitializeNavigation(function(result) 
-        if result == true then
-            Initialized = true
-        end
-    end)
+    if not Initialized then
+        InitializeNavigation(function(result) 
+            if result == true then
+                Initialized = true
+            end
+        end)
+    end
 end
 
 local function ExecutePlugins()
