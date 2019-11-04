@@ -539,7 +539,7 @@ if (IsClassic) then
 		["ROGUE"] = {
 			["None"] = {
 				weapons = "dual wield",
-				Strength = 0, Agility = 1.1, Stamina = 0.05, Intellect = 0, Spirit = 0,
+				Strength = 1.0, Agility = 1.1, Stamina = 0.05, Intellect = 0, Spirit = 0,
 				Armor = 0.001, Dodge = 0, Parry = 0, Block = 0, Defense = 0,
 				SpellPower = 0, SpellPenetration = 0, Haste = 1.05, Mp5 = 0,
 				AttackPower = 1, ArmorPenetration = 0, Crit = 1.1, Hit = 1.75, 
@@ -550,7 +550,7 @@ if (IsClassic) then
 			},
 			["Assassination"] = {
 				weapons = "dagger and any",
-				Strength = 0, Agility = 1.1, Stamina = 0.05, Intellect = 0, Spirit = 0,
+				Strength = 1.0, Agility = 1.1, Stamina = 0.05, Intellect = 0, Spirit = 0,
 				Armor = 0.001, Dodge = 0, Parry = 0, Block = 0, Defense = 0,
 				SpellPower = 0, SpellPenetration = 0, Haste = 1.05, Mp5 = 0,
 				AttackPower = 1, ArmorPenetration = 0, Crit = 1.1, Hit = 1.75, 
@@ -572,7 +572,7 @@ if (IsClassic) then
 			},
 			["Combat"] = {
 				weapons = "dual wield",
-				Strength = 0, Agility = 1.1, Stamina = 0.05, Intellect = 0, Spirit = 0,
+				Strength = 1.0, Agility = 1.1, Stamina = 0.05, Intellect = 0, Spirit = 0,
 				Armor = 0.001, Dodge = 0, Parry = 0, Block = 0, Defense = 0,
 				SpellPower = 0, SpellPenetration = 0, Haste = 1.05, Mp5 = 0,
 				AttackPower = 1, ArmorPenetration = 0, Crit = 1.1, Hit = 1.75, 
@@ -583,7 +583,7 @@ if (IsClassic) then
 			},
 			["Subtlety"] = {
 				weapons = "dagger and any",
-				Strength = 0.3, Agility = 1.1, Stamina = 0.2, Intellect = 0, Spirit = 0,
+				Strength = 1.0, Agility = 1.1, Stamina = 0.2, Intellect = 0, Spirit = 0,
 				Armor = 0.001, Dodge = 0.1, Parry = 0.1, Block = 0, Defense = 0,
 				SpellPower = 0, SpellPenetration = 0, Haste = 0.5, Mp5 = 0,
 				AttackPower = 0.4, ArmorPenetration = 0, Crit = 1.1, Hit = 0.6, 

@@ -62,10 +62,10 @@ Helpers\Swing.lua
 
 Bot\Log.lua
 Bot\Navigation.lua
-Bot\Vendor.lua
-Bot\Combat.lua
-Bot\Grindbot.lua
-Bot\AutoGear.lua
+Bot\Grindbot\Vendor.lua
+Bot\Grindbot\Combat.lua
+Bot\Grindbot\Grindbot.lua
+Bot\Grindbot\AutoGear.lua
 
 
 Enums\Spells\Global.lua
