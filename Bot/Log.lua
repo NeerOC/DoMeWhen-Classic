@@ -8,7 +8,7 @@ function Log:NormalInfo(str)
 end
 
 function Log:DebugInfo(str)
-   DEFAULT_CHAT_FRAME:AddMessage("|TInterface\\Icons\\INV_Misc_Note_01:20:20:0:0:20:20:0:20:0:20|t |cfff542720[Lilium]|r |cffFFA500[Info]|r " .. str)
+   DEFAULT_CHAT_FRAME:AddMessage("|TInterface\\Icons\\INV_Misc_Note_01:20:20:0:0:20:20:0:20:0:20|t |cfff54272[Lilium]|r |cffFFA500[Info]|r " .. str)
 end
 
 function Log:SevereInfo(str)

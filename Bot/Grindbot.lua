@@ -205,19 +205,13 @@ function Grindbot:RotationToggle()
     if DMW.Settings.profile.Grind.SkipCombatOnTransport then
         -- if we have skip aggro enabled then if we are near hotspot(120 yards) enable rotation otherwise disable it.
         if Navigation:NearHotspot(200) then
-            if DMW.Settings.profile.HUD.Rotation == 2 then
-                DMW.Settings.profile.HUD.Rotation = 1
-            end
+            RunMacroText('/LILIUM HUD Rotation 1')
         else
-            if DMW.Settings.profile.HUD.Rotation == 1 then
-                DMW.Settings.profile.HUD.Rotation = 2
-            end
+            RunMacroText('/LILIUM HUD Rotation 2')
         end
     else
         -- If we dont have skip aggro then Enable rotation if its disabled
-        if DMW.Settings.profile.HUD.Rotation == 2 then
-            DMW.Settings.profile.HUD.Rotation = 1
-        end
+            RunMacroText('/LILIUM HUD Rotation 1')
     end
 end
 
@@ -238,7 +232,8 @@ function Grindbot:Pulse()
         if #DMW.Settings.profile.Grind.HotSpots < 2 then
             if not PauseFlags.Information then 
                 Log:DebugInfo('You need atleast 2 hotspots.')
-                PauseFlags.Information = true 
+                PauseFlags.Information = true
+                RunMacroText('/LILIUM HUD Grindbot 2')
                 C_Timer.After(1, function() PauseFlags.Information = false end) 
             end
             return

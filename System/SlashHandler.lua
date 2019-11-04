@@ -1,6 +1,7 @@
 local DMW = DMW
 
-DMW:RegisterChatCommand("dmw", "ChatCommand")
+DMW:RegisterChatCommand("lilium", "ChatCommand")
+DMW:RegisterChatCommand("lil", "ChatCommand")
 
 local function SplitInput(Input)
     local Table = {}
@@ -24,11 +25,11 @@ function DMW:ChatCommand(Input)
             end
         elseif Commands[1] == "HELP" then
             print("Main UI:")
-            print("/DMW")
+            print("/Lilium")
             print("HUD Buttons:")
             for i = 1, #DMW.UI.HUD.Options do
                 for Name, Setting in pairs(DMW.UI.HUD.Options[i]) do
-                    print("/DMW HUD " .. Name .. " 1 - " .. #Setting)
+                    print("/LILIUM HUD " .. Name .. " 1 - " .. #Setting)
                 end
             end
         elseif Commands[1] == "DEBUG" then
@@ -37,6 +38,12 @@ function DMW:ChatCommand(Input)
             else
                 DMW.UI.Debug.Frame:Hide()
             end
+        elseif Commands[1] == "GRIND" then
+            if not DMW.UI.Grindbot.Frame.IsShown() then
+                DMW.UI.Grindbot.Frame:Show()
+            else
+                DMW.UI.Grindbot.Frame:Hide()
+            end
         elseif Commands[1] == "REPAIR" then
             SetDurabilityVendor()
         elseif Commands[1] == "FOOD" then
@@ -44,7 +51,7 @@ function DMW:ChatCommand(Input)
         elseif Commands[1] == "CLEAR" then
             ClearHotspot()
         else
-            LibStub("AceConfigCmd-3.0").HandleCommand(DMW, "dmw", "DMW", Input)
+            LibStub("AceConfigCmd-3.0").HandleCommand(DMW, "lilium", "LILIUM", Input)
         end
     end
 end
