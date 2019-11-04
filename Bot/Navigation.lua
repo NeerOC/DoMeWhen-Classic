@@ -17,7 +17,7 @@ local ObsDistance = 4
 local ObsFlags = bit.bor(0x1, 0x10)
 
 -- Movement check functions
-function GameObjectInfront()
+function Navigation:GameObjectInfront()
     local px, py, pz = ObjectPosition('player')
     local facing = ObjectFacing('player')
     
@@ -41,7 +41,7 @@ function GameObjectInfront()
     end
 end
 
-local function GameObjectLeft()
+function Navigation:GameObjectLeft()
     local px, py, pz = ObjectPosition('player')
     local facing = ObjectFacing('player')
     local hitcount = 0
@@ -66,7 +66,7 @@ local function GameObjectLeft()
     end
  end
  
-local function GameObjectRight()
+function Navigation:GameObjectRight()
     local px, py, pz = ObjectPosition('player')
     local facing = ObjectFacing('player')
     local hitcount = 0
@@ -182,16 +182,11 @@ function Navigation:DrawVisuals()
                 if HotSpots[i] then
                     local x, y, z = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
                     LibDraw.Text("x", "GameFontNormalLarge", x, y, z)
-                    if DMW.Settings.profile.Grind.drawCircles then LibDraw.Circle(x, y, z, DMW.Settings.profile.Grind.RoamDistance) end
+                    if DMW.Settings.profile.Grind.drawCircles then LibDraw.GroundCircle(x, y, z, DMW.Settings.profile.Grind.RoamDistance) end
                 end
             end
         end
     end
-end
-
-function Navigation:GetActualGround(x, y, z)
-    local HitX, HitY, HitZ = TraceLine (x, y, z + 0.5, x, y, z - 5 , bit.bor(0x30151))
-    return HitZ
 end
 
 function Navigation:Movement()
@@ -335,25 +330,30 @@ function Navigation:StopMoving()
 end
 
 function Navigation:Unstuck()
-    local left, leftcount = GameObjectLeft()
-    local right, rightcount = GameObjectRight()
-    local front, frontcount = GameObjectInfront()
+    local left, leftcount = self:GameObjectLeft()
+    local right, rightcount = self:GameObjectRight()
+    local front, frontcount = self:GameObjectInfront()
 
     Log:SevereInfo('Unstuck!')
+
     if left and right then
         if leftcount > rightcount then
             StrafeLeftStart()
-            C_Timer.After(0.2, function() StrafeLeftStop() end)
+            C_Timer.After(0.3, function() StrafeLeftStop() end)
         else
             StrafeRightStart()
-            C_Timer.After(0.2, function() StrafeRightStop() end)
+            C_Timer.After(0.3, function() StrafeRightStop() end)
         end
-    elseif left and not right then
-        StrafeRightStart()
-        C_Timer.After(0.2, function() StrafeRightStop() end)
-    elseif right and not left then
-        StrafeLeftStart()
-        C_Timer.After(0.2, function() StrafeLeftStop() end)
+        self:ResetPath()
     end
-    self:ResetPath()
+
+    if left and not right then
+        StrafeRightStart()
+        C_Timer.After(0.3, function() StrafeRightStop() end)
+    end
+    if right and not left then
+        StrafeLeftStart()
+        C_Timer.After(0.3, function() StrafeLeftStop() end)
+    end
+    
 end

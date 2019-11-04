@@ -394,6 +394,12 @@ function Grindbot:SwapMode()
         VendorTask = false
         return
     end
+    
+    -- If we are not in combat and not mounted and our health is less than we decided or if we use mana and its less than decided do the rest function.
+        if not DMW.Player.Combat and not IsMounted() and (DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana) then
+            Grindbot.Mode = Modes.Resting
+            return
+        end
 
     -- Force vendor while vendor task is true, this is set in Vendor.lua file to make sure we complete it all.
     if VendorTask then
@@ -418,12 +424,6 @@ function Grindbot:SwapMode()
     -- if we are in combat and we are near hotspot, set to combat mode.
     if hasEnemy and Navigation:NearHotspot(150) then
         Grindbot.Mode = Modes.Combat
-        return
-    end
-
-    -- If we are not in combat and not mounted and our health is less than we decided or if we use mana and its less than decided do the rest function.
-    if not DMW.Player.Combat and not IsMounted() and (DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana) then
-        Grindbot.Mode = Modes.Resting
         return
     end
 

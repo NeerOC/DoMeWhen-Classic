@@ -93,7 +93,7 @@ local function export(value)
 end
 
 local GrindbotOptionsTable = {
-    name = "Grindbot",
+    name = "[Grindbot]",
     handler = GrindbotConfig,
     type = "group",
     childGroups = "tab",
@@ -1124,7 +1124,7 @@ local Options = {
                 BotHeader = {
                     type = "header",
                     order = 12,
-                    name = "[BOT]"
+                    name = "|cfff54272[Lilium]|r"
                 },
                 GrindSettings = {
                     type = "execute",
