@@ -172,19 +172,6 @@ local GrindbotOptionsTable = {
                     set = function(info, value)
                         DMW.Settings.profile.Grind.beHuman = value
                     end
-                },
-                AutoGear = {
-                    type = "toggle",
-                    order = 6,
-                    name = "AutoGear",
-                    desc = "Will automatically equip gear that is better.",
-                    width = 0.7,
-                    get = function()
-                        return DMW.Settings.profile.Grind.AutoGear
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.AutoGear = value
-                    end
                 }
             }
         },

@@ -68,8 +68,7 @@ local defaults = {
             drawCircles = false,
             openClams = false,
             MountBlacklist = {},
-            beHuman = true,
-            AutoGear = false
+            beHuman = true
         },
         Tracker = {
             Herbs = false,
