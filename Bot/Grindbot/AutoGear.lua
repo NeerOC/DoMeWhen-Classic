@@ -2196,7 +2196,7 @@ function AutoGearScanBags(lootRollItemID, lootRollID, questRewardID)
 				equippedInfo = ReadItemInfo(i)
 				equippedScore = DetermineItemScore(equippedInfo, weighting)
 				if ((not best[i].equipped) and best[i].score > equippedScore) then
-					Log:NormalInfo(""..(best[i].info.Name or "nothing").." ("..string.format("%.2f", best[i].score)..") was determined to be better than "..(equippedInfo.Name or "nothing").." ("..string.format("%.2f", equippedScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping." or "Would equip if automatic gear equipping was enabled."), 1)
+					Log:NormalInfo(""..(best[i].info.Name or "nothing").." ("..string.format("%.2f", best[i].score)..") was determined to be better than "..(equippedInfo.Name or "nothing").." ("..string.format("%.2f", equippedScore)..").  "..((AutoGearDB.Enabled == true) and "Equipping."), 1)
 					PrintItem(best[i].info)
 					PrintItem(equippedInfo)
 					anythingBetter = 1
