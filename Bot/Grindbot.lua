@@ -151,13 +151,13 @@ function Grindbot:Hotspotter()
         
         if shiftdown and altdown and leftmousedown and ctype then
             if self:RemoveClickSpot(cx, cy, cz) then
-                Log:DebugInfo('Removed Hotspot [X] ' .. Round(cx) .. ' [Y] ' .. Round(cy) .. ' [Z] ' .. Round(cz) .. ' [Distance] ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)))
+                Log:DebugInfo('Removed Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
             end
         end
 
         if altdown and not shiftdown and leftmousedown and ctype then
             if self:AddClickSpot(cx, cy, cz) then
-                Log:DebugInfo('Added Hotspot [X] ' .. Round(cx) .. ' [Y] ' .. Round(cy) .. ' [Z] ' .. Round(cz) .. ' [Distance] ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)))
+                Log:DebugInfo('Added Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
             end
         end
     end
