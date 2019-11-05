@@ -7,7 +7,7 @@ local Log = DMW.Bot.Log
 local TaskDone = false
 
 -- ETA: 2020
-local ItemSaveList = {'Black Pearl', 'Golden Pearl', 'Felcloth'}
+local ItemSaveList = {'Black Pearl', 'Golden Pearl', 'Felcloth', 'Formula: Enchant Weapon - Icy Chill', 'Formula: Enchant Bracer - Superior Spirit'}
 
 local slots = {
 	"RangedSlot",

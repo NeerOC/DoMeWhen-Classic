@@ -41,6 +41,16 @@ local Settings = {
     WaterName = ''
 }
 
+-- Just to show our mode
+local ModeFrame = CreateFrame("Frame",nil,UIParent)
+ModeFrame:SetWidth(1) 
+ModeFrame:SetHeight(1) 
+ModeFrame:SetAlpha(.90);
+ModeFrame:SetPoint("CENTER",0,-200)
+ModeFrame.text = ModeFrame:CreateFontString(nil,"ARTWORK") 
+ModeFrame.text:SetFont("Fonts\\ARIALN.ttf", 13, "OUTLINE")
+ModeFrame.text:SetPoint("CENTER",0,0)
+
 
 -- < Global functions
 function ClearHotspot()
@@ -257,30 +267,37 @@ function Grindbot:Pulse()
         -- Do whatever our mode says.
         if Grindbot.Mode == Modes.Dead then
             Navigation:MoveToCorpse()
+            ModeFrame.text:SetText('Corpse Run')
         end
 
         if Grindbot.Mode == Modes.Combat then
             Combat:AttackCombat()
+            ModeFrame.text:SetText('Combat Attack')
         end
 
         if Grindbot.Mode == Modes.Resting then
             self:Rest()
+            ModeFrame.text:SetText('Resting')
         end
 
         if Grindbot.Mode == Modes.Vendor then
             Vendor:DoTask()
+            ModeFrame.text:SetText('Vendor run')
         end
 
         if Grindbot.Mode == Modes.Looting then
             self:GetLoot()
+            ModeFrame.text:SetText('Looting')
         end
 
         if Grindbot.Mode == Modes.Grinding then
             Combat:Grinding()
+            ModeFrame.text:SetText('Grinding')
         end
 
         if Grindbot.Mode == Modes.Roaming then
             Navigation:Roam()
+            ModeFrame.text:SetText('Roaming')
         end
     else
         if not PauseFlags.Hotspotting then self:Hotspotter() end
@@ -379,7 +396,7 @@ function Grindbot:SwapMode()
     end
 
     -- If we got dismounted and we are near hotspot and we have an enemy and its closer than 10 yrds, attack it.
-    if not IsMounted() and Navigation:NearHotspot(150) and hasEnemy and theEnemy.Distance < 10 then
+    if not IsMounted() and Navigation:NearHotspot(150) and hasEnemy and theEnemy.Distance < 5 then
         Grindbot.Mode = Modes.Combat
         return
     end
@@ -391,10 +408,10 @@ function Grindbot:SwapMode()
     end
     
     -- If we are not in combat and not mounted and our health is less than we decided or if we use mana and its less than decided do the rest function.
-        if not DMW.Player.Combat and not IsMounted() and (DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana) then
-            Grindbot.Mode = Modes.Resting
-            return
-        end
+    if not DMW.Player.Combat and not IsMounted() and (DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana) then
+        Grindbot.Mode = Modes.Resting
+        return
+    end
 
     -- Force vendor while vendor task is true, this is set in Vendor.lua file to make sure we complete it all.
     if VendorTask then

@@ -68,15 +68,9 @@ function Combat:SearchAttackable()
         )
     end
 
-    -- First get line of sight units if none exist, return the closest one. (Also make sure to priortize hostile enemies)
+    -- Lets get closest hostile first.
     for _, Unit in ipairs(Table) do
-        if self:IsGoodUnit(Unit.Pointer) and Unit:LineOfSight() and UnitReaction(Unit.Pointer, 'player') < 4 then
-            return true, Unit
-        end
-    end
-
-    for _, Unit in ipairs(Table) do
-        if self:IsGoodUnit(Unit.Pointer) and Unit:LineOfSight() then
+        if self:IsGoodUnit(Unit.Pointer) and UnitReaction(Unit.Pointer, 'player') < 4 then
             return true, Unit
         end
     end
