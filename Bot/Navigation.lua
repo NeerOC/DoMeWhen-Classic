@@ -278,6 +278,13 @@ function Navigation:Mount()
     end
 end
 
+function Navigation:GetPathDistanceToUnit(unit)
+    if unit then
+        local UnitPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, unit.PosX, unit.PosY, unit.PosZ, true, false, 1)
+        return Navigation:CalcPathDistance(UnitPath)
+    end
+end
+
 function Navigation:GetDistanceBetweenPositions(pos_a, pos_b)
     return math.sqrt(((pos_a[1] - pos_b[1])^2) + ((pos_a[2] - pos_b[2])^2) + ((pos_a[3] - pos_b[3])^2))
 end

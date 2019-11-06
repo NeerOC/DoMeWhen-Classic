@@ -40,6 +40,7 @@ local function Init()
     DMW.UI.InitQueue()
     Initialized = false
     if not Initialized then
+        print("|TInterface\\Icons\\Ability_DualWield:20:20:0:0:20:20:0:20:0:20|t |cfff54272[Lilium]|r " .. 'Initializing.. Please Wait')
         InitializeNavigation(function(result) 
             if result == true then
                 Initialized = true

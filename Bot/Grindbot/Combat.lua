@@ -55,32 +55,30 @@ end
 function Combat:SearchAttackable()
     local Table = {}
     for _, Unit in pairs(DMW.Units) do
-        if UnitClassification(Unit.Pointer) == 'normal' then
+        if UnitClassification(Unit.Pointer) == 'normal' and self:IsGoodUnit(Unit.Pointer) and Unit.Distance < DMW.Settings.profile.Grind.RoamDistance then
             table.insert(Table, Unit)
         end
     end
+    
     if #Table > 1 then
         table.sort(
             Table,
             function(x, y)
-                return x.Distance < y.Distance
+                return Navigation:GetPathDistanceToUnit(x) < Navigation:GetPathDistanceToUnit(y)
             end
         )
     end
 
     -- Lets get closest hostile first.
     for _, Unit in ipairs(Table) do
-        if self:IsGoodUnit(Unit.Pointer) and UnitReaction(Unit.Pointer, 'player') < 4 then
+        if UnitReaction(Unit.Pointer, 'player') < 4 then
             return true, Unit
         end
     end
 
     for _, Unit in ipairs(Table) do
-        if self:IsGoodUnit(Unit.Pointer) then
-            return true, Unit
-        end
+        return true, Unit
     end
-    
 end
 
 function Combat:SearchEnemy()
@@ -141,6 +139,20 @@ function Combat:SearchEnemy()
             return true, Unit
         end
     end
+
+    for _, Unit in ipairs(Table) do
+        if Unit:HasThreat() and not UnitIsTapDenied(Unit.Pointer) then
+            return true, Unit
+        end
+    end
+end
+
+function Combat:EnemyBehind()
+    for _, Unit in pairs(DMW.Attackable) do
+        if Unit.Distance < 10 and Unit:HasThreat() and ObjectIsBehind(Unit.Pointer, 'player') then
+           return true
+        end
+    end
 end
 
 function Combat:Grinding()
@@ -191,7 +203,13 @@ function Combat:InitiateAttack(Unit)
         elseif UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             -- If random is true then if theres not adds around us, juggle the enemy(Strafe) 
             if math.random(1, 1000) < 4 and DMW.Settings.profile.Grind.beHuman then
-                if #DMW.Player:GetAttackable(20) <= 2 then self:JuggleEnemy() end
+                if #DMW.Player:GetAttackable(20) <= 2 and not self:EnemyBehind() then self:JuggleEnemy() end
+            end
+
+            if self:EnemyBehind() then
+                MoveForwardStart()
+            else
+                MoveForwardStop()
             end
         end
         if Unit.Distance <= 9 then

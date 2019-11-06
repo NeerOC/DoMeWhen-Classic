@@ -213,8 +213,8 @@ end
 
 function Grindbot:RotationToggle()
     if DMW.Settings.profile.Grind.SkipCombatOnTransport then
-        -- if we have skip aggro enabled then if we are near hotspot(120 yards) enable rotation otherwise disable it.
-        if Navigation:NearHotspot(200) then
+        -- if we have skip aggro enabled then if we are near hotspot(150 yards) enable rotation otherwise disable it.
+        if Navigation:NearHotspot(150) then
             RunMacroText('/LILIUM HUD Rotation 1')
         else
             RunMacroText('/LILIUM HUD Rotation 2')
@@ -389,6 +389,12 @@ function Grindbot:SwapMode()
         return
     end
 
+    -- If we are not in combat and not mounted and our health is less than we decided or if we use mana and its less than decided do the rest function.
+    if not DMW.Player.Combat and not IsMounted() and (DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana) then
+        Grindbot.Mode = Modes.Resting
+        return
+    end
+
     -- Loot out of combat?
     if self:CanLoot() and not hasEnemy then
         Grindbot.Mode = Modes.Looting
@@ -404,12 +410,6 @@ function Grindbot:SwapMode()
     -- If we are on vendor task and the Vendor.lua has determined the task to be done then we set the vendor task to false.
     if VendorTask and Vendor:TaskDone() then
         VendorTask = false
-        return
-    end
-    
-    -- If we are not in combat and not mounted and our health is less than we decided or if we use mana and its less than decided do the rest function.
-    if not DMW.Player.Combat and not IsMounted() and (DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana) then
-        Grindbot.Mode = Modes.Resting
         return
     end
 
