@@ -110,14 +110,20 @@ function Combat:SearchEnemy()
     end
 
     for _, Unit in ipairs(Table) do
-        if Unit:Interrupt() and (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
+        if Unit.Player and Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer) then
+            return true, Unit
+        end
+    end
+
+    for _, Unit in ipairs(Table) do
+        if not Unit.Player and Unit.Target == GetActivePlayer() and Unit:Interrupt() then
             return true, Unit
         end
     end
 
     for _, Unit in ipairs(Table) do
         local PowerType = UnitPowerType(Unit.Pointer)
-        if PowerType == 0 and (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer))) then
+        if not Unit.Player and Unit.Target == GetActivePlayer() and PowerType == 0 then
             return true, Unit
         end
     end
@@ -131,7 +137,7 @@ function Combat:SearchEnemy()
     end
 
     for _, Unit in ipairs(Table) do
-        if (Unit:UnitThreatSituation() > 0 and not UnitIsTapDenied(Unit.Pointer)) or (Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer)) then
+        if not Unit.Player and Unit.Target == GetActivePlayer() then
             return true, Unit
         end
     end
