@@ -214,7 +214,7 @@ end
 function Grindbot:RotationToggle()
     if DMW.Settings.profile.Grind.SkipCombatOnTransport then
         -- if we have skip aggro enabled then if we are near hotspot(150 yards) enable rotation otherwise disable it.
-        if Navigation:NearHotspot(150) then
+        if Navigation:NearHotspot(DMW.Settings.profile.Grind.RoamDistance) then
             RunMacroText('/LILIUM HUD Rotation 1')
         else
             RunMacroText('/LILIUM HUD Rotation 2')
@@ -402,7 +402,7 @@ function Grindbot:SwapMode()
     end
 
     -- If we got dismounted and we are near hotspot and we have an enemy and its closer than 10 yrds, attack it.
-    if not IsMounted() and Navigation:NearHotspot(150) and hasEnemy and theEnemy.Distance < 5 then
+    if not IsMounted() and hasEnemy and Combat:UnitNearHotspot(theEnemy.Pointer) then
         Grindbot.Mode = Modes.Combat
         return
     end
@@ -434,7 +434,7 @@ function Grindbot:SwapMode()
     end
 
     -- if we are in combat and we are near hotspot, set to combat mode.
-    if hasEnemy and Navigation:NearHotspot(150) then
+    if hasEnemy and Combat:UnitNearHotspot(theEnemy.Pointer) then
         Grindbot.Mode = Modes.Combat
         return
     end
