@@ -77,11 +77,8 @@ function Unit:LineOfSight(OtherUnit)
         return true
     end
     OtherUnit = OtherUnit or DMW.Player
-    local los1 = TraceLine(self.PosX, self.PosY, self.PosZ + 1, OtherUnit.PosX, OtherUnit.PosY, OtherUnit.PosZ + 1, 0x100010)
-    local los2 = TraceLine(self.PosX, self.PosY, self.PosZ + 1.5, OtherUnit.PosX, OtherUnit.PosY, OtherUnit.PosZ + 1.5, 0x100010)
-    local los3 = TraceLine(self.PosX, self.PosY, self.PosZ + 2, OtherUnit.PosX, OtherUnit.PosY, OtherUnit.PosZ + 2, 0x100010)
-
-    return los1 == nil and los2 == nil and los3 == nil
+    local los = TraceLine(self.PosX, self.PosY, self.PosZ + 1.5, OtherUnit.PosX, OtherUnit.PosY, OtherUnit.PosZ + 1.5, 0x100010)
+    return los == nil
 end
 
 function Unit:IsEnemy()

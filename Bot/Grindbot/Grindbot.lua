@@ -236,76 +236,75 @@ function Grindbot:Pulse()
     end
     -- Do stuff with timer end />
 
-    if DMW.Settings.profile.HUD.DrawVisuals == 1 then Navigation:DrawVisuals() end
-
-    if DMW.Settings.profile.HUD.Grindbot == 1 then
-        if #DMW.Settings.profile.Grind.HotSpots < 2 then
-            if not PauseFlags.Information then 
-                Log:DebugInfo('You need atleast 2 hotspots.')
-                PauseFlags.Information = true
-                RunMacroText('/LILIUM HUD Grindbot 2')
-                C_Timer.After(1, function() PauseFlags.Information = false end) 
-            end
-            return
+    if #DMW.Settings.profile.Grind.HotSpots < 2 then
+        if not PauseFlags.Information then 
+            Log:DebugInfo('You need atleast 2 hotspots.')
+            PauseFlags.Information = true
+            RunMacroText('/LILIUM HUD Grindbot 2')
+            C_Timer.After(1, function() PauseFlags.Information = false end) 
         end
-
-        -- Call the enable and disable function of rotation when going to and from vendor.
-        self:RotationToggle()
-        -- Call movement
-        Navigation:Movement()
-        if not Combat:EnemyBehind() then MoveForwardStop() end -- Just extra to make sure we dont walk like a moron
-
-        if not InformationOutput then
-            Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]') 
-            Log:NormalInfo('Repair Vendor [' .. DMW.Settings.profile.Grind.RepairVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.RepairVendorX, DMW.Settings.profile.Grind.RepairVendorY, DMW.Settings.profile.Grind.RepairVendorZ)) .. ' Yrds]')
-            Log:NormalInfo('Number of hotspots: ' .. #DMW.Settings.profile.Grind.HotSpots)
-            InformationOutput = true
-        end
-
-        -- This sets our state
-        self:SwapMode()
-
-        -- Do whatever our mode says.
-        if Grindbot.Mode == Modes.Dead then
-            Navigation:MoveToCorpse()
-            ModeFrame.text:SetText('Corpse Run')
-        end
-
-        if Grindbot.Mode == Modes.Combat then
-            Combat:AttackCombat()
-            ModeFrame.text:SetText('Combat Attack')
-        end
-
-        if Grindbot.Mode == Modes.Resting then
-            self:Rest()
-            ModeFrame.text:SetText('Resting')
-        end
-
-        if Grindbot.Mode == Modes.Vendor then
-            Vendor:DoTask()
-            ModeFrame.text:SetText('Vendor run')
-        end
-
-        if Grindbot.Mode == Modes.Looting then
-            self:GetLoot()
-            ModeFrame.text:SetText('Looting')
-        end
-
-        if Grindbot.Mode == Modes.Grinding then
-            Combat:Grinding()
-            ModeFrame.text:SetText('Grinding')
-        end
-
-        if Grindbot.Mode == Modes.Roaming then
-            Navigation:Roam()
-            ModeFrame.text:SetText('Roaming')
-        end
-    else
-        if not PauseFlags.Hotspotting then self:Hotspotter() end
-        Navigation:ResetPath()
-        Navigation:SortHotspots()
-        if InformationOutput then InformationOutput = false end
+        return
     end
+
+    -- Call the enable and disable function of rotation when going to and from vendor.
+    self:RotationToggle()
+    -- Call movement
+    Navigation:Movement()
+    if not Combat:EnemyBehind() then MoveForwardStop() end -- Just extra to make sure we dont walk like a moron
+
+    if not InformationOutput then
+        Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]') 
+        Log:NormalInfo('Repair Vendor [' .. DMW.Settings.profile.Grind.RepairVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.RepairVendorX, DMW.Settings.profile.Grind.RepairVendorY, DMW.Settings.profile.Grind.RepairVendorZ)) .. ' Yrds]')
+        Log:NormalInfo('Number of hotspots: ' .. #DMW.Settings.profile.Grind.HotSpots)
+        InformationOutput = true
+    end
+
+    -- This sets our state
+    self:SwapMode()
+
+    -- Do whatever our mode says.
+    if Grindbot.Mode == Modes.Dead then
+        Navigation:MoveToCorpse()
+        ModeFrame.text:SetText('Corpse Run')
+    end
+
+    if Grindbot.Mode == Modes.Combat then
+        Combat:AttackCombat()
+        ModeFrame.text:SetText('Combat Attack')
+    end
+
+    if Grindbot.Mode == Modes.Resting then
+        self:Rest()
+        ModeFrame.text:SetText('Resting')
+    end
+
+    if Grindbot.Mode == Modes.Vendor then
+        Vendor:DoTask()
+        ModeFrame.text:SetText('Vendor run')
+    end
+
+    if Grindbot.Mode == Modes.Looting then
+        self:GetLoot()
+        ModeFrame.text:SetText('Looting')
+    end
+
+    if Grindbot.Mode == Modes.Grinding then
+        Combat:Grinding()
+        ModeFrame.text:SetText('Grinding')
+    end
+
+    if Grindbot.Mode == Modes.Roaming then
+        Navigation:Roam()
+        ModeFrame.text:SetText('Roaming')
+    end
+end
+
+function Grindbot:DisabledFunctions()
+    if not PauseFlags.Hotspotting then self:Hotspotter() end
+    Navigation:ResetPath()
+    Navigation:SortHotspots()
+    if InformationOutput then InformationOutput = false end
+    ModeFrame.text:SetText('Disabled')
 end
 
 function Grindbot:GetLoot()

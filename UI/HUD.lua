@@ -15,16 +15,24 @@ function HUD.Init()
 end
 
 local CoreOptions = {
-    [6] = {
+    [7] = {
         DrawVisuals = {
             [1] = {Text = "Visuals |cFF00FF00Enabled", Tooltip = ""},
             [2] = {Text = "Visuals |cffff0000Disabled", Tooltip = ""}
         }
     },
+    [6] = {
+        BotMode = {
+            [1] = {Text = "Grindbot", Tooltip = ""},
+            [2] = {Text = "Lockpick", Tooltip = ""},
+            [3] = {Text = "Pickpocket", Tooltip = ""},
+            [4] = {Text = "Dungeon", Tooltip = ""}
+        }
+    },
     [5] = {
-        Grindbot = {
-            [1] = {Text = "Grindbot |cFF00FF00Enabled", Tooltip = ""},
-            [2] = {Text = "Grindbot |cffff0000Disabled", Tooltip = ""}
+        Engine = {
+            [1] = {Text = "Engine |cFF00FF00Enabled", Tooltip = ""},
+            [2] = {Text = "Engine |cffff0000Disabled", Tooltip = ""}
         }
     },
     [4] = {
