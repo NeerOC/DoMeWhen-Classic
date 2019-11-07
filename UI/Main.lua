@@ -175,7 +175,7 @@ local GrindbotOptionsTable = {
                 },
                 doSkin = {
                     type = "toggle",
-                    order = 5,
+                    order = 6,
                     name = "Skin Mobs",
                     desc = "Will skin mobs.",
                     width = 0.7,
@@ -185,7 +185,20 @@ local GrindbotOptionsTable = {
                     set = function(info, value)
                         DMW.Settings.profile.Grind.doSkin = value
                     end
-                }
+                },
+                useHearthstone = {
+                    type = "toggle",
+                    order = 7,
+                    name = "Hearthstone",
+                    desc = "Will use Hearthstone on vendor runs (IF IT CAN BE USED)",
+                    width = 0.7,
+                    get = function()
+                        return DMW.Settings.profile.Grind.useHearthstone
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.useHearthstone = value
+                    end
+                },
             }
         },
         SecondTab = {

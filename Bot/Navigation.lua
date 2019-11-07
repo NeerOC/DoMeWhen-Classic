@@ -158,7 +158,6 @@ function Navigation:NearHotspot(yrds)
     return false
 end
 
-
 function Navigation:DrawVisuals()
     LibDraw.SetWidth(4)
     LibDraw.SetColorRaw(0, 128, 128, 100)
@@ -213,6 +212,7 @@ function Navigation:Movement()
                 NavPath = nil
             end
         else
+            --if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, lastX, lastY, lastZ) == 0 then
             if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and lastZ == DMW.Player.PosZ then
                 stuckCount = stuckCount + 1
                 if stuckCount > 100 then

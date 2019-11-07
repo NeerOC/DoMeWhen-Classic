@@ -181,6 +181,14 @@ function Vendor:GetDurability()
     return totalDurability
 end
 
+function Vendor:useHearthstone()
+    if DMW.Settings.profile.Grind.useHearthstone and IsUsableItem('Hearthstone') and not DMW.Player.Casting then
+        UseItemByName('Hearthstone')
+        return true
+    end
+    return false
+end
+
 function Vendor:DoTask()
     ItemSaveList = DMW.Settings.profile.Grind.itemSaveList
     local RepairVendorX, RepairVendorY, RepairVendorZ = DMW.Settings.profile.Grind.RepairVendorX, DMW.Settings.profile.Grind.RepairVendorY, DMW.Settings.profile.Grind.RepairVendorZ
@@ -206,6 +214,11 @@ function Vendor:DoTask()
     if (BuyFood or BuyWater) and FoodVendorName == '' then Log:DebugInfo('Set Food Vendor with /DMW Food') return end
 
     if self:CanSell(MaxRarity) or self:GetDurability() < RepairPercent then
+        if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, RepairVendorX, RepairVendorY, RepairVendorZ) >= 200 then
+            if self:useHearthstone() then
+                return
+            end
+        end
         -- Go sell and repair at repair vendor if either we have something to sell or we are below durability threshold
         if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, RepairVendorX, RepairVendorY, RepairVendorZ) >= 5 then
             -- Walk to vendor if we arent close.
@@ -234,6 +247,12 @@ function Vendor:DoTask()
 
     if BuyFood and NeedFoodCount >= 10 then
         -- We need to buy food
+        if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, FoodVendorX, FoodVendorY, FoodVendorZ) >= 200 then
+            if self:useHearthstone() then
+                return
+            end
+        end
+        
         if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, FoodVendorX, FoodVendorY, FoodVendorZ) >= 5 then
             -- Walk to vendor if we arent close.
             Navigation:MoveTo(FoodVendorX, FoodVendorY, FoodVendorZ)
@@ -259,6 +278,12 @@ function Vendor:DoTask()
 
     if BuyWater and NeedWaterCount >= 10 then
         -- We need to buy water
+        if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, FoodVendorX, FoodVendorY, FoodVendorZ) >= 200 then
+            if self:useHearthstone() then
+                return
+            end
+        end
+
         if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, FoodVendorX, FoodVendorY, FoodVendorZ) >= 5 then
             -- Walk to vendor if we arent close.
             Navigation:MoveTo(FoodVendorX, FoodVendorY, FoodVendorZ)
@@ -284,6 +309,5 @@ function Vendor:DoTask()
 
     -- If we reach this part then we have everything.
     if not TaskDone then Log:NormalInfo('Vendor run complete.') TaskDone = true end
-
 end
 

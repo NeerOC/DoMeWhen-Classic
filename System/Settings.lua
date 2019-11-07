@@ -70,6 +70,7 @@ local defaults = {
             MountBlacklist = {},
             beHuman = true,
             doSkin = false,
+            useHearthstone = false,
             itemSaveList = {}
         },
         Tracker = {
