@@ -231,7 +231,6 @@ function Grindbot:Pulse()
         self:LoadSettings()
         if DMW.Settings.profile.Grind.openClams then self:ClamTask() end
         self:DeleteTask()
-        if not Combat:EnemyBehind() then MoveForwardStop() end -- Just extra to make sure we dont walk like a moron
         Throttle = true
         C_Timer.After(0.1, function() Throttle = false end)
     end
@@ -254,6 +253,7 @@ function Grindbot:Pulse()
         self:RotationToggle()
         -- Call movement
         Navigation:Movement()
+        if not Combat:EnemyBehind() then MoveForwardStop() end -- Just extra to make sure we dont walk like a moron
 
         if not InformationOutput then
             Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]') 
