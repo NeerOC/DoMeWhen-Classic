@@ -182,10 +182,12 @@ function Vendor:GetDurability()
 end
 
 function Vendor:useHearthstone()
-    if DMW.Settings.profile.Grind.useHearthstone and IsUsableItem('Hearthstone') and not DMW.Player.Casting then
-        UseItemByName('Hearthstone')
-        return true
-    end
+    local _,secleft = GetItemCooldown(6948)
+    if DMW.Settings.profile.Grind.useHearthstone and secleft < 2 and not DMW.Player.Casting then
+        if DMW.Player.Moving then Navigation:ResetPath() Navigation:StopMoving() end
+            UseItemByName('Hearthstone')
+            return true
+        end
     return false
 end
 

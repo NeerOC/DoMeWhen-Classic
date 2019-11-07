@@ -214,7 +214,7 @@ end
 function Grindbot:RotationToggle()
     if DMW.Settings.profile.Grind.SkipCombatOnTransport then
         -- if we have skip aggro enabled then if we are near hotspot(150 yards) enable rotation otherwise disable it.
-        if Navigation:NearHotspot(DMW.Settings.profile.Grind.RoamDistance) then
+        if Navigation:NearHotspot(DMW.Settings.profile.Grind.RoamDistance * 1.5) then
             RunMacroText('/LILIUM HUD Rotation 1')
         else
             RunMacroText('/LILIUM HUD Rotation 2')
@@ -317,14 +317,14 @@ function Grindbot:GetLoot()
             Navigation:MoveTo(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ)
         else
             if IsMounted() then Dismount() end
-            if not PauseFlags.Interacting then
+            if not PauseFlags.Interacting and not DMW.Player.Casting then
                 for _, Unit in pairs(DMW.Units) do
                     if Unit.Dead and Unit.Distance < 5 and (UnitCanBeLooted(Unit.Pointer) or DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer)) then
                         InteractUnit(Unit.Pointer)
                     end
                 end
                 PauseFlags.Interacting = true
-                C_Timer.After(0.1, function() PauseFlags.Interacting = false end)
+                C_Timer.After(0.8, function() PauseFlags.Interacting = false end)
             end
         end
     end

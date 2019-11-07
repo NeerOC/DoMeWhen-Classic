@@ -186,9 +186,14 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.doSkin = value
                     end
                 },
+                GeneralSpacer = {
+                    type = "header",
+                    order = 7,
+                    name = ""
+                },
                 useHearthstone = {
                     type = "toggle",
-                    order = 7,
+                    order = 8,
                     name = "Hearthstone",
                     desc = "Will use Hearthstone on vendor runs (IF IT CAN BE USED)",
                     width = 0.7,
