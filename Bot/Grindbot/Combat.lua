@@ -141,7 +141,7 @@ function Combat:SearchEnemy()
     end
 
     for _, Unit in ipairs(Table) do
-        if Unit:HasThreat() and not UnitIsTapDenied(Unit.Pointer) then
+        if Unit:UnitThreatSituation(DMW.Player) > 1 and not UnitIsTapDenied(Unit.Pointer) then
             return true, Unit
         end
     end
@@ -149,7 +149,7 @@ end
 
 function Combat:EnemyBehind()
     for _, Unit in pairs(DMW.Attackable) do
-        if Unit.Distance < 10 and Unit:HasThreat() and ObjectIsBehind(Unit.Pointer, 'player') then
+        if Unit.Distance < 10 and Unit:UnitThreatSituation(DMW.Player) > 1 and ObjectIsBehind(Unit.Pointer, 'player') then
            return true
         end
     end

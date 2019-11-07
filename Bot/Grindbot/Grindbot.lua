@@ -231,6 +231,7 @@ function Grindbot:Pulse()
         self:LoadSettings()
         if DMW.Settings.profile.Grind.openClams then self:ClamTask() end
         self:DeleteTask()
+        if not Combat:EnemyBehind() then MoveForwardStop() end -- Just extra to make sure we dont walk like a moron
         Throttle = true
         C_Timer.After(0.1, function() Throttle = false end)
     end
