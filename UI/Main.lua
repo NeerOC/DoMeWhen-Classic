@@ -172,6 +172,19 @@ local GrindbotOptionsTable = {
                     set = function(info, value)
                         DMW.Settings.profile.Grind.beHuman = value
                     end
+                },
+                doSkin = {
+                    type = "toggle",
+                    order = 5,
+                    name = "Skin Mobs",
+                    desc = "Will skin mobs.",
+                    width = 0.7,
+                    get = function()
+                        return DMW.Settings.profile.Grind.doSkin
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.doSkin = value
+                    end
                 }
             }
         },

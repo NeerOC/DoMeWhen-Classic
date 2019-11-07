@@ -67,7 +67,7 @@ function Grindbot:CanLoot()
 
         local Table = {}
         for _, Unit in pairs(DMW.Units) do
-            if Unit.Dead and UnitCanBeLooted(Unit.Pointer) then
+            if Unit.Dead and (UnitCanBeLooted(Unit.Pointer) or DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer)) then
                 table.insert(Table, Unit)
             end
         end
@@ -82,7 +82,7 @@ function Grindbot:CanLoot()
         end
     
         for _, Unit in ipairs(Table) do
-            if Unit.Distance <= 50 then
+            if Unit.Distance <= 30 then
                 return true, Unit
             end
         end
@@ -320,7 +320,7 @@ function Grindbot:GetLoot()
             if IsMounted() then Dismount() end
             if not PauseFlags.Interacting then
                 for _, Unit in pairs(DMW.Units) do
-                    if Unit.Dead and Unit.Distance < 5 and UnitCanBeLooted(Unit.Pointer) then
+                    if Unit.Dead and Unit.Distance < 5 and (UnitCanBeLooted(Unit.Pointer) or DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer)) then
                         InteractUnit(Unit.Pointer)
                     end
                 end
