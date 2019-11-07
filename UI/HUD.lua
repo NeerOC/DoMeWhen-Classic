@@ -24,8 +24,8 @@ local CoreOptions = {
     [6] = {
         BotMode = {
             [1] = {Text = "Grindbot", Tooltip = ""},
-            [2] = {Text = "Lockpick", Tooltip = ""},
-            [3] = {Text = "Pickpocket", Tooltip = ""},
+            [2] = {Text = "Pickpocket", Tooltip = ""},
+            [3] = {Text = "Lockpick", Tooltip = ""},
             [4] = {Text = "Dungeon", Tooltip = ""}
         }
     },

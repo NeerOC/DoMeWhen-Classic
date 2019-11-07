@@ -62,11 +62,14 @@ Helpers\Swing.lua
 
 Bot\Log.lua
 Bot\Navigation.lua
+
 Bot\Grindbot\Vendor.lua
 Bot\Grindbot\Combat.lua
 Bot\Grindbot\Grindbot.lua
-Bot\Engine.lua
 
+Bot\Pickpocket\Pickpocket.lua
+Bot\Pickpocket\Picklock.lua
+Bot\Engine.lua
 
 Enums\Spells\Global.lua
 Enums\Spells\Druid.lua
