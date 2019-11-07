@@ -33,7 +33,7 @@ function Combat:IsGoodUnit(unit)
     local Flags = {
         notPet = ObjectCreator(unit) == nil,
         noTargetOrMeOrPet = UnitTarget(unit) == nil or UnitIsUnit(UnitTarget(unit), 'player') or UnitIsUnit(UnitTarget(unit), 'pet'),
-        isLevel = UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
+        isLevel = UnitLevel('player') == 60 or UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
         isPVP = not UnitIsPVP(unit),
         inRange = self:UnitNearHotspot(unit),
         notDead = not UnitIsDeadOrGhost(unit),
