@@ -6,8 +6,7 @@ local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 local TaskDone = false
 
--- ETA: 2020
-local ItemSaveList = {'Black Pearl', 'Golden Pearl', 'Felcloth', 'Formula: Enchant Weapon - Icy Chill', 'Formula: Enchant Bracer - Superior Spirit'}
+local ItemSaveList = nil
 
 local slots = {
 	"RangedSlot",
@@ -183,6 +182,7 @@ function Vendor:GetDurability()
 end
 
 function Vendor:DoTask()
+    ItemSaveList = DMW.Settings.profile.Grind.itemSaveList
     local RepairVendorX, RepairVendorY, RepairVendorZ = DMW.Settings.profile.Grind.RepairVendorX, DMW.Settings.profile.Grind.RepairVendorY, DMW.Settings.profile.Grind.RepairVendorZ
     local FoodVendorX, FoodVendorY, FoodVendorZ = DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ
     local FoodVendorName = DMW.Settings.profile.Grind.FoodVendorName
@@ -195,7 +195,6 @@ function Vendor:DoTask()
     local MaxRarity = DMW.Settings.profile.Grind.MaximumVendorRarity - 1
     local FoodCount = DMW.Settings.profile.Grind.FoodAmount
     local WaterCount = DMW.Settings.profile.Grind.WaterAmount
-
     local NeedWaterCount = WaterCount - GetItemCount(WaterName)
     local NeedFoodCount = FoodCount - GetItemCount(FoodName)
 

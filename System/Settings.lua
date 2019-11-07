@@ -69,7 +69,8 @@ local defaults = {
             openClams = false,
             MountBlacklist = {},
             beHuman = true,
-            doSkin = false
+            doSkin = false,
+            itemSaveList = {}
         },
         Tracker = {
             Herbs = false,

@@ -380,7 +380,7 @@ local GrindbotOptionsTable = {
                     desc = "At what range can you attack the mobs?",
                     width = "full",
                     min = 3,
-                    max = 30,
+                    max = 35,
                     step = 1,
                     get = function()
                         return DMW.Settings.profile.Grind.CombatDistance
