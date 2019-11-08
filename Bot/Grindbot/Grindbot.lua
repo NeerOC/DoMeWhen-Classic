@@ -50,7 +50,18 @@ ModeFrame:SetPoint("CENTER",0,-200)
 ModeFrame.text = ModeFrame:CreateFontString(nil,"ARTWORK") 
 ModeFrame.text:SetFont("Fonts\\ARIALN.ttf", 13, "OUTLINE")
 ModeFrame.text:SetPoint("CENTER",0,0)
+--
 
+local evFrame=CreateFrame("Frame");
+evFrame:RegisterEvent("CHAT_MSG_WHISPER");
+evFrame:SetScript("OnEvent",function(self,event,msg,ply)
+    if DMW.Settings.profile.Grind.ignoreWhispers then
+        if event=="CHAT_MSG_WHISPER" then
+            Log:DebugInfo('Added [' .. ply .. '] To Ignore List')
+            RunMacroText('/Ignore ' .. ply)
+        end
+    end
+end);
 
 -- < Global functions
 function ClearHotspot()

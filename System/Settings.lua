@@ -73,6 +73,7 @@ local defaults = {
             beHuman = true,
             doSkin = false,
             useHearthstone = false,
+            ignoreWhispers = false,
             itemSaveList = {},
         },
         Tracker = {

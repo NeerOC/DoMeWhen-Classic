@@ -142,7 +142,7 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.drawCircles = value
                     end
                 },
-                GeneralSpacer = {
+                drawSpacer = {
                     type = "header",
                     order = 4,
                     name = ""
@@ -162,7 +162,7 @@ local GrindbotOptionsTable = {
                 },
                 beHuman = {
                     type = "toggle",
-                    order = 5,
+                    order = 6,
                     name = "Be Human",
                     desc = "Will strafe and jump with good conditions.",
                     width = 0.7,
@@ -175,7 +175,7 @@ local GrindbotOptionsTable = {
                 },
                 doSkin = {
                     type = "toggle",
-                    order = 6,
+                    order = 7,
                     name = "Skin Mobs",
                     desc = "Will skin mobs.",
                     width = 0.7,
@@ -186,14 +186,14 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.doSkin = value
                     end
                 },
-                GeneralSpacer = {
+                miscSpacer = {
                     type = "header",
-                    order = 7,
+                    order = 8,
                     name = ""
                 },
                 useHearthstone = {
                     type = "toggle",
-                    order = 8,
+                    order = 9,
                     name = "Hearthstone",
                     desc = "Will use Hearthstone on vendor runs (IF IT CAN BE USED)",
                     width = 0.7,
@@ -202,6 +202,19 @@ local GrindbotOptionsTable = {
                     end,
                     set = function(info, value)
                         DMW.Settings.profile.Grind.useHearthstone = value
+                    end
+                },
+                ignoreWhisperers = {
+                    type = "toggle",
+                    order = 10,
+                    name = "Ignore Players",
+                    desc = "Will ignore players who whisper you.",
+                    width = 0.9,
+                    get = function()
+                        return DMW.Settings.profile.Grind.ignoreWhispers
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.ignoreWhispers = value
                     end
                 },
             }
