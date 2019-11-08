@@ -286,7 +286,7 @@ function Navigation:Mount()
                 Mounting = true
                 C_Timer.After(4, function() Mounting = false if not IsMounted() then mountTries = mountTries + 1 end end)
             else
-                if not Mounting and GetItemCooldown(GetItemInfoInstant(DMW.Settings.profile.Grind.MountName)) == 0 then
+                if not Mounting and DMW.Settings.profile.Grind.MountName ~= "" and GetItemCooldown(GetItemInfoInstant(DMW.Settings.profile.Grind.MountName)) == 0 then
                     UseItemByName(DMW.Settings.profile.Grind.MountName)
                     self:ResetPath()
                     Mounting = true
