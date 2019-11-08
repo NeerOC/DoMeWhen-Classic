@@ -12,6 +12,7 @@ local DestX, DestY, DestZ
 local EndX, EndY, EndZ
 local Mounting = false
 local stuckCount = 0
+local unStucking = false
 
 local ObsDistance = 4
 local ObsFlags = bit.bor(0x1, 0x10)
@@ -218,10 +219,13 @@ function Navigation:Movement()
             end
         else
             --if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, lastX, lastY, lastZ) == 0 then
-            if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and lastZ == DMW.Player.PosZ then
+            if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY then
                 stuckCount = stuckCount + 1
                 if stuckCount > 100 then
                     JumpOrAscendStart()
+                    Dismount()
+                    unStucking = true
+                    C_Timer.After(2, function() unStucking = false end)
                     self:Unstuck()
                     stuckCount = 0
                 end
@@ -238,7 +242,7 @@ function Navigation:MoveTo(toX, toY, toZ)
     if (DMW.Player.Casting) or EndX and GetDistanceBetweenPositions(toX, toY, toZ, EndX, EndY, EndZ) < 0.1 and NavPath then return end
 
     pathIndex = 1
-    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, false, 1)
+    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, true, 1)
 
     if NavPath then
         EndX, EndY, EndZ = toX, toY, toZ
@@ -260,7 +264,7 @@ function Navigation:GrindRoam()
 end
 
 function Navigation:CanMount()
-    return not IsSwimming() and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
+    return not unStucking and not IsSwimming() and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
 end
 
 function Navigation:Mount()
