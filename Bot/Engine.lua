@@ -48,8 +48,8 @@ function Engine:SetupFolders()
     end
 end
 
-function Engine:SetReady()
-    Ready = true
+function Engine:SetReady(bool)
+    Ready = bool
 end
 
 function Engine:IsReady()

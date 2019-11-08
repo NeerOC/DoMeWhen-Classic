@@ -47,7 +47,7 @@ local function Init()
         InitializeNavigation(function(result) 
             if result == true then
                 Initialized = true
-                DMW.Bot.Engine:SetReady()
+                DMW.Bot.Engine:SetReady(true)
                 print("|TInterface\\Icons\\Ability_DualWield:20:20:0:0:20:20:0:20:0:20|t |cfff54272[Lilium]|r " .. 'Fully Initialized, Good Luck, Have Fun!')
             end
         end)
