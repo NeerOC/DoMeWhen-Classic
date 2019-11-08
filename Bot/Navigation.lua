@@ -211,7 +211,6 @@ function Navigation:Movement()
         end
 
         local pX, pY, pZ = ObjectPosition('player')
-       --local Distance = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DestX, DestY, DestZ)
         local Distance = sqrt((DestX - pX) ^ 2) + ((DestY - pY) ^ 2) 
 
         if Distance <= 1 then
@@ -226,9 +225,7 @@ function Navigation:Movement()
                 stuckCount = stuckCount + 1
                 if stuckCount > 200 then
                     Dismount()
-                    unStucking = true
-                    self:Unstuck()
-                    stuckCount = 0
+                    if not unStucking then self:Unstuck() unStucking = true stuckCount = 0 end
                 end
             end
             if DestX then MoveTo(DestX, DestY, DestZ)
@@ -265,7 +262,7 @@ function Navigation:GrindRoam()
 end
 
 function Navigation:CanMount()
-    return not IsSwimming() and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
+    return not unStucking and not IsSwimming() and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
 end
 
 function Navigation:Mount()
@@ -361,11 +358,11 @@ function Navigation:Unstuck()
 
     Log:SevereInfo('Unstuck!')
     MoveBackwardStart()
+    C_Timer.After(1.3, function() unStucking = false end)
     C_Timer.After(0.5, function() MoveBackwardStop() strafeTime = true end)
     if strafeTime then
         strafeTime = false
-        C_Timer.After(1, function() unStucking = false end)
         StrafeLeftStart()
-        C_Timer.After(0.3, function() StrafeLeftStop() C_Timer.After(0.3, function() StrafeRightStart() C_Timer.After(0.3, function() StrafeRightStop() JumpOrAscendStart() self:ResetPath() end) end) end)
+        C_Timer.After(0.3, function() StrafeLeftStop() StrafeRightStart() C_Timer.After(0.3, function() StrafeRightStop() JumpOrAscendStart() self:ResetPath() end) end)
     end
 end
