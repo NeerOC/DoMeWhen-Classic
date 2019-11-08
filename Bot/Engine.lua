@@ -7,6 +7,7 @@ local Picklock = DMW.Bot.Picklock
 local Navigation = DMW.Bot.Navigation
 local Log = DMW.Bot.Log
 
+local Ready = false
 local folderChecks = false
 local readItemFile = false
 
@@ -16,7 +17,7 @@ function Engine:Pulse()
     if not folderChecks then self:SetupFolders() folderChecks = true end
     if not readItemFile then self:LoadFile() readItemFile = true C_Timer.After(1, function() readItemFile = false end) end
     -- If Engine is enabled then start choice of bot.
-    if DMW.Settings.profile.HUD.Engine == 1 then
+    if DMW.Settings.profile.HUD.Engine == 1 and self:IsReady() then
         -- If we chose Grindbot then pulse Grindbot.
         if DMW.Settings.profile.HUD.BotMode == 1 then
             Grindbot:Pulse()
@@ -44,6 +45,14 @@ function Engine:SetupFolders()
     else
         WriteFile(GetHackDirectory() .. "/Lilium/Grindbot/itemList.txt", "Golden Pearl\nBlack Pearl\n", true, true)
     end
+end
+
+function Engine:SetReady()
+    Ready = true
+end
+
+function Engine:IsReady()
+    return Ready
 end
 
 function Engine:LoadFile()
