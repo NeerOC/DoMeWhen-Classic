@@ -363,6 +363,6 @@ function Navigation:Unstuck()
     if strafeTime then
         strafeTime = false
         StrafeLeftStart()
-        C_Timer.After(0.3, function() StrafeLeftStop() StrafeRightStart() C_Timer.After(0.3, function() StrafeRightStop() JumpOrAscendStart() self:ResetPath() end) end)
+        C_Timer.After(math.random() + math.random(0.1, 0.3), function() StrafeLeftStop() StrafeRightStart() C_Timer.After(math.random() + math.random(0.1, 0.3), function() StrafeRightStop() JumpOrAscendStart() self:ResetPath() end) end)
     end
 end
