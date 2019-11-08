@@ -332,7 +332,7 @@ function Grindbot:GetLoot()
             if not PauseFlags.Interacting and not DMW.Player.Casting then
                 for _, Unit in pairs(DMW.Units) do
                     if Unit.Dead and Unit.Distance < 5 and (UnitCanBeLooted(Unit.Pointer) or DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer)) then
-                        if InteractUnit(Unit.Pointer) then PauseFlags.skinDelay = true C_Timer.After(1, function() PauseFlags.skinDelay = false end) end
+                        if InteractUnit(Unit.Pointer) then PauseFlags.skinDelay = true C_Timer.After(2.5, function() PauseFlags.skinDelay = false end) end
                     end
                 end
                 PauseFlags.Interacting = true

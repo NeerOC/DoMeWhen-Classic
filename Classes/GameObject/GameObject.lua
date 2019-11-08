@@ -27,7 +27,7 @@ function GameObject:GetDistance(OtherUnit)
 end
 
 function GameObject:GetNavDistance()
-    if DMW.Bot.Engine:IsReady() then
+    if DMW.Bot.Engine:IsReady() and DMW.Settings.profile.HUD.BotMode == 3 then
         return DMW.Bot.Navigation:GetPathDistanceTo(self)
     end
     return 999

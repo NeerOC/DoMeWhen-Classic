@@ -31,6 +31,7 @@ function Combat:IsGoodUnit(unit)
     local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
 
     local Flags = {
+        notCritter = UnitCreatureTypeID(unit) ~= 8,
         notPet = ObjectCreator(unit) == nil,
         noTargetOrMeOrPet = UnitTarget(unit) == nil or UnitIsUnit(UnitTarget(unit), 'player') or UnitIsUnit(UnitTarget(unit), 'pet'),
         isLevel = UnitLevel('player') == 60 or UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
