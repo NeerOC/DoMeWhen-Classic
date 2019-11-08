@@ -14,6 +14,7 @@ local readItemFile = false
 function Engine:Pulse()
     -- Lets draw visuals if the user made the choice.
     if DMW.Settings.profile.HUD.DrawVisuals == 1 then Navigation:DrawVisuals() end
+    if not IsHackEnabled('antiafk') then SetHackEnabled ('antiafk', true) Log:DebugInfo('AntiAFK Enabled') end
     if not folderChecks then self:SetupFolders() folderChecks = true end
     if not readItemFile then self:LoadFile() readItemFile = true C_Timer.After(1, function() readItemFile = false end) end
     -- If Engine is enabled then start choice of bot.

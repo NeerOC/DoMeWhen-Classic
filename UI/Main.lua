@@ -1178,7 +1178,8 @@ local Options = {
                     desc = "Enable/Disable EWT Anti Afk",
                     width = "full",
                     get = function()
-                        return IsHackEnabled("antiafk")
+                        local antiEnabled = IsHackEnabled('antiafk')
+                        return antiEnabled
                     end,
                     set = function(info, value)
                         SetHackEnabled("antiafk", value)
