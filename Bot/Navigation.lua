@@ -196,7 +196,12 @@ function Navigation:Movement()
         DestY = NavPath[pathIndex][2]
         DestZ = NavPath[pathIndex][3]
 
-        if self:CalcPathDistance(NavPath) > 60 and self:CanMount() then
+        if self:CalcPathDistance(NavPath) > DMW.Settings.profile.Grind.mountDistance and DMW.Settings.profile.Grind.UseMount and self:CanMount() then
+            self:Mount()
+            return
+        end
+
+        if DMW.Settings.profile.Grind.vendorMount and Grindbot.Mode == 4 and self:CanMount() then
             self:Mount()
             return
         end
@@ -255,7 +260,7 @@ function Navigation:Roam()
 end
 
 function Navigation:CanMount()
-    return DMW.Settings.profile.Grind.UseMount and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
+    return not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
 end
 
 function Navigation:Mount()

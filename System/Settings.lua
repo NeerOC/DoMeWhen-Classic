@@ -62,6 +62,8 @@ local defaults = {
             BuyFood = false,
             BuyWater = false,
             UseMount = false,
+            vendorMount = false,
+            mountDistance = 60,
             SkipCombatOnTransport = true,
             drawPath = true,
             drawHotspots = true,
@@ -71,7 +73,7 @@ local defaults = {
             beHuman = true,
             doSkin = false,
             useHearthstone = false,
-            itemSaveList = {}
+            itemSaveList = {},
         },
         Tracker = {
             Herbs = false,

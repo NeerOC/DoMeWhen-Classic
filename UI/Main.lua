@@ -469,7 +469,7 @@ local GrindbotOptionsTable = {
                     type = "input",
                     order = 1,
                     name = "Mount Name",
-                    desc = "Name of the item used to summon your mount.",
+                    desc = "Warlocks and Paladins automatically use their Mount Spell, otherwise you need to type in the mount item name.",
                     width = 0.9,
                     get = function()
                         return DMW.Settings.profile.Grind.MountName
@@ -491,9 +491,43 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.UseMount = value
                     end
                 },
-                SkipCombat = {
+                vendorMount = {
                     type = "toggle",
                     order = 3,
+                    name = "Vendor Mount",
+                    desc = "Do you only wanna use the mount when going to vendors?",
+                    width = 0.6,
+                    get = function()
+                        return DMW.Settings.profile.Grind.vendorMount
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.vendorMount = value
+                    end
+                },
+                GeneralHeader = {
+                    type = "header",
+                    order = 4,
+                    name = ""
+                },
+                MountDistance = {
+                    type = "range",
+                    order = 5,
+                    name = "Mount Distance",
+                    desc = "Minimum Range before we should use mount.",
+                    width = "full",
+                    min = 30,
+                    max = 200,
+                    step = 10,
+                    get = function()
+                        return DMW.Settings.profile.Grind.mountDistance
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.mountDistance = value
+                    end
+                },
+                SkipCombat = {
+                    type = "toggle",
+                    order = 6,
                     name = "Skip Aggro",
                     desc = "Do you wanna ignore monsters if we aren't near the designated hotspots?",
                     width = 0.6,
@@ -503,12 +537,7 @@ local GrindbotOptionsTable = {
                     set = function(info, value)
                         DMW.Settings.profile.Grind.SkipCombatOnTransport = value
                     end
-                },
-                GeneralHeader = {
-                    type = "header",
-                    order = 4,
-                    name = ""
-                },
+                }
             }
         }
     }

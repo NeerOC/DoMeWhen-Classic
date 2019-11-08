@@ -30,7 +30,7 @@ function Engine:Pulse()
             Picklock:Pulse()
         end
     else
-        Grindbot:DisabledFunctions()
+        if DMW.Settings.profile.HUD.BotMode == 1 then Grindbot:DisabledFunctions() end
     end
 end
 

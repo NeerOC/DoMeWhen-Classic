@@ -128,7 +128,7 @@ function Combat:SearchEnemy()
 
     if UnitExists('pet') then
         for _, Unit in ipairs(Table) do
-            if ((UnitIsUnit(Unit.Target, 'pet') and UnitAffectingCombat('pet'))) then
+            if DMW.Player.PetActive and Unit.Target and ((UnitIsUnit(Unit.Target, 'pet') and UnitAffectingCombat('pet'))) then
                 return true, Unit
             end
         end
