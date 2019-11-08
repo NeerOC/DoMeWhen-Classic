@@ -140,9 +140,11 @@ function Combat:SearchEnemy()
         end
     end
 
-    for _, Unit in ipairs(Table) do
-        if Unit:UnitThreatSituation(DMW.Player) > 1 and not UnitIsTapDenied(Unit.Pointer) then
-            return true, Unit
+    if DMW.Player.Combat then
+        for _, Unit in ipairs(Table) do
+            if UnitAffectingCombat(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) and Unit.Distance < 15 then
+                return true, Unit
+            end
         end
     end
 end

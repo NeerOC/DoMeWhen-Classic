@@ -12,7 +12,9 @@ local DestX, DestY, DestZ
 local EndX, EndY, EndZ
 local Mounting = false
 local stuckCount = 0
+local mountTries = 0
 local unStucking = false
+
 
 local ObsDistance = 4
 local ObsFlags = bit.bor(0x1, 0x10)
@@ -191,7 +193,7 @@ end
 
 function Navigation:Movement()
     local NoMoveFlags = bit.bor(DMW.Enums.UnitFlags.Stunned, DMW.Enums.UnitFlags.Confused, DMW.Enums.UnitFlags.Pacified, DMW.Enums.UnitFlags.Feared)
-
+    if IsMounted() and mountTries > 0 then mountTries = 0 end
     if NavPath and not DMW.Player.Casting and not DMW.Player:HasFlag(NoMoveFlags) and not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Root) then
         DestX = NavPath[pathIndex][1]
         DestY = NavPath[pathIndex][2]
@@ -221,7 +223,7 @@ function Navigation:Movement()
             --if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, lastX, lastY, lastZ) == 0 then
             if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY then
                 stuckCount = stuckCount + 1
-                if stuckCount > 100 then
+                if stuckCount > 200 then
                     JumpOrAscendStart()
                     Dismount()
                     unStucking = true
@@ -269,6 +271,10 @@ end
 
 function Navigation:Mount()
     local Spell = DMW.Player.Spells
+    if mountTries > 1 then
+        AddMountBlackList()
+        mountTries = 0
+    end
     if not DMW.Player.Casting and not IsMounted() then
         if DMW.Player.Moving then
             self:StopMoving()
@@ -278,10 +284,14 @@ function Navigation:Mount()
                 Spell.SummonMount:Cast(DMW.Player)
                 self:ResetPath()
                 Mounting = true
-                C_Timer.After(4, function() Mounting = false end)
+                C_Timer.After(4, function() Mounting = false if not IsMounted() then mountTries = mountTries + 1 end end)
             else
-                UseItemByName(DMW.Settings.profile.Grind.MountName)
-                self:ResetPath()
+                if not Mounting and GetItemCooldown(GetItemInfoInstant(DMW.Settings.profile.Grind.MountName)) == 0 then
+                    UseItemByName(DMW.Settings.profile.Grind.MountName)
+                    self:ResetPath()
+                    Mounting = true
+                    C_Timer.After(4, function() Mounting = false if not IsMounted() then mountTries = mountTries + 1 end end)
+                end
             end
         end
     end

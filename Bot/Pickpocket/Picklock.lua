@@ -23,7 +23,7 @@ function Picklock:Pulse()
                 --print('too far' .. theLockbox.Distance)
                 Navigation:MoveTo(theLockbox.PosX, theLockbox.PosY, theLockbox.PosZ)
             else
-                if IsMounted() then Dismount() end
+                if IsMounted() then Dismount() return end
                 if DMW.Player.Moving then Navigation:StopMoving() return end
                 if not PauseFlags.Interacting then ObjectInteract(theLockbox.Pointer) PauseFlags.Interacting = true C_Timer.After(0.5, function() PauseFlags.Interacting = false end) end
             end
