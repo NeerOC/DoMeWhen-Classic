@@ -266,7 +266,7 @@ function Navigation:GrindRoam()
 end
 
 function Navigation:CanMount()
-    return not unStucking and not IsSwimming() and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
+    return not IsSwimming() and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
 end
 
 function Navigation:Mount()

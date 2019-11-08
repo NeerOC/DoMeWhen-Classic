@@ -19,7 +19,7 @@ function Picklock:Pulse()
     local distanceBetween = 500
 
     if hasEnemy and hasLockbox then
-        distanceBetween = GetDistanceBetweenPosition(theEnemy.PosX, theEnemy.PosY, theEnemy.PosZ, theLockbox.PosX, theLockbox.PosY,theLockbox.PosZ)
+        distanceBetween = GetDistanceBetweenPositions(theEnemy.PosX, theEnemy.PosY, theEnemy.PosZ, theLockbox.PosX, theLockbox.PosY,theLockbox.PosZ)
     end
     
 
