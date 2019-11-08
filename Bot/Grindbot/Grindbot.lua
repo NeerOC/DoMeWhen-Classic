@@ -9,6 +9,7 @@ local Log = DMW.Bot.Log
 local Throttle = false
 local VendorTask = false
 local InformationOutput = false
+local skinBlacklist = {}
 
 local PauseFlags = {
     Interacting = false,
@@ -42,6 +43,8 @@ local Settings = {
     WaterName = ''
 }
 
+
+
 -- Just to show our mode
 local ModeFrame = CreateFrame("Frame",nil,UIParent)
 ModeFrame:SetWidth(1) 
@@ -71,6 +74,19 @@ function ClearHotspot()
     end
     Log:DebugInfo('Hotspots Cleared!')
 end
+
+function addSkinBlacklist()
+    table.insert(skinBlacklist, DMW.Player.Target.Pointer)
+end
+
+function blackListContains(unit)
+    for i=1, #skinBlacklist do
+        if skinBlacklist[i] == unit then 
+           return true
+        end
+     end
+     return false
+end
 -- Global functions />
 
 function Grindbot:CanLoot()
@@ -79,7 +95,7 @@ function Grindbot:CanLoot()
 
         local Table = {}
         for _, Unit in pairs(DMW.Units) do
-            if (Unit.Dead and (UnitCanBeLooted(Unit.Pointer)) or (DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer))) then
+            if Unit.Dead and (UnitCanBeLooted(Unit.Pointer) or DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer)) then
                 table.insert(Table, Unit)
             end
         end
@@ -92,7 +108,7 @@ function Grindbot:CanLoot()
                 end
             )
         end
-    
+
         for _, Unit in ipairs(Table) do
             if Unit.Distance <= 30 then
                 return true, Unit
@@ -331,12 +347,12 @@ function Grindbot:GetLoot()
             if IsMounted() then Dismount() end
             if not PauseFlags.Interacting and not DMW.Player.Casting then
                 for _, Unit in pairs(DMW.Units) do
-                    if Unit.Dead and Unit.Distance < 5 and (UnitCanBeLooted(Unit.Pointer) or DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer)) then
-                        if InteractUnit(Unit.Pointer) then PauseFlags.skinDelay = true C_Timer.After(2.5, function() PauseFlags.skinDelay = false end) end
+                    if Unit.Dead and not blackListContains(Unit.Pointer) and Unit.Distance < 5 and (UnitCanBeLooted(Unit.Pointer) or DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer)) then
+                        if InteractUnit(Unit.Pointer) then PauseFlags.skinDelay = true C_Timer.After(2, function() PauseFlags.skinDelay = false end) end
                     end
                 end
                 PauseFlags.Interacting = true
-                C_Timer.After(0.6, function() PauseFlags.Interacting = false end)
+                C_Timer.After(0.9, function() PauseFlags.Interacting = false end)
             end
         end
     end

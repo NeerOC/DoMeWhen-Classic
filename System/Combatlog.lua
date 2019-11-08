@@ -33,7 +33,10 @@ function frame:Reader(event, ...)
         Locals()
         if spellType == "You can't mount here" then
             AddMountBlackList()
+        elseif spellType == "Target is tapped" then
+            addSkinBlacklist()
         end
+        
         DMW.Functions.AuraCache.Event(...)
         if source == Player.GUID or destination == Player.GUID then
             local sourceobj = source == Player.GUID and Player.Pointer or GetObjectWithGUID(source)
