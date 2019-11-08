@@ -8,6 +8,7 @@ local WaypointIndex = 1
 local PauseFlags = {
     Interacting = false
 }
+local lockBoxes = {}
 
 function Picklock:Pulse()
     if GetItemCount(5060) == 0 then Log:DebugInfo('You dont have any Thieves tools, go get that first.') return end
@@ -23,7 +24,7 @@ function Picklock:Pulse()
     end
     
 
-    if hasEnemy and hasLockbox and distanceBetween < 30 then
+    if hasEnemy and hasLockbox and theEnemy:GetDistance(theLockbox) < 30 then
         Combat:InitiateAttack(theEnemy)
     else
         if hasLockbox then
@@ -54,7 +55,7 @@ function Picklock:GetLocker()
         table.sort(
             Table,
             function(x, y)
-                return x.Distance < y.Distance
+                return x.NavDistance < y.NavDistance
             end
         )
     end

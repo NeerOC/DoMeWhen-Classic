@@ -119,7 +119,7 @@ local PickpocketOptionsTable = {
                     name = "Where",
                     desc = "Where are you going to look for lockboxes?",
                     width = "full",
-                    values = {"Stationary (1-100)", "Stonetalon (100-170)", "Badlands (170-200)", "Searing Gorge (200-250)"},
+                    values = {"Stationary (1-100)", "Stonetalon (100-170)", "Badlands (175-200)", "Searing Gorge (200-250)"},
                     style = "dropdown",
                     get = function()
                         return DMW.Settings.profile.Picklock.LockpickChoice
@@ -138,6 +138,10 @@ local PickpocketOptionsTable = {
                             Log:DebugInfo('Will now roam Stonetalon looking for Lockboxes.')
                         elseif value == 3 then
                             -- Hotspots set to Badlands
+                            DMW.Settings.profile.Picklock.Hotspots = {}
+                            local WP1 = {x = -6360.5488, y = -3123.589, z = 301.1114}
+                            table.insert(DMW.Settings.profile.Picklock.Hotspots, WP1)
+                            Log:DebugInfo('Will now roam Badlands for lockboxes.. MAKE SURE YOU ATLEAST HAVE 175 SKILL!')
                         elseif value == 4 then
                             --Hotspots set to Searing gorge
                         end

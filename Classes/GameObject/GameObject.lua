@@ -11,6 +11,7 @@ function GameObject:Update()
     self.NextUpdate = DMW.Time + (math.random(100, 400) / 1000)
     self.PosX, self.PosY, self.PosZ = ObjectPosition(self.Pointer)
     self.Distance = self:GetDistance()
+    self.NavDistance = self:GetNavDistance()
     if not self.Name or self.Name == "" then
         self.Name = ObjectName(self.Pointer)
     end
@@ -23,6 +24,10 @@ end
 function GameObject:GetDistance(OtherUnit)
     OtherUnit = OtherUnit or DMW.Player
     return sqrt(((self.PosX - OtherUnit.PosX) ^ 2) + ((self.PosY - OtherUnit.PosY) ^ 2) + ((self.PosZ - OtherUnit.PosZ) ^ 2))
+end
+
+function GameObject:GetNavDistance()
+    return DMW.Bot.Navigation:GetPathDistanceTo(self)
 end
 
 function GameObject:IsQuest()

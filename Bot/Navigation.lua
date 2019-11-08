@@ -200,6 +200,8 @@ function Navigation:Movement()
         DestY = NavPath[pathIndex][2]
         DestZ = NavPath[pathIndex][3]
 
+        if IsSwimming() then AscendStop() end
+
         if self:CalcPathDistance(NavPath) > DMW.Settings.profile.Grind.mountDistance and DMW.Settings.profile.Grind.UseMount and self:CanMount() then
             self:Mount()
             return
@@ -293,7 +295,7 @@ function Navigation:Mount()
     end
 end
 
-function Navigation:GetPathDistanceToUnit(unit)
+function Navigation:GetPathDistanceTo(unit)
     if unit then
         local UnitPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, unit.PosX, unit.PosY, unit.PosZ, true, true, 1)
         return Navigation:CalcPathDistance(UnitPath)
