@@ -33,7 +33,9 @@ function frame:Reader(event, ...)
         Locals()
         if spellType == "You can't mount here" then
             AddMountBlackList()
-        elseif spellType == "Target is tapped" then
+        end
+
+        if spellType == "Target is tapped" and skinTarget == destination then
             addSkinBlacklist()
         end
         

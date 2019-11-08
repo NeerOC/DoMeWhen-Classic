@@ -58,11 +58,17 @@ ModeFrame.text:SetPoint("CENTER",0,0)
 
 local evFrame=CreateFrame("Frame");
 evFrame:RegisterEvent("CHAT_MSG_WHISPER");
+evFrame:RegisterEvent("LOOT_CLOSED");
 evFrame:SetScript("OnEvent",function(self,event,msg,ply)
     if DMW.Settings.profile.Grind.ignoreWhispers then
         if event=="CHAT_MSG_WHISPER" then
             Log:DebugInfo('Added [' .. ply .. '] To Ignore List')
             RunMacroText('/Ignore ' .. ply)
+        end
+    end
+    if DMW.Settings.profile.Grind.doSkin then
+        if event== "LOOT_CLOSED" then
+            PauseFlags.skinDelay = true C_Timer.After(2, function() PauseFlags.skinDelay = false end)
         end
     end
 end);
@@ -91,11 +97,11 @@ end
 
 function Grindbot:CanLoot()
     if Grindbot:GetFreeSlots() == 0 then return false end
-    if DMW.Player.Casting then return false end
+    if PauseFlags.skinDelay then return end
 
         local Table = {}
         for _, Unit in pairs(DMW.Units) do
-            if Unit.Dead and (UnitCanBeLooted(Unit.Pointer) or DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer)) then
+            if Unit.Dead and not blackListContains(Unit.Pointer) and (UnitCanBeLooted(Unit.Pointer) or UnitCanBeSkinned(Unit.Pointer) and DMW.Settings.profile.Grind.doSkin) then
                 table.insert(Table, Unit)
             end
         end
@@ -345,14 +351,21 @@ function Grindbot:GetLoot()
             Navigation:MoveTo(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ)
         else
             if IsMounted() then Dismount() end
-            if not PauseFlags.Interacting and not DMW.Player.Casting then
+            if not PauseFlags.Interacting then
                 for _, Unit in pairs(DMW.Units) do
-                    if Unit.Dead and not blackListContains(Unit.Pointer) and Unit.Distance < 5 and (UnitCanBeLooted(Unit.Pointer) or DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer)) then
-                        if InteractUnit(Unit.Pointer) then PauseFlags.skinDelay = true C_Timer.After(2, function() PauseFlags.skinDelay = false end) end
+                    if Unit.Dead and Unit.Distance < 5 then
+                        if UnitCanBeLooted(Unit.Pointer) then
+                            if InteractUnit(Unit.Pointer) then PauseFlags.Interacting = true C_Timer.After(0.1, function() PauseFlags.Interacting = false end) end
+                            return
+                        end
+                    end
+                end 
+                if DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(LootUnit.Pointer) then
+                    if not DMW.Player.Casting then
+                        if InteractUnit(LootUnit.Pointer) then PauseFlags.Interacting = true C_Timer.After(1, function() PauseFlags.Interacting = false end) end
+                        return
                     end
                 end
-                PauseFlags.Interacting = true
-                C_Timer.After(0.9, function() PauseFlags.Interacting = false end)
             end
         end
     end
