@@ -43,7 +43,8 @@ Spells.WARLOCK = {
         RainOfFire = {Ranks = {5740, 6219, 11677, 11678}, CastType = "Ground"},
         RitualOfDoom = {Ranks = {18540}},
         SearingPain = {Ranks = {5676, 17919, 17920, 17921, 17922, 17923}},
-        ShadowBolt = {Ranks = {686, 695, 705, 1088, 1106, 7641, 11659, 11660, 11661, 25307}},
+        Sacrifice = {Ranks = {7812,19438,19440,19441,19442,19443}},
+		ShadowBolt = {Ranks = {686, 695, 705, 1088, 1106, 7641, 11659, 11660, 11661, 25307}},
         ShadowWard = {Ranks = {6229, 11739, 11740, 28610}},
         Shadowburn = {Ranks = {17877, 18867, 18868, 18869, 18870, 18871}},
         SiphonLife = {Ranks = {18265, 18879, 18880, 18881, 18927, 18928, 18929}},
@@ -53,7 +54,7 @@ Spells.WARLOCK = {
         SummonSuccubus = {Ranks = {712}},
         SummonVoidwalker = {Ranks = {697}},
         UnendingBreath = {Ranks = {5697}},
-        SummonMount = {Ranks = {5784,  23161}}
+		SummonMount = {Ranks = {5784,  23161}}
     },
     Buffs = {
         DemonArmor = {Ranks = {706, 1086, 11733, 11734, 11735}},
