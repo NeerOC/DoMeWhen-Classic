@@ -285,7 +285,7 @@ end
 
 function Navigation:GetPathDistanceToUnit(unit)
     if unit then
-        local UnitPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, unit.PosX, unit.PosY, unit.PosZ, true, false, 1)
+        local UnitPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, unit.PosX, unit.PosY, unit.PosZ, true, true, 1)
         return Navigation:CalcPathDistance(UnitPath)
     end
 end

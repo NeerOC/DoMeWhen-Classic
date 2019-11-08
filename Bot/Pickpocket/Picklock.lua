@@ -71,5 +71,7 @@ function Picklock:Roam()
             WaypointIndex = WaypointIndex + 1
         end
     end
-    Navigation:MoveTo(Hotspots[WaypointIndex].x, Hotspots[WaypointIndex].y, Hotspots[WaypointIndex].z)
+    if Distance >= 5 then
+        Navigation:MoveTo(Hotspots[WaypointIndex].x, Hotspots[WaypointIndex].y, Hotspots[WaypointIndex].z)
+    end
 end
