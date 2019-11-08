@@ -14,6 +14,7 @@ local Mounting = false
 local stuckCount = 0
 local mountTries = 0
 local unStucking = false
+local strafeTime = false
 
 
 local ObsDistance = 4
@@ -227,7 +228,6 @@ function Navigation:Movement()
                     JumpOrAscendStart()
                     Dismount()
                     unStucking = true
-                    C_Timer.After(2, function() unStucking = false end)
                     self:Unstuck()
                     stuckCount = 0
                 end
@@ -361,25 +361,12 @@ function Navigation:Unstuck()
     local front, frontcount = self:GameObjectInfront()
 
     Log:SevereInfo('Unstuck!')
-
-    if left and right then
-        if leftcount > rightcount then
-            StrafeLeftStart()
-            C_Timer.After(0.3, function() StrafeLeftStop() end)
-        else
-            StrafeRightStart()
-            C_Timer.After(0.3, function() StrafeRightStop() end)
-        end
-        self:ResetPath()
-    end
-
-    if left and not right then
-        StrafeRightStart()
-        C_Timer.After(0.3, function() StrafeRightStop() end)
-    end
-    if right and not left then
+    MoveBackwardStart()
+    C_Timer.After(0.5, function() MoveBackwardStop() strafeTime = true end)
+    if strafeTime then
+        strafeTime = false
+        C_Timer.After(1, function() unStucking = false end)
         StrafeLeftStart()
-        C_Timer.After(0.3, function() StrafeLeftStop() end)
+        C_Timer.After(0.3, function() StrafeLeftStop() C_Timer.After(0.3, function() StrafeRightStart() C_Timer.After(0.3, function() StrafeRightStop() end) end) end)
     end
-    
 end
