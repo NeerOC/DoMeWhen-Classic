@@ -39,11 +39,7 @@ function DMW:ChatCommand(Input)
                 DMW.UI.Debug.Frame:Hide()
             end
         elseif Commands[1] == "GRIND" then
-            if not DMW.UI.Grindbot.Frame.IsShown() then
-                DMW.UI.Grindbot.Frame:Show()
-            else
-                DMW.UI.Grindbot.Frame:Hide()
-            end
+            LibStub("AceConfigDialog-3.0"):Open("GrindbotConfig", GrindbotFrame)
         elseif Commands[1] == "REPAIR" then
             SetDurabilityVendor()
         elseif Commands[1] == "FOOD" then
