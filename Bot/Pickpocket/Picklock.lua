@@ -15,12 +15,19 @@ function Picklock:Pulse()
     Navigation:Movement()
 
     local hasEnemy, theEnemy = Combat:SearchEnemy()
-    if not hasEnemy then
-        -- Lets search for lockboxes
-        local hasLockbox, theLockbox = self:GetLocker()
+    local hasLockbox, theLockbox = self:GetLocker()
+    local distanceBetween = 500
+
+    if hasEnemy and hasLockbox then
+        distanceBetween = GetDistanceBetweenPosition(theEnemy.PosX, theEnemy.PosY, theEnemy.PosZ, theLockbox.PosX, theLockbox.PosY,theLockbox.PosZ)
+    end
+    
+
+    if hasEnemy and hasLockbox and distanceBetween < 30 then
+        Combat:InitiateAttack(theEnemy)
+    else
         if hasLockbox then
             if theLockbox.Distance >= 5 then
-                --print('too far' .. theLockbox.Distance)
                 Navigation:MoveTo(theLockbox.PosX, theLockbox.PosY, theLockbox.PosZ)
             else
                 if IsMounted() then Dismount() return end
@@ -31,9 +38,6 @@ function Picklock:Pulse()
             --Start roaming if no lockbox
             self:Roam()
         end
-    else
-        -- Lets kill the enemy
-        Combat:InitiateAttack(theEnemy)
     end
 end
 

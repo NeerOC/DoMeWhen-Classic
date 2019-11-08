@@ -367,6 +367,6 @@ function Navigation:Unstuck()
         strafeTime = false
         C_Timer.After(1, function() unStucking = false end)
         StrafeLeftStart()
-        C_Timer.After(0.3, function() StrafeLeftStop() C_Timer.After(0.3, function() StrafeRightStart() C_Timer.After(0.3, function() StrafeRightStop() end) end) end)
+        C_Timer.After(0.3, function() StrafeLeftStop() C_Timer.After(0.3, function() StrafeRightStart() C_Timer.After(0.3, function() StrafeRightStop() self:ResetPath() end) end) end)
     end
 end
