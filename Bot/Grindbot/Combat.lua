@@ -107,6 +107,14 @@ function Combat:SearchEnemy()
         end
     end
 
+    if DMW.Player.Combat then
+        for _, Unit in ipairs(Table) do
+            if UnitAffectingCombat(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) and Unit.Distance < 15 and Unit.HP < 100 then
+                return true, Unit
+            end
+        end
+    end
+
     for _, Unit in ipairs(Table) do
         if Unit.Player and Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer) then
             return true, Unit
@@ -137,14 +145,6 @@ function Combat:SearchEnemy()
     for _, Unit in ipairs(Table) do
         if not Unit.Player and Unit.Target == GetActivePlayer() then
             return true, Unit
-        end
-    end
-
-    if DMW.Player.Combat then
-        for _, Unit in ipairs(Table) do
-            if UnitAffectingCombat(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) and Unit.Distance < 15 then
-                return true, Unit
-            end
         end
     end
 end

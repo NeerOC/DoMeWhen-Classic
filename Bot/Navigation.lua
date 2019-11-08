@@ -242,7 +242,7 @@ function Navigation:MoveTo(toX, toY, toZ)
     if (DMW.Player.Casting) or EndX and GetDistanceBetweenPositions(toX, toY, toZ, EndX, EndY, EndZ) < 0.1 and NavPath then return end
 
     pathIndex = 1
-    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, true, 1)
+    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, true, 3)
 
     if NavPath then
         EndX, EndY, EndZ = toX, toY, toZ
@@ -297,7 +297,7 @@ end
 
 function Navigation:GetPathDistanceTo(unit)
     if unit then
-        local UnitPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, unit.PosX, unit.PosY, unit.PosZ, true, true, 1)
+        local UnitPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, unit.PosX, unit.PosY, unit.PosZ, true, true, 3)
         return Navigation:CalcPathDistance(UnitPath)
     end
 end
@@ -360,11 +360,12 @@ function Navigation:Unstuck()
 
     Log:SevereInfo('Unstuck!')
     MoveBackwardStart()
+    JumpOrAscendStart()
     C_Timer.After(1.3, function() unStucking = false end)
     C_Timer.After(0.5, function() MoveBackwardStop() strafeTime = true end)
     if strafeTime then
         strafeTime = false
         StrafeLeftStart()
-        C_Timer.After(math.random() + math.random(0.1, 0.3), function() StrafeLeftStop() StrafeRightStart() C_Timer.After(math.random() + math.random(0.1, 0.3), function() StrafeRightStop() JumpOrAscendStart() self:ResetPath() end) end)
+        C_Timer.After(math.random() + math.random(0.1, 0.3), function() StrafeLeftStop() StrafeRightStart() C_Timer.After(math.random() + math.random(0.1, 0.3), function() StrafeRightStop() self:ResetPath() end) end)
     end
 end
