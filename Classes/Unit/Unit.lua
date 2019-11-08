@@ -2,6 +2,7 @@ local DMW = DMW
 local Unit = DMW.Classes.Unit
 local LibCC = LibStub("LibClassicCasterinoDMW", true)
 local UnitIsUnit
+local Throttle = false
 
 function Unit:New(Pointer)
     if not UnitIsUnit then
@@ -32,7 +33,7 @@ function Unit:Update()
         DMW.Tables.AuraUpdate[self.Pointer] = nil
     end
     self.Distance = self:GetDistance()
-    
+    if not Throttle then self.NavDistance = self:GetNavDistance() Throttle = true C_Timer.After(0.2, function() Throttle = false end) end
     self.Dead = UnitIsDeadOrGhost(self.Pointer)
     if RealMobHealth_CreatureHealthCache and self.ObjectID and RealMobHealth_CreatureHealthCache[self.ObjectID .. "-" .. self.Level] then
         self.HealthMax = RealMobHealth_CreatureHealthCache[self.ObjectID .. "-" .. self.Level]

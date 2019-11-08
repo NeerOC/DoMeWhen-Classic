@@ -65,7 +65,7 @@ function Combat:SearchAttackable()
         table.sort(
             Table,
             function(x, y)
-                return Navigation:GetPathDistanceTo(x) < Navigation:GetPathDistanceTo(y)
+                return x.NavDistance < y.NavDistance
             end
         )
     end

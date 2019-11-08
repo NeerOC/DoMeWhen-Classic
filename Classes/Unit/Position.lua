@@ -11,6 +11,13 @@ function Unit:GetDistance(OtherUnit)
     return Dist
 end
 
+function Unit:GetNavDistance()
+    if DMW.Bot.Engine:IsReady() then
+        return DMW.Bot.Navigation:GetPathDistanceTo(self)
+    end
+    return 999
+end
+
 function Unit:AggroDistance()
     local maxRadius = 45 --.0 * sWorld->getRate(RATE_CREATURE_AGGRO));
     local minRadius = 5 --.0 * sWorld->getRate(RATE_CREATURE_AGGRO));

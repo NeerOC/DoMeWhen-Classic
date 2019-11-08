@@ -331,7 +331,6 @@ function Navigation:ResetPath()
     end
 end
 
-
 function Navigation:MoveToCorpse()
     if not UnitIsGhost('player') then RepopMe() return end
 
