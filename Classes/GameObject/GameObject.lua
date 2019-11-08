@@ -1,5 +1,6 @@
 local DMW = DMW
 local GameObject = DMW.Classes.GameObject
+local Throttle = false
 
 function GameObject:New(Pointer)
     self.Pointer = Pointer
@@ -11,7 +12,7 @@ function GameObject:Update()
     self.NextUpdate = DMW.Time + (math.random(100, 400) / 1000)
     self.PosX, self.PosY, self.PosZ = ObjectPosition(self.Pointer)
     self.Distance = self:GetDistance()
-     self.NavDistance = self:GetNavDistance()
+    if not Throttle then self.NavDistance = self:GetNavDistance() Throttle = true C_Timer.After(0.2, function() Throttle = false end) end
     if not self.Name or self.Name == "" then
         self.Name = ObjectName(self.Pointer)
     end
@@ -27,7 +28,7 @@ function GameObject:GetDistance(OtherUnit)
 end
 
 function GameObject:GetNavDistance()
-    if DMW.Bot.Engine:IsReady() and DMW.Settings.profile.HUD.BotMode == 3 then
+    if DMW.Bot.Engine:IsReady() then
         return DMW.Bot.Navigation:GetPathDistanceTo(self)
     end
     return 999
