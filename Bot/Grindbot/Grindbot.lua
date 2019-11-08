@@ -305,7 +305,7 @@ function Grindbot:Pulse()
     end
 
     if Grindbot.Mode == Modes.Roaming then
-        Navigation:Roam()
+        Navigation:GrindRoam()
         ModeFrame.text:SetText('Roaming')
     end
 end

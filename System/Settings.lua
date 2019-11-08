@@ -76,6 +76,13 @@ local defaults = {
             ignoreWhispers = false,
             itemSaveList = {},
         },
+        Picklock = {
+            Hotspots = {},
+            LockpickChoice = 1
+        },
+        Pickpocket = {
+
+        },
         Tracker = {
             Herbs = false,
             Ore = false,

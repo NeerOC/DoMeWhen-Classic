@@ -245,7 +245,7 @@ function Navigation:MoveTo(toX, toY, toZ)
     end
 end
 
-function Navigation:Roam()
+function Navigation:GrindRoam()
     local HotSpots = DMW.Settings.profile.Grind.HotSpots
     local distance = GetDistanceToPosition(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z)
 
@@ -260,7 +260,7 @@ function Navigation:Roam()
 end
 
 function Navigation:CanMount()
-    return not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
+    return not IsSwimming() and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
 end
 
 function Navigation:Mount()
