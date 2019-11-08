@@ -15,7 +15,8 @@ local PauseFlags = {
     Hotspotting = false,
     Information = false,
     CantEat = false,
-    CantDrink = false
+    CantDrink = false,
+    skinDelay = false
 }
 
 local Modes = {
@@ -271,7 +272,7 @@ function Grindbot:Pulse()
     end
 
     -- This sets our state
-    self:SwapMode()
+    if not PauseFlags.skinDelay or not DMW.Settings.profile.Grind.doSkin then self:SwapMode() end
 
     -- Do whatever our mode says.
     if Grindbot.Mode == Modes.Dead then
@@ -331,12 +332,11 @@ function Grindbot:GetLoot()
             if not PauseFlags.Interacting and not DMW.Player.Casting then
                 for _, Unit in pairs(DMW.Units) do
                     if Unit.Dead and Unit.Distance < 5 and (UnitCanBeLooted(Unit.Pointer) or DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(Unit.Pointer)) then
-                        if InteractUnit(Unit.Pointer) then if DMW.Settings.profile.Grind.doSkin then DMW.Bot.Engine:SetReady(false) C_Timer.After(1, function() DMW.Bot.Engine:SetReady(true) end) end
-                        end
+                        if InteractUnit(Unit.Pointer) then PauseFlags.skinDelay = true C_Timer.After(1, function() PauseFlags.skinDelay = false end) end
                     end
                 end
                 PauseFlags.Interacting = true
-                C_Timer.After(0.8, function() PauseFlags.Interacting = false end)
+                C_Timer.After(0.6, function() PauseFlags.Interacting = false end)
             end
         end
     end
