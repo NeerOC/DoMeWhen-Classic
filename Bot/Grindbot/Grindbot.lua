@@ -13,6 +13,7 @@ local skinBlacklist = {}
 
 local PauseFlags = {
     Interacting = false,
+    Skinning = false,
     Hotspotting = false,
     Information = false,
     CantEat = false,
@@ -42,8 +43,6 @@ local Settings = {
     FoodName = '',
     WaterName = ''
 }
-
-
 
 -- Just to show our mode
 local ModeFrame = CreateFrame("Frame",nil,UIParent)
@@ -94,6 +93,15 @@ function blackListContains(unit)
      return false
 end
 -- Global functions />
+function Grindbot:ClearblackList()
+    for i = 1, #skinBlacklist do
+        if skinBlacklist[i] and not ObjectExists(skinBlacklist[i]) then
+            skinBlacklist[i] = nil
+        end
+    end
+    local cleanBlacklist = CleanNils(skinBlacklist)
+    skinBlacklist = cleanBlacklist
+end
 
 function Grindbot:CanLoot()
     if Grindbot:GetFreeSlots() == 0 then return false end
@@ -265,6 +273,7 @@ function Grindbot:Pulse()
         self:LoadSettings()
         if DMW.Settings.profile.Grind.openClams then self:ClamTask() end
         self:DeleteTask()
+        self:ClearblackList()
         Throttle = true
         C_Timer.After(0.1, function() Throttle = false end)
     end
@@ -359,10 +368,10 @@ function Grindbot:GetLoot()
                             return
                         end
                     end
-                end 
-                if DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(LootUnit.Pointer) then
+                end
+                if DMW.Settings.profile.Grind.doSkin and UnitCanBeSkinned(LootUnit.Pointer) and not PauseFlags.Skinning then
                     if not DMW.Player.Casting then
-                        if InteractUnit(LootUnit.Pointer) then PauseFlags.Interacting = true C_Timer.After(1, function() PauseFlags.Interacting = false end) end
+                        if InteractUnit(LootUnit.Pointer) then PauseFlags.Skinning = true C_Timer.After(0.45, function() PauseFlags.Skinning = false end) end
                         return
                     end
                 end

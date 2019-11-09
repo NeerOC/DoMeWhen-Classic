@@ -35,8 +35,8 @@ function frame:Reader(event, ...)
             AddMountBlackList()
         end
 
-        if spellType == "Target is tapped" and skinTarget == destination then
-            addSkinBlacklist()
+        if spellType == "Target is tapped" then
+            C_Timer.After(0.4, function() addSkinBlacklist() end)
         end
         
         DMW.Functions.AuraCache.Event(...)
