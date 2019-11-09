@@ -196,7 +196,7 @@ function Grindbot:ClamTask()
                     return
                 end
                 
-                if string.find(name, 'Big-mouth Clam') or string.find(name, 'Thick-shelled Clam') or string.find(name, 'Small Barnacled Clam') then
+                if name == 'Big-mouth Clam' or name == 'Thick-shelled Clam' or name == 'Small Barnacled Clam' then
                     UseContainerItem(BagID, BagSlot)
                     return
                 end
