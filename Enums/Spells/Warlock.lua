@@ -80,6 +80,7 @@ Spells.WARLOCK = {
         Immolate = {Ranks = {348, 707, 1094, 2941, 11665, 11667, 11668, 25309}},
         Shadowburn = {Ranks = {17877, 18867, 18868, 18869, 18870, 18871}},
         SiphonLife = {Ranks = {18265, 18879, 18880, 18881, 18927, 18928, 18929}},
+        Polymorph = {Ranks = {118, 12824, 12825, 12826}},
     },
     Talents = {
         --Affliction
