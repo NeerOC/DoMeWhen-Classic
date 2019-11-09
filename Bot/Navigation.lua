@@ -260,7 +260,7 @@ end
 function Navigation:GrindRoam()
     local HotSpots = DMW.Settings.profile.Grind.HotSpots
 
-    if not RandomedWaypoint and DMW.Settings.profile.Grind.randomizeWaypoints then
+    if (not RandomedWaypoint or not WaypointX) and DMW.Settings.profile.Grind.randomizeWaypoints then
         WaypointX, WaypointY, WaypointZ = self:RandomizePosition(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z, DMW.Settings.profile.Grind.randomizeWaypointDistance)
         RandomedWaypoint = true
     end
