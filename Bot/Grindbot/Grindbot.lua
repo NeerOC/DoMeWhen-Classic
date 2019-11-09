@@ -190,13 +190,15 @@ function Grindbot:ClamTask()
             CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
             if CurrentItemLink then
                 name = GetItemInfo(CurrentItemLink)
-                if string.find(name, 'Clam') or string.find(name, 'clam') then
-                    if not IsUsableItem(CurrentItemLink) then
-                        PickupContainerItem(BagID,BagSlot); 
-                        DeleteCursorItem();
-                    else
-                        UseContainerItem(BagID, BagSlot)
-                    end
+                if string.find(name, 'Clam Meat') then
+                    PickupContainerItem(BagID,BagSlot); 
+                    DeleteCursorItem();
+                    return
+                end
+                
+                if string.find(name, 'Big-mouth Clam') or string.find(name, 'Thick-shelled Clam') or string.find(name, 'Small Barnacled Clam') then
+                    UseContainerItem(BagID, BagSlot)
+                    return
                 end
             end
         end
