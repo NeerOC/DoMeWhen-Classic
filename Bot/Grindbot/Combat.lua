@@ -26,11 +26,21 @@ function Combat:UnitNearHotspot(unit)
     return false
 end
 
+function Combat:BlacklistedUnit(name)
+for i=1, #DMW.Settings.profile.Grind.targetBlacklist do
+    if DMW.Settings.profile.Grind.targetBlacklist[i] == name then 
+        return true
+    end
+end
+return false
+end
+
 function Combat:IsGoodUnit(unit)
     local minLvl = UnitLevel('player') - DMW.Settings.profile.Grind.minNPCLevel
     local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
 
     local Flags = {
+        notBlacklisted = not self:BlacklistedUnit(UnitName(unit)),
         notCritter = UnitCreatureTypeID(unit) ~= 8,
         notPet = ObjectCreator(unit) == nil,
         noTargetOrMeOrPet = UnitTarget(unit) == nil or UnitIsUnit(UnitTarget(unit), 'player') or UnitIsUnit(UnitTarget(unit), 'pet'),

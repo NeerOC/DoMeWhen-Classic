@@ -48,6 +48,14 @@ function DMW:ChatCommand(Input)
            SetFoodVendor()
         elseif Commands[1] == "CLEAR" then
             ClearHotspot()
+        elseif Commands[1] == "BLACKLIST" then
+            if DMW.Player.Target then
+                local Name = DMW.Player.Target.Name
+                table.insert(DMW.Settings.profile.Grind.targetBlacklist, Name)
+                DMW.Bot.Log:DebugInfo('[' .. Name .. '] Added to blacklist')
+            else
+                DMW.Bot.Log:SevereInfo('No Target, No Blacklist!')
+            end
         else
             LibStub("AceConfigCmd-3.0").HandleCommand(DMW, "lilium", "LILIUM", Input)
         end
