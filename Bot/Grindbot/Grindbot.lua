@@ -67,7 +67,7 @@ evFrame:SetScript("OnEvent",function(self,event,msg,ply)
     end
     if DMW.Settings.profile.Grind.doSkin then
         if event== "LOOT_CLOSED" then
-            PauseFlags.skinDelay = true C_Timer.After(2, function() PauseFlags.skinDelay = false end)
+            PauseFlags.skinDelay = true C_Timer.After(1.8, function() PauseFlags.skinDelay = false end)
         end
     end
 end);
@@ -365,7 +365,6 @@ function Grindbot:GetLoot()
                     if Unit.Dead and Unit.Distance < 5 then
                         if UnitCanBeLooted(Unit.Pointer) then
                             if InteractUnit(Unit.Pointer) then PauseFlags.Interacting = true C_Timer.After(0.1, function() PauseFlags.Interacting = false end) end
-                            return
                         end
                     end
                 end
