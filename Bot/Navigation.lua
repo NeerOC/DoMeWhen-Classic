@@ -350,17 +350,15 @@ function Navigation:CalcPathDistance(peff)
 end
 
 function Navigation:ResetPath()
-    if NavPath ~= nil then
-        NavPath = nil
-        pathIndex = 1
-        DestX = nil 
-        DestY = nil
-        DestZ = nil
-        EndX = nil
-        EndY = nil 
-        EndZ = nil
-        stuckCount = 0
-    end
+    NavPath = nil
+    pathIndex = 1
+    DestX = nil
+    DestY = nil
+    DestZ = nil
+    EndX = nil
+    EndY = nil 
+    EndZ = nil
+    stuckCount = 0
 end
 
 function Navigation:MoveToCorpse()

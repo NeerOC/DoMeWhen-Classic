@@ -11,8 +11,10 @@ local VendorTask = false
 local InformationOutput = false
 local skinBlacklist = {}
 local lootBlacklist = {}
+local moveToLootTime
 
 local PauseFlags = {
+    movingToLoot = false,
     Interacting = false,
     Skinning = false,
     Hotspotting = false,
@@ -368,14 +370,17 @@ function Grindbot:GetLoot()
     if LootUnit then
         if LootUnit.Distance >= 5 then
             Navigation:MoveTo(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ)
+            if not PauseFlags.movingToLoot then PauseFlags.movingToLoot = true moveToLootTime = DMW.Time end
             local endX, endY, endZ = Navigation:ReturnPathEnd()
             local endPathToUnitDist = GetDistanceBetweenPositions(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ, endX, endY, endZ)
-            if endPathToUnitDist > 2 then
+            if endPathToUnitDist > 1 or moveToLootTime > 6 then
                 -- Blacklist unit
                 Log:SevereInfo('Added LootUnit to badBlacklist')
                 table.insert(lootBlacklist, LootUnit.Pointer)
             end
         else
+            moveToLootTime = 0
+            PauseFlags.movingToLoot = false
             if IsMounted() then Dismount() end
             if not PauseFlags.Interacting then
                 for _, Unit in pairs(DMW.Units) do
