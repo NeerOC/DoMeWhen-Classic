@@ -306,6 +306,7 @@ function Grindbot:Pulse()
     -- Call movement
     Navigation:Movement()
     if not Combat:EnemyBehind() then MoveForwardStop() end -- Just extra to make sure we dont walk like a moron
+    if DMW.Player.Casting then self:ResetMoveToLoot() end -- Reset if casting
 
     if not InformationOutput then
         Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]') 
