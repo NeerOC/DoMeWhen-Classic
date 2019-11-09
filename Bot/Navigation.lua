@@ -9,13 +9,14 @@ local pathIndex = 1
 local HotSpotIndex = 1
 local lastX, lastY, lastZ = 0, 0, 0
 local DestX, DestY, DestZ
+local WaypointX, WaypointY, WaypointZ
 local EndX, EndY, EndZ
 local Mounting = false
 local stuckCount = 0
 local mountTries = 0
 local unStucking = false
 local strafeTime = false
-
+local RandomedWaypoint = false
 
 local ObsDistance = 4
 local ObsFlags = bit.bor(0x1, 0x10)
@@ -249,18 +250,44 @@ function Navigation:MoveTo(toX, toY, toZ)
     end
 end
 
+function Navigation:RandomizePosition(x, y, z, dist)
+    local rx, ry, rz = GetPositionFromPosition(x, y, z, dist, math.random(20, 360), 360)
+    local CalcedPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, rx, ry, rz, true, true, 1)
+    local groundX, GroundY, GroundZ = TraceLine(CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] + 2, CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] - 200, bit.bor(0x100))
+    return groundX, GroundY, GroundZ
+end
+
 function Navigation:GrindRoam()
     local HotSpots = DMW.Settings.profile.Grind.HotSpots
-    local distance = GetDistanceToPosition(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z)
 
-    if HotSpotIndex == #HotSpots and distance < 5 then
-        HotSpotIndex = 1
+    if not RandomedWaypoint and DMW.Settings.profile.Grind.randomizeWaypoints then
+        WaypointX, WaypointY, WaypointZ = self:RandomizePosition(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z, 20)
+        RandomedWaypoint = true
+    end
+
+    if DMW.Settings.profile.Grind.randomizeWaypoints then
+        self:MoveTo(WaypointX, WaypointY, WaypointZ)
+        local Distance = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, WaypointX, WaypointY, WaypointZ)
+        if HotSpotIndex == #HotSpots and Distance < 5 then
+            HotSpotIndex = 1
+            RandomedWaypoint = false
+        else
+            if Distance < 5 then
+                HotSpotIndex = HotSpotIndex + 1
+                RandomedWaypoint = false
+            end
+        end
     else
-        if distance < 5 then
-            HotSpotIndex = HotSpotIndex + 1
+        self:MoveTo(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z)
+        local Distance = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z)
+        if HotSpotIndex == #HotSpots and Distance < 5 then
+            HotSpotIndex = 1
+        else
+            if Distance < 5 then
+                HotSpotIndex = HotSpotIndex + 1
+            end
         end
     end
-    self:MoveTo(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z)
 end
 
 function Navigation:CanMount()

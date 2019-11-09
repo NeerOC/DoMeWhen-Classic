@@ -74,6 +74,8 @@ local defaults = {
             doSkin = false,
             useHearthstone = false,
             ignoreWhispers = false,
+            skipLOS = true,
+            randomizeWaypoints = false,
             itemSaveList = {},
         },
         Picklock = {

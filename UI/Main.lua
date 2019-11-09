@@ -210,7 +210,7 @@ local GrindbotOptionsTable = {
                     order = 5,
                     name = "Open Clams",
                     desc = "Open clams and delete shit.",
-                    width = 0.7,
+                    width = 0.6,
                     get = function()
                         return DMW.Settings.profile.Grind.openClams
                     end,
@@ -223,7 +223,7 @@ local GrindbotOptionsTable = {
                     order = 6,
                     name = "Be Human",
                     desc = "Will strafe and jump with good conditions.",
-                    width = 0.7,
+                    width = 0.6,
                     get = function()
                         return DMW.Settings.profile.Grind.beHuman
                     end,
@@ -254,7 +254,7 @@ local GrindbotOptionsTable = {
                     order = 9,
                     name = "Hearthstone",
                     desc = "Will use Hearthstone on vendor runs (IF IT CAN BE USED)",
-                    width = 0.7,
+                    width = 0.6,
                     get = function()
                         return DMW.Settings.profile.Grind.useHearthstone
                     end,
@@ -267,12 +267,25 @@ local GrindbotOptionsTable = {
                     order = 10,
                     name = "Ignore Players",
                     desc = "Will ignore players who whisper you.",
-                    width = 0.9,
+                    width = 0.7,
                     get = function()
                         return DMW.Settings.profile.Grind.ignoreWhispers
                     end,
                     set = function(info, value)
                         DMW.Settings.profile.Grind.ignoreWhispers = value
+                    end
+                },
+                ignoreLOS = {
+                    type = "toggle",
+                    order = 11,
+                    name = "Skip LOS",
+                    desc = "If you find yourself wobbling between enemies, it might be because of LOS.",
+                    width = 0.6,
+                    get = function()
+                        return DMW.Settings.profile.Grind.skipLos
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.skipLos = value
                     end
                 },
             }
@@ -607,6 +620,19 @@ local GrindbotOptionsTable = {
                     end,
                     set = function(info, value)
                         DMW.Settings.profile.Grind.SkipCombatOnTransport = value
+                    end
+                },
+                randomWaypoints = {
+                    type = "toggle",
+                    order = 7,
+                    name = "Randomize Waypoints",
+                    desc = "Do you wanna Randomize Waypoints? (Wont work well in tunnels or caves)",
+                    width = 1,
+                    get = function()
+                        return DMW.Settings.profile.Grind.randomizeWaypoints
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.randomizeWaypoints = value
                     end
                 }
             }
