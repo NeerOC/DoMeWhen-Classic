@@ -634,6 +634,22 @@ local GrindbotOptionsTable = {
                     set = function(info, value)
                         DMW.Settings.profile.Grind.randomizeWaypoints = value
                     end
+                },
+                randomDistance = {
+                    type = "range",
+                    order = 8,
+                    name = "Random Distance",
+                    desc = "The Distance From The Center Of Hotspot To Generate New Hotspot",
+                    width = "full",
+                    min = 5,
+                    max = 25,
+                    step = 1,
+                    get = function()
+                        return DMW.Settings.profile.Grind.randomizeWaypointDistance
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.randomizeWaypointDistance = value
+                    end
                 }
             }
         }

@@ -10,6 +10,7 @@ local Throttle = false
 local VendorTask = false
 local InformationOutput = false
 local skinBlacklist = {}
+local lootBlacklist = {}
 
 local PauseFlags = {
     Interacting = false,
@@ -103,13 +104,22 @@ function Grindbot:ClearblackList()
     skinBlacklist = cleanBlacklist
 end
 
+function Grindbot:OnLootBlacklist(unit)
+    for i=1, #lootBlacklist do
+        if lootBlacklist[i] == unit then 
+           return true
+        end
+     end
+     return false
+end
+
 function Grindbot:CanLoot()
     if Grindbot:GetFreeSlots() == 0 then return false end
     if PauseFlags.skinDelay then return end
 
         local Table = {}
         for _, Unit in pairs(DMW.Units) do
-            if Unit.Dead and not blackListContains(Unit.Pointer) and (UnitCanBeLooted(Unit.Pointer) or UnitCanBeSkinned(Unit.Pointer) and DMW.Settings.profile.Grind.doSkin) then
+            if Unit.Dead and not blackListContains(Unit.Pointer) and not self:OnLootBlacklist(Unit.Pointer) and (UnitCanBeLooted(Unit.Pointer) or UnitCanBeSkinned(Unit.Pointer) and DMW.Settings.profile.Grind.doSkin) then
                 table.insert(Table, Unit)
             end
         end
@@ -207,7 +217,7 @@ function Grindbot:Hotspotter()
             end
         end
 
-        if altdown and not shiftdown and leftmousedown and ctype then
+        if altdown and not shiftdown and leftmousedown and ctype and cx ~= 0 then
             if self:AddClickSpot(cx, cy, cz) then
                 Log:DebugInfo('Added Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
             end
@@ -358,6 +368,13 @@ function Grindbot:GetLoot()
     if LootUnit then
         if LootUnit.Distance >= 5 then
             Navigation:MoveTo(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ)
+            local endX, endY, endZ = Navigation:ReturnPathEnd()
+            local endPathToUnitDist = GetDistanceBetweenPositions(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ, endX, endY, endZ)
+            if endPathToUnitDist > 2 then
+                -- Blacklist unit
+                Log:SevereInfo('Added LootUnit to badBlacklist')
+                table.insert(lootBlacklist, LootUnit.Pointer)
+            end
         else
             if IsMounted() then Dismount() end
             if not PauseFlags.Interacting then

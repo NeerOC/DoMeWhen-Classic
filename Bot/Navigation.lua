@@ -253,21 +253,22 @@ end
 function Navigation:RandomizePosition(x, y, z, dist)
     local rx, ry, rz = GetPositionFromPosition(x, y, z, dist, math.random(20, 360), 360)
     local CalcedPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, rx, ry, rz, true, true, 1)
-    local groundX, GroundY, GroundZ = TraceLine(CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] + 2, CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] - 200, bit.bor(0x100))
-    return groundX, GroundY, GroundZ
+    local GroundX, GroundY, GroundZ = TraceLine(CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] + 2, CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] - 200, bit.bor(0x100))
+    return GroundX, GroundY, GroundZ
 end
 
 function Navigation:GrindRoam()
     local HotSpots = DMW.Settings.profile.Grind.HotSpots
 
     if not RandomedWaypoint and DMW.Settings.profile.Grind.randomizeWaypoints then
-        WaypointX, WaypointY, WaypointZ = self:RandomizePosition(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z, 20)
+        WaypointX, WaypointY, WaypointZ = self:RandomizePosition(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z, DMW.Settings.profile.Grind.randomizeWaypointDistance)
         RandomedWaypoint = true
     end
 
     if DMW.Settings.profile.Grind.randomizeWaypoints then
+        local PX, PY, PZ = ObjectPosition('player')
         self:MoveTo(WaypointX, WaypointY, WaypointZ)
-        local Distance = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, WaypointX, WaypointY, WaypointZ)
+        local Distance = GetDistanceBetweenPositions(PX, PY, PZ, WaypointX, WaypointY, WaypointZ)
         if HotSpotIndex == #HotSpots and Distance < 5 then
             HotSpotIndex = 1
             RandomedWaypoint = false
@@ -327,6 +328,10 @@ function Navigation:GetPathDistanceTo(unit)
         local UnitPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, unit.PosX, unit.PosY, unit.PosZ, true, true, 3)
         return Navigation:CalcPathDistance(UnitPath)
     end
+end
+
+function Navigation:ReturnPathEnd()
+    return NavPath[#NavPath][1],NavPath[#NavPath][2],NavPath[#NavPath][3]
 end
 
 function Navigation:GetDistanceBetweenPositions(pos_a, pos_b)

@@ -76,6 +76,7 @@ local defaults = {
             ignoreWhispers = false,
             skipLOS = true,
             randomizeWaypoints = false,
+            randomizeWaypointDistance = 20,
             targetBlacklist = {},
             itemSaveList = {},
         },

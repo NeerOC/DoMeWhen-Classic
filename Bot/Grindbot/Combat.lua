@@ -6,6 +6,7 @@ local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 
 local Juggling = false
+local badBlacklist = {}
 
 function Combat:CanSeeUnit(unit)
     local los1 = TraceLine(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ + 1, unit.PosX, unit.PosY, unit.PosZ + 1, 0x100111)
@@ -40,6 +41,7 @@ function Combat:IsGoodUnit(unit)
     local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
 
     local Flags = {
+        notUnitBad = not self:UnitBad(unit),
         notBlacklisted = not self:BlacklistedUnit(UnitName(unit)),
         notCritter = UnitCreatureTypeID(unit) ~= 8,
         notPet = ObjectCreator(unit) == nil,
@@ -61,6 +63,15 @@ function Combat:IsGoodUnit(unit)
     end
 
     return true
+end
+
+function Combat:UnitBad(unit)
+    for i=1, #badBlacklist do
+        if badBlacklist[i] == unit then 
+            return true
+        end
+    end
+    return false
 end
 
 function Combat:SearchAttackable()
@@ -127,12 +138,6 @@ function Combat:SearchEnemy()
     end
 
     for _, Unit in ipairs(Table) do
-        if Unit.Player and Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer) then
-            return true, Unit
-        end
-    end
-
-    for _, Unit in ipairs(Table) do
         if not Unit.Player and Unit.Target == GetActivePlayer() and Unit:Interrupt() then
             return true, Unit
         end
@@ -155,6 +160,12 @@ function Combat:SearchEnemy()
 
     for _, Unit in ipairs(Table) do
         if not Unit.Player and Unit.Target == GetActivePlayer() then
+            return true, Unit
+        end
+    end
+
+    for _, Unit in ipairs(Table) do
+        if Unit.Player and Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer) and ObjectIsFacing(Unit.Pointer, GetActivePlayer()) then
             return true, Unit
         end
     end
@@ -187,6 +198,13 @@ end
 function Combat:InitiateAttack(Unit)
     if (Unit.Distance > DMW.Settings.profile.Grind.CombatDistance or not Unit:LineOfSight()) then
         Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
+        local endX, endY, endZ = Navigation:ReturnPathEnd()
+        local endPathToUnitDist = GetDistanceBetweenPositions(Unit.PosX, Unit.PosY, Unit.PosZ, endX, endY, endZ)
+        if endPathToUnitDist > 2 then
+            -- Blacklist unit
+            Log:SevereInfo('Added unit to badBlacklist')
+            table.insert(badBlacklist, Unit.Pointer)
+        end
     else
         if DMW.Player.Moving then
             Navigation:StopMoving()
