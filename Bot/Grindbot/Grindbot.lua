@@ -404,7 +404,7 @@ function Grindbot:Rest()
     end
 
     if Settings.WaterName ~= '' then
-        if DMW.Player.PowerPct < Settings.RestMana and not Drinking and not PauseFlags.CantDrink then < Settings.RestMana and not Drinking and not PauseFlags.CantDrink then
+        if DMW.Player.PowerPct < Settings.RestMana and not Drinking and not PauseFlags.CantDrink then
             UseItemByName(Settings.WaterName)
             PauseFlags.CantDrink = true
             C_Timer.After(1, function() PauseFlags.CantDrink = false end)
