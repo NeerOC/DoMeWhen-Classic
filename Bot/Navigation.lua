@@ -378,7 +378,9 @@ function Navigation:MoveToCorpse()
             else
                 if DMW.Time - pvpTimer >= DMW.Settings.profile.Grind.preventPVPTime then
                     StaticPopup1Button1:Click()
+                    timerStarted = false
                     NavPath = nil
+                    pvpTimer = 0
                     return
                 end
             end

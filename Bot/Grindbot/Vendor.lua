@@ -262,7 +262,11 @@ function Vendor:DoTask()
         else
             -- We are close to vendor, do shit.
             if MerchantFrame:IsVisible() and NeedFoodCount >= 10 and not Bools.BuyingFood then
-                self:BuyItemWithName(FoodName, NeedFoodCount) Bools.BuyingFood = true C_Timer.After(15, function() Bools.BuyingFood = false end)
+                if self:BuyItemWithName(FoodName, NeedFoodCount) then
+                    Bools.BuyingFood = true
+                    Log:DebugInfo('Buying Food With Name [' .. FoodName .. '] Amount [' .. NeedFoodCount .. ']')
+                    C_Timer.After(10, function() Bools.BuyingFood = false end)
+                end
             end
 
             if GossipFrame:IsVisible() and not Bools.Talking then
@@ -293,7 +297,11 @@ function Vendor:DoTask()
         else
             -- We are close to vendor, do shit.
             if MerchantFrame:IsVisible() and NeedWaterCount >= 10 and not Bools.BuyingWater then
-                self:BuyItemWithName(WaterName, NeedWaterCount) Bools.BuyingWater = true C_Timer.After(15, function() Bools.Buying = falseWater end)
+                if self:BuyItemWithName(WaterName, NeedWaterCount) then
+                    Bools.BuyingWater = true
+                    Log:DebugInfo('Buying Water With Name [' .. WaterName .. '] Amount [' .. NeedWaterCount .. ']')
+                    C_Timer.After(10, function() Bools.Buying = falseWater end)
+                end
             end
 
             if GossipFrame:IsVisible() and not Bools.Talking then
