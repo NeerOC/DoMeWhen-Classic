@@ -19,10 +19,11 @@ function Pickpocket:WalkTheSpots()
     local Waypoints = DMW.Settings.profile.Pickpocket.Hotspots
     local CurrentX, CurrentY, CurrentZ, JumpType = Waypoints[WP].x, Waypoints[WP].y, Waypoints[WP].z, Waypoints[WP].j
     local DistanceToWP = Navigation:GetDistanceToPosition(CurrentX, CurrentY, CurrentZ)
-    
+    local HeightDiff = CurrentZ - DMW.Player.PosZ
+
     if DistanceToWP > 0.8 then
         if DistanceToWP > 0.8 and DistanceToWP < 3 and JumpType then
-            if not PauseFlags.Jumping then
+            if not PauseFlags.Jumping and HeightDiff > 0.4 then
                 JumpOrAscendStart()
                 PauseFlags.Jumping = true
                 C_Timer.After(1, function() PauseFlags.Jumping = false end)
