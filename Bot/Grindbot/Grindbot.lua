@@ -288,7 +288,7 @@ function Grindbot:Pulse()
         if DMW.Settings.profile.Grind.openClams then self:ClamTask() end
         self:DeleteTask()
         self:ClearblackList()
-        if not DMW.Player.Pet.Dead and DMW.Player.Pet.Target and not Combat:SearchEnemy() then PetFollow() end -- Stupid ass rotations using pets unnecesary
+        if DMW.Player.Pet and not DMW.Player.Pet.Dead and DMW.Player.Pet.Target and not Combat:SearchEnemy() then PetFollow() end -- Stupid ass rotations using pets unnecesary
         Throttle = true
         C_Timer.After(0.1, function() Throttle = false end)
     end
