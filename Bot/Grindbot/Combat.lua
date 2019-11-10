@@ -135,9 +135,9 @@ function Combat:SearchEnemy()
     end
 
     -- focus pet target after that if we have pet
-    if DMW.Player.PetActive then
+    if DMW.Player.Pet and not DMW.Player.Pet.Dead then
         for _, Unit in ipairs(Table) do
-            if Unit.Target and ((UnitIsUnit(Unit.Target, 'pet') and UnitAffectingCombat('pet'))) then
+            if Unit.Target and (Unit.Target == DMW.Player.Pet.Pointer and DMW.Player.Pet.Combat) then
                 return true, Unit
             end
         end
