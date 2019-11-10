@@ -288,6 +288,40 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.skipLos = value
                     end
                 },
+                otherSpacer = {
+                    type = "header",
+                    order = 12,
+                    name = ""
+                },
+                preventPVP = {
+                    type = "toggle",
+                    order = 13,
+                    name = "Prevent PVP",
+                    desc = "Wanna wait a while before respawning? ",
+                    width = 0.6,
+                    get = function()
+                        return DMW.Settings.profile.Grind.preventPVP
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.preventPVP = value
+                    end
+                },
+                preventPVPTime = {
+                    type = "range",
+                    order = 14,
+                    name = "Prevent Time",
+                    desc = "How many seconds do we wait for?",
+                    width = "1.5",
+                    min = 60,
+                    max = 600,
+                    step = 10,
+                    get = function()
+                        return DMW.Settings.profile.Grind.preventPVPTime
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.preventPVPTime = value
+                    end
+                },
             }
         },
         SecondTab = {

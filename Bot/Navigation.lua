@@ -17,6 +17,8 @@ local mountTries = 0
 local unStucking = false
 local strafeTime = false
 local RandomedWaypoint = false
+local pvpTimer
+local timerStarted = false
 
 local ObsDistance = 4
 local ObsFlags = bit.bor(0x1, 0x10)
@@ -367,10 +369,26 @@ function Navigation:MoveToCorpse()
     local PosX, PosY, PosZ = GetCorpsePosition()
     self:MoveTo(PosX, PosY, PosZ)
 
-    if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() then
-        StaticPopup1Button1:Click()
-        NavPath = nil
-        return
+    if DMW.Settings.profile.Grind.preventPVP then
+        if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() then
+            if not timerStarted then
+                Log:DebugInfo('Will now wait for ' .. DMW.Settings.profile.Grind.preventPVPTime .. ' seconds.')
+                timerStarted = true
+                pvpTimer = DMW.Time
+            else
+                if DMW.Time - pvpTimer >= DMW.Settings.profile.Grind.preventPVPTime then
+                    StaticPopup1Button1:Click()
+                    NavPath = nil
+                    return
+                end
+            end
+        end
+    else
+        if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() then
+            StaticPopup1Button1:Click()
+            NavPath = nil
+            return
+        end
     end
 end
 
