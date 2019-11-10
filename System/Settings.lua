@@ -87,7 +87,7 @@ local defaults = {
             LockpickChoice = 1
         },
         Pickpocket = {
-
+            Hotspots = {}
         },
         Tracker = {
             Herbs = false,

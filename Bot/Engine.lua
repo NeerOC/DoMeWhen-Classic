@@ -33,6 +33,7 @@ function Engine:Pulse()
         end
     else
         if DMW.Settings.profile.HUD.BotMode == 1 then Grindbot:DisabledFunctions() end
+        if DMW.Settings.profile.HUD.BotMode == 2 then Pickpocket:Hotspotter() end
     end
 end
 

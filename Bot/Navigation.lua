@@ -146,7 +146,7 @@ function Navigation:NearBlacklist()
     return false
 end
 
-local function GetDistanceToPosition(x, y, z)
+function Navigation:GetDistanceToPosition(x, y, z)
     local px, py, pz = ObjectPosition('player')
     return GetDistanceBetweenPositions(px, py, pz, x, y, z)
 end
@@ -169,6 +169,7 @@ function Navigation:DrawVisuals()
     LibDraw.SetWidth(4)
     LibDraw.SetColorRaw(0, 128, 128, 100)
 
+    
     if NavPath and DMW.Settings.profile.Grind.drawPath then
         for i = pathIndex, #NavPath do
             if i == pathIndex then
@@ -180,15 +181,35 @@ function Navigation:DrawVisuals()
         end
     end
 
-    if DMW.Settings.profile.Grind.drawHotspots then
-        local HotSpots = DMW.Settings.profile.Grind.HotSpots
-        LibDraw.SetColorRaw(76, 0, 153, 100)
+    if DMW.Settings.profile.HUD.BotMode == 1 then
+        if DMW.Settings.profile.Grind.drawHotspots then
+            local HotSpots = DMW.Settings.profile.Grind.HotSpots
+            LibDraw.SetColorRaw(76, 0, 153, 100)
+            if #HotSpots > 0 then
+                for i = 1, #HotSpots do
+                    if HotSpots[i] then
+                        local x, y, z = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
+                        LibDraw.Text("x", "GameFontNormalLarge", x, y, z)
+                        if DMW.Settings.profile.Grind.drawCircles then LibDraw.GroundCircle(x, y, z, DMW.Settings.profile.Grind.RoamDistance / 2) end
+                    end
+                end
+            end
+        end
+    end
+
+    if DMW.Settings.profile.HUD.BotMode == 2 then
+        local HotSpots = DMW.Settings.profile.Pickpocket.Hotspots
         if #HotSpots > 0 then
             for i = 1, #HotSpots do
                 if HotSpots[i] then
-                    local x, y, z = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
-                    LibDraw.Text("x", "GameFontNormalLarge", x, y, z)
-                    if DMW.Settings.profile.Grind.drawCircles then LibDraw.GroundCircle(x, y, z, DMW.Settings.profile.Grind.RoamDistance / 2) end
+                    local x, y, z, jump = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z, HotSpots[i].j
+                    if not jump then
+                        LibDraw.SetColorRaw(1, 213, 164, 100)
+                        LibDraw.Text(i, "GameFontNormalLarge", x, y, z)
+                    else
+                        LibDraw.SetColorRaw(51, 26, 213, 100)
+                        LibDraw.Text("J" .. i, "GameFontNormalLarge", x, y, z)
+                    end
                 end
             end
         end

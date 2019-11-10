@@ -98,3 +98,11 @@ DMW.Enums.Trackable = {
     [75293] = {Name = "Large Battered Chest", SkillReq = 0},
     [153453] = {Name = "Solid Chest", SkillReq = 0}
 }
+
+DMW.Enums.Lockboxes = {
+    [123330] = {Name = "Buccaneer's Strongbox", SkillReq = 0},
+    [179486] = {Name = "Battered Footlocker", SkillReq = 70},
+    [179487] = {Name = "Waterlogged Footlocker", SkillReq = 70},
+    [179490] = {Name = "Battered Footlocker", SkillReq = 150},
+    [179492] = {Name = "Dented Footlocker", SkillReq = 175}
+}

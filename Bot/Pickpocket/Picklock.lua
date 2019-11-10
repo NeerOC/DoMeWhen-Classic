@@ -46,7 +46,7 @@ function Picklock:GetLocker()
     local Table = {}
     for _, Object in pairs(DMW.GameObjects) do
         local Name = Object.Name
-        if string.find(Name, 'Footlocker') then
+        if string.find(Name, 'Footlocker') and DMW.Enums.Lockboxes[Object.ObjectID].SkillReq <= DMW.Player.Professions.Lockpicking then
             table.insert(Table, Object)
         end
     end
