@@ -106,7 +106,7 @@ end
 function Combat:SearchEnemy()
     local Table = {}
     for _, Unit in pairs(DMW.Attackable) do
-        if Unit.Distance < 50 then
+        if Unit.Distance < 80 then
             table.insert(Table, Unit)
         end
     end
@@ -134,6 +134,13 @@ function Combat:SearchEnemy()
             if UnitAffectingCombat(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) and Unit.Distance < 15 and Unit.HP < 100 then
                 return true, Unit
             end
+        end
+    end
+
+    -- Lets execute our target first
+    for _, Unit in ipairs(Table) do
+        if not Unit.Player and Unit.Target == GetActivePlayer() and Unit.HP < 50 then
+            return true, Unit
         end
     end
 
@@ -198,12 +205,15 @@ end
 function Combat:InitiateAttack(Unit)
     if (Unit.Distance > DMW.Settings.profile.Grind.CombatDistance or not Unit:LineOfSight()) then
         Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
-        local endX, endY, endZ = Navigation:ReturnPathEnd()
-        local endPathToUnitDist = GetDistanceBetweenPositions(Unit.PosX, Unit.PosY, Unit.PosZ, endX, endY, endZ)
-        if endPathToUnitDist > 4 then
-            -- Blacklist unit
-            Log:SevereInfo('Added Unit to badBlacklist')
-            table.insert(badBlacklist, Unit.Pointer)
+        
+        if Navigation:ReturnPathEnd() ~= nil then
+            local endX, endY, endZ = Navigation:ReturnPathEnd()
+            local endPathToUnitDist = GetDistanceBetweenPositions(Unit.PosX, Unit.PosY, Unit.PosZ, endX, endY, endZ)
+            if endPathToUnitDist > 4 then
+                -- Blacklist unit
+                Log:SevereInfo('Added Unit to badBlacklist')
+                table.insert(badBlacklist, Unit.Pointer)
+            end
         end
     else
         if DMW.Player.Moving then

@@ -373,14 +373,16 @@ function Grindbot:GetLoot()
     if LootUnit then
         if LootUnit.Distance >= 5 then
             Navigation:MoveTo(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ)
-            if not PauseFlags.movingToLoot then PauseFlags.movingToLoot = true moveToLootTime = DMW.Time end
-            local endX, endY, endZ = Navigation:ReturnPathEnd()
-            local endPathToUnitDist = GetDistanceBetweenPositions(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ, endX, endY, endZ)
-            if endPathToUnitDist > 2 or DMW.Time - moveToLootTime > 6 then
-                -- Blacklist unit
-                Log:SevereInfo('Added LootUnit to badBlacklist Dist: ' .. endPathToUnitDist .. ' Time: ' .. DMW.Time-moveToLootTime)
-                table.insert(lootBlacklist, LootUnit.Pointer)
-            end
+            if Navigation:ReturnPathEnd() ~= nil then
+                if not PauseFlags.movingToLoot then PauseFlags.movingToLoot = true moveToLootTime = DMW.Time end
+                local endX, endY, endZ = Navigation:ReturnPathEnd()
+                local endPathToUnitDist = GetDistanceBetweenPositions(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ, endX, endY, endZ)
+                if endPathToUnitDist > 2 or DMW.Time - moveToLootTime > 6 then
+                    -- Blacklist unit
+                    Log:SevereInfo('Added LootUnit to badBlacklist Dist: ' .. endPathToUnitDist .. ' Time: ' .. DMW.Time-moveToLootTime)
+                    table.insert(lootBlacklist, LootUnit.Pointer)
+                end
+                end
         else
             self:ResetMoveToLoot()
             if IsMounted() then Dismount() end
