@@ -319,7 +319,7 @@ function Grindbot:Pulse()
 
     -- This sets our state
     if not PauseFlags.skinDelay or not DMW.Settings.profile.Grind.doSkin then self:SwapMode() end
-    if not Grindbot.Mode == Modes.Looting then Grindbot:ResetMoveToLoot() end
+    if Grindbot.Mode ~= Modes.Looting then Grindbot:ResetMoveToLoot() end
     -- Do whatever our mode says.
     if Grindbot.Mode == Modes.Dead then
         Navigation:MoveToCorpse()
@@ -376,9 +376,9 @@ function Grindbot:GetLoot()
             if not PauseFlags.movingToLoot then PauseFlags.movingToLoot = true moveToLootTime = DMW.Time end
             local endX, endY, endZ = Navigation:ReturnPathEnd()
             local endPathToUnitDist = GetDistanceBetweenPositions(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ, endX, endY, endZ)
-            if endPathToUnitDist > 1 or DMW.Time - moveToLootTime > 6 then
+            if endPathToUnitDist > 2 or DMW.Time - moveToLootTime > 6 then
                 -- Blacklist unit
-                Log:SevereInfo('Added LootUnit to badBlacklist')
+                Log:SevereInfo('Added LootUnit to badBlacklist Dist: ' .. endPathToUnitDist .. ' Time: ' .. DMW.Time-moveToLootTime)
                 table.insert(lootBlacklist, LootUnit.Pointer)
             end
         else
