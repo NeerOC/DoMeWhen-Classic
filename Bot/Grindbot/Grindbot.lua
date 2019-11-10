@@ -343,7 +343,7 @@ function Grindbot:Pulse()
 
     if Grindbot.Mode == Modes.Looting then
         self:GetLoot()
-        ModeFrame.text:SetText('Looting')
+        ModeFrame.text:SetText('Looting: ' .. 'Spent: ' .. DMW.Time - moveToLootTime)
     end
 
     if Grindbot.Mode == Modes.Grinding then
@@ -414,7 +414,7 @@ function Grindbot:LootSlots()
 end
 
 function Grindbot:ResetMoveToLoot()
-    moveToLootTime = 0
+    moveToLootTime = DMW.Time
     PauseFlags.movingToLoot = false
 end
 

@@ -200,9 +200,9 @@ function Combat:InitiateAttack(Unit)
         Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
         local endX, endY, endZ = Navigation:ReturnPathEnd()
         local endPathToUnitDist = GetDistanceBetweenPositions(Unit.PosX, Unit.PosY, Unit.PosZ, endX, endY, endZ)
-        if endPathToUnitDist > 2 then
+        if endPathToUnitDist > 4 then
             -- Blacklist unit
-            Log:SevereInfo('Added unit to badBlacklist')
+            Log:SevereInfo('Added Unit to badBlacklist')
             table.insert(badBlacklist, Unit.Pointer)
         end
     else
