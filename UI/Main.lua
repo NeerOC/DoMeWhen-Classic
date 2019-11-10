@@ -613,7 +613,7 @@ local GrindbotOptionsTable = {
                     type = "toggle",
                     order = 6,
                     name = "Skip Aggro",
-                    desc = "Do you wanna ignore monsters if we aren't near the designated hotspots?",
+                    desc = "Do you wanna ignore monsters if we aren't near the designated hotspots? (THIS MAKES SURE TO GET TO HOTSPOT AND VENDOR 100% EVEN IF YOU GET KILLLED)",
                     width = 0.6,
                     get = function()
                         return DMW.Settings.profile.Grind.SkipCombatOnTransport

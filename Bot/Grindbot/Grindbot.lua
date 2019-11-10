@@ -270,7 +270,7 @@ end
 function Grindbot:RotationToggle()
     if DMW.Settings.profile.Grind.SkipCombatOnTransport then
         -- if we have skip aggro enabled then if we are near hotspot(150 yards) enable rotation otherwise disable it.
-        if Navigation:NearHotspot(DMW.Settings.profile.Grind.RoamDistance * 1.5) then
+        if Navigation:NearHotspot(130) then
             RunMacroText('/LILIUM HUD Rotation 1')
         else
             RunMacroText('/LILIUM HUD Rotation 2')
@@ -462,6 +462,12 @@ function Grindbot:SwapMode()
         -- If the above is not true and we arent standing, we stand.
         if not DMW.Player:Standing() then DoEmote('STAND') end
     end
+
+    -- (TRIAL!)
+    if Navigation:NearHotspot(130) and hasEnemy then
+        Grindbot.Mode = Modes.Combat
+        return
+    end 
 
     -- if we dont have skip aggro enabled in pathing and we arent mounted and we are in combat, fight back.
     if not DMW.Settings.profile.Grind.SkipCombatOnTransport and not IsMounted() and hasEnemy then

@@ -106,7 +106,7 @@ end
 function Combat:SearchEnemy()
     local Table = {}
     for _, Unit in pairs(DMW.Attackable) do
-        if Unit.Distance < 80 then
+        if Unit.Distance < 60 then
             table.insert(Table, Unit)
         end
     end
@@ -120,58 +120,48 @@ function Combat:SearchEnemy()
         )
     end
 
-    -- First check if there are totems then any of the mobs have mana (indicator of a caster) otherwise kill the one with lowest hp
     if DMW.Player.Combat then
         for _, Unit in ipairs(Table) do
+            -- Totems first
             if Unit.Distance <= 8 and UnitCreatureTypeID(Unit.Pointer) == 11 then
                 return true, Unit
             end
-        end
-    end
 
-    if DMW.Player.Combat then
-        for _, Unit in ipairs(Table) do
+            -- Nearby fleeing targets then
             if UnitAffectingCombat(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) and Unit.Distance < 15 and Unit.HP < 100 then
                 return true, Unit
             end
         end
     end
 
-    -- Lets execute our target first
-    for _, Unit in ipairs(Table) do
-        if not Unit.Player and Unit.Target == GetActivePlayer() and Unit.HP < 50 then
-            return true, Unit
-        end
-    end
-
-    for _, Unit in ipairs(Table) do
-        if not Unit.Player and Unit.Target == GetActivePlayer() and Unit:Interrupt() then
-            return true, Unit
-        end
-    end
-
-    for _, Unit in ipairs(Table) do
-        local PowerType = UnitPowerType(Unit.Pointer)
-        if not Unit.Player and Unit.Target == GetActivePlayer() and PowerType == 0 then
-            return true, Unit
-        end
-    end
-
-    if UnitExists('pet') then
+    -- focus pet target after that if we have pet
+    if DMW.Player.PetActive then
         for _, Unit in ipairs(Table) do
-            if DMW.Player.PetActive and Unit.Target and ((UnitIsUnit(Unit.Target, 'pet') and UnitAffectingCombat('pet'))) then
+            if Unit.Target and ((UnitIsUnit(Unit.Target, 'pet') and UnitAffectingCombat('pet'))) then
                 return true, Unit
             end
         end
     end
 
     for _, Unit in ipairs(Table) do
+        local PowerType = UnitPowerType(Unit.Pointer)
+        local Casting = Unit:CastingInfo() ~= nil
+
+        if not Unit.Player and Unit.Target == GetActivePlayer() and Unit.HP < 50 then
+            return true, Unit
+        end
+        if not Unit.Player and Unit.Target == GetActivePlayer() and Casting then
+            return true, Unit
+        end
+        
+        if not Unit.Player and Unit.Target == GetActivePlayer() and PowerType == 0 then
+            return true, Unit
+        end
+
         if not Unit.Player and Unit.Target == GetActivePlayer() then
             return true, Unit
         end
-    end
-
-    for _, Unit in ipairs(Table) do
+        
         if Unit.Player and Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer) and ObjectIsFacing(Unit.Pointer, GetActivePlayer()) then
             return true, Unit
         end
@@ -198,6 +188,7 @@ end
 function Combat:AttackCombat()
     local hasEnemy, theEnemy = self:SearchEnemy()
     if hasEnemy then
+        if IsMounted() then Dismount() end
         self:InitiateAttack(theEnemy)
     end
 end
