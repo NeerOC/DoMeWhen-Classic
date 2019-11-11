@@ -75,9 +75,16 @@ function Combat:UnitBad(unit)
 end
 
 function Combat:SearchAttackable()
+    -- Search for hostiles around us and attack them first.
+    for _, Unit in pairs(DMW.Attackable) do
+        if UnitClassification(Unit.Pointer) == 'normal' and UnitReaction(Unit.Pointer, 'player') < 4 and Unit.Distance <= Unit:AggroDistance() + 8 then
+            return true, Unit
+        end
+    end
+
     local Table = {}
     for _, Unit in pairs(DMW.Units) do
-        if UnitClassification(Unit.Pointer) == 'normal' and self:IsGoodUnit(Unit.Pointer) and (Unit:LineOfSight() or DMW.Settings.profile.Grind.skipLOS) then
+        if UnitClassification(Unit.Pointer) == 'normal' and self:IsGoodUnit(Unit.Pointer) and (Unit:LineOfSight() or DMW.Settings.profile.Grind.skipLOS) and #Unit:GetHostiles(20) < 2 then
             table.insert(Table, Unit)
         end
     end
@@ -96,9 +103,7 @@ function Combat:SearchAttackable()
         if UnitReaction(Unit.Pointer, 'player') < 4 then
             return true, Unit
         end
-    end
 
-    for _, Unit in ipairs(Table) do
         return true, Unit
     end
 end

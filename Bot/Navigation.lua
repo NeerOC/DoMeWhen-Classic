@@ -216,6 +216,10 @@ function Navigation:DrawVisuals()
     end
 end
 
+function Navigation:NodeDistance()
+    if IsMounted() then return 2 end return 1
+end
+
 function Navigation:Movement()
     local NoMoveFlags = bit.bor(DMW.Enums.UnitFlags.Stunned, DMW.Enums.UnitFlags.Confused, DMW.Enums.UnitFlags.Pacified, DMW.Enums.UnitFlags.Feared)
     if IsMounted() and mountTries > 0 then mountTries = 0 end
@@ -239,7 +243,7 @@ function Navigation:Movement()
         local pX, pY, pZ = ObjectPosition('player')
         local Distance = sqrt((DestX - pX) ^ 2) + ((DestY - pY) ^ 2) 
 
-        if Distance <= 1 then
+        if Distance <= self:NodeDistance() then
             pathIndex = pathIndex + 1
             if pathIndex > #NavPath then
                 pathIndex = 1
@@ -247,7 +251,7 @@ function Navigation:Movement()
             end
         else
             --if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, lastX, lastY, lastZ) == 0 then
-            if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY then
+            if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and not IsSwimming() then
                 stuckCount = stuckCount + 1
                 if stuckCount > 200 then
                     Dismount()
@@ -266,7 +270,7 @@ function Navigation:MoveTo(toX, toY, toZ)
     if (DMW.Player.Casting) or EndX and GetDistanceBetweenPositions(toX, toY, toZ, EndX, EndY, EndZ) < 0.1 and NavPath then return end
 
     pathIndex = 1
-    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, true, 3)
+    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, true, 1)
 
     if NavPath then
         EndX, EndY, EndZ = toX, toY, toZ
