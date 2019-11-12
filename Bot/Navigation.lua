@@ -217,7 +217,7 @@ function Navigation:DrawVisuals()
 end
 
 function Navigation:NodeDistance()
-    if IsMounted() then return 2 end return 1
+    if IsMounted() then return 2 end return 1.3
 end
 
 function Navigation:Movement()
@@ -253,7 +253,7 @@ function Navigation:Movement()
             --if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, lastX, lastY, lastZ) == 0 then
             if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and not IsSwimming() then
                 stuckCount = stuckCount + 1
-                if stuckCount > 200 then
+                if stuckCount > 10 then
                     Dismount()
                     if not unStucking then self:Unstuck() unStucking = true stuckCount = 0 end
                 end
@@ -270,7 +270,7 @@ function Navigation:MoveTo(toX, toY, toZ)
     if (DMW.Player.Casting) or EndX and GetDistanceBetweenPositions(toX, toY, toZ, EndX, EndY, EndZ) < 0.1 and NavPath then return end
 
     pathIndex = 1
-    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, true, true, 1)
+    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, false, true, 1)
 
     if NavPath then
         EndX, EndY, EndZ = toX, toY, toZ
@@ -280,7 +280,10 @@ end
 function Navigation:RandomizePosition(x, y, z, dist)
     local rx, ry, rz = GetPositionFromPosition(x, y, z, dist, math.random(20, 360), 360)
     local CalcedPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, rx, ry, rz, true, true, 1)
-    local GroundX, GroundY, GroundZ = TraceLine(CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] + 2, CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] - 200, bit.bor(0x100))
+    local GroundX, GroundY, GroundZ = TraceLine(CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] + 2, CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] - 200, bit.bor(0x110))
+    if not GroundZ and WorldPreload(GroundX, GroundY, DMW.Player.PosZ) then
+        GroundZ = select(3, TraceLine(GroundX, GroundY, 9999, GroundX, GroundY, -9999, 0x110))
+    end
     return GroundX, GroundY, GroundZ
 end
 
@@ -352,7 +355,7 @@ end
 
 function Navigation:GetPathDistanceTo(unit)
     if unit then
-        local UnitPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, unit.PosX, unit.PosY, unit.PosZ, true, true, 3)
+        local UnitPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, unit.PosX, unit.PosY, unit.PosZ, false, true, 1)
         return Navigation:CalcPathDistance(UnitPath)
     end
 end

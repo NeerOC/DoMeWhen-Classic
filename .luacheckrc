@@ -3925,6 +3925,7 @@ globals = {
 	"CalculatePath",
 	"GetMapId",
 	"GetCorpsePosition",
+	"WorldPreload",
 	--Extras
 	"DMW",
 	"QuestieLoader",
