@@ -361,7 +361,9 @@ function Navigation:GetPathDistanceTo(unit)
 end
 
 function Navigation:ReturnPathEnd()
-    return NavPath[#NavPath][1],NavPath[#NavPath][2],NavPath[#NavPath][3] or nil
+    if NavPath then
+        return NavPath[#NavPath][1],NavPath[#NavPath][2],NavPath[#NavPath][3]
+    end
 end
 
 function Navigation:GetDistanceBetweenPositions(pos_a, pos_b)

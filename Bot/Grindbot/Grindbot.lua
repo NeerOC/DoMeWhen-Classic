@@ -5,6 +5,7 @@ local Vendor = DMW.Bot.Vendor
 local Combat = DMW.Bot.Combat
 local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
+local Misc = DMW.Bot.Misc
 
 local Throttle = false
 local VendorTask = false
@@ -96,7 +97,8 @@ function blackListContains(unit)
      return false
 end
 -- Global functions />
-function Grindbot:ClearblackList()
+
+function Grindbot:ClearBlackList()
     for i = 1, #skinBlacklist do
         if skinBlacklist[i] and not ObjectExists(skinBlacklist[i]) then
             skinBlacklist[i] = nil
@@ -116,7 +118,7 @@ function Grindbot:OnLootBlacklist(unit)
 end
 
 function Grindbot:CanLoot()
-    if Grindbot:GetFreeSlots() == 0 then return false end
+    if Misc:GetFreeSlots() == 0 then return false end
     if PauseFlags.skinDelay then return end
 
         local Table = {}
@@ -143,151 +145,13 @@ function Grindbot:CanLoot()
     return false
 end
 
-function Grindbot:GetFreeSlots()
-local totalfree=0
-for bag=0, NUM_BAG_SLOTS do
-    local bagfree=tonumber((GetContainerNumFreeSlots(bag)))
-    totalfree=bagfree and totalfree+bagfree or totalfree
-end
-    return totalfree
-end
-
-function Grindbot:HasItem(itemname)
-    for BagID = 0, 4 do
-        for BagSlot = 1, GetContainerNumSlots(BagID) do
-            CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
-            if CurrentItemLink then
-                name, void, Rarity, void, void, itype, SubType, void, void, void, ItemPrice = GetItemInfo(CurrentItemLink)
-                if name == itemname then
-                    return true
-                end
-            end
-        end
-    end
-    return false
-end
-
-function Grindbot:DeleteTask()
-    -- Deletes quest items so we dont get stuck looting the same shit.
-    for BagID = 0, 4 do
-        for BagSlot = 1, GetContainerNumSlots(BagID) do
-            CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
-            if CurrentItemLink then
-                name = GetItemInfo(CurrentItemLink)
-                if string.find(name, 'Distress') then
-                    PickupContainerItem(BagID, BagSlot); 
-                    DeleteCursorItem();
-                end
-            end
-        end
-    end
-end
-
-function Grindbot:ClamTask()
-    -- instantly opens clams and deletes meat
-    for BagID = 0, 4 do
-        for BagSlot = 1, GetContainerNumSlots(BagID) do
-            CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
-            if CurrentItemLink then
-                name = GetItemInfo(CurrentItemLink)
-                if string.find(name, 'Clam Meat') then
-                    PickupContainerItem(BagID,BagSlot); 
-                    DeleteCursorItem();
-                    return
-                end
-                
-                if name == 'Big-mouth Clam' or name == 'Thick-shelled Clam' or name == 'Small Barnacled Clam' then
-                    UseContainerItem(BagID, BagSlot)
-                    return
-                end
-            end
-        end
-    end
-
-    self:LootSlots()
-end
-
-function Grindbot:Hotspotter()
-    if IsForeground() then
-        local cx, cy, cz, ctype = GetLastClickInfo()
-        local altdown, alttoggle = GetKeyState(0x12)
-        local shiftdown, shifttoggle = GetKeyState(0x10)
-        local leftmousedown, leftmousetoggle = GetKeyState(0x01)
-        local rightmousedown, rightmousetoggle = GetKeyState(0x02)
-        
-        if shiftdown and altdown and leftmousedown and ctype then
-            if self:RemoveClickSpot(cx, cy, cz) then
-                Log:DebugInfo('Removed Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
-            end
-        end
-
-        if altdown and not shiftdown and leftmousedown and ctype and cx ~= 0 then
-            if self:AddClickSpot(cx, cy, cz) then
-                Log:DebugInfo('Added Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
-            end
-        end
-    end
-end
-
-function Grindbot:RemoveClickSpot(x, y, z)
-    local keyremove
-    for k in pairs (DMW.Settings.profile.Grind.HotSpots) do
-        local hx, hy, hz = DMW.Settings.profile.Grind.HotSpots[k].x, DMW.Settings.profile.Grind.HotSpots[k].y, DMW.Settings.profile.Grind.HotSpots[k].z
-        local dist = GetDistanceBetweenPositions(x, y, z, hx, hy, hz)
-        if dist < 20 then
-            keyremove = k
-            break
-        end
-    end
-    if keyremove then
-        DMW.Settings.profile.Grind.HotSpots [keyremove] = nil
-        PauseFlags.Hotspotting = true
-        C_Timer.After(0.3, function()
-            PauseFlags.Hotspotting = false
-        end)
-        return true
-    end
-    return false
-end
-
-function Grindbot:AddClickSpot(xx, yy, zz)
-    local Spot = {x = xx, y = yy, z = zz}
-    for k in pairs (DMW.Settings.profile.Grind.HotSpots) do
-        local hx, hy, hz = DMW.Settings.profile.Grind.HotSpots[k].x, DMW.Settings.profile.Grind.HotSpots[k].y, DMW.Settings.profile.Grind.HotSpots[k].z
-        local dist = GetDistanceBetweenPositions(xx, yy, zz, hx, hy, hz)
-        if dist < DMW.Settings.profile.Grind.RoamDistance then
-            return false
-        end
-    end
-    table.insert(DMW.Settings.profile.Grind.HotSpots, Spot)
-    PauseFlags.Hotspotting = true
-    C_Timer.After(0.3, function()
-        PauseFlags.Hotspotting = false
-    end)
-    return true
-end
-
-function Grindbot:RotationToggle()
-    if DMW.Settings.profile.Grind.SkipCombatOnTransport then
-        -- if we have skip aggro enabled then if we are near hotspot(150 yards) enable rotation otherwise disable it.
-        if Navigation:NearHotspot(130) then
-            RunMacroText('/LILIUM HUD Rotation 1')
-        else
-            RunMacroText('/LILIUM HUD Rotation 2')
-        end
-    else
-        -- If we dont have skip aggro then Enable rotation if its disabled
-            RunMacroText('/LILIUM HUD Rotation 1')
-    end
-end
-
 function Grindbot:Pulse()
     -- < Do Stuff With Timer
     if not Throttle then
         self:LoadSettings()
-        if DMW.Settings.profile.Grind.openClams then self:ClamTask() end
-        self:DeleteTask()
-        self:ClearblackList()
+        if DMW.Settings.profile.Grind.openClams then Misc:ClamTask() end
+        Misc:DeleteTask()
+        self:ClearBlackList()
         if DMW.Player.Pet and not DMW.Player.Pet.Dead and DMW.Player.Pet.Target and not Combat:SearchEnemy() then PetFollow() end -- Stupid ass rotations using pets unnecesary
         Throttle = true
         C_Timer.After(0.1, function() Throttle = false end)
@@ -305,7 +169,7 @@ function Grindbot:Pulse()
     end
 
     -- Call the enable and disable function of rotation when going to and from vendor.
-    self:RotationToggle()
+    Misc:RotationToggle()
     -- Call movement
     Navigation:Movement()
     if not Combat:EnemyBehind() then MoveForwardStop() end -- Just extra to make sure we dont walk like a moron
@@ -359,7 +223,7 @@ function Grindbot:Pulse()
 end
 
 function Grindbot:DisabledFunctions()
-    if not PauseFlags.Hotspotting then self:Hotspotter() end
+    if not PauseFlags.Hotspotting then Misc:Hotspotter() end
     Navigation:ResetPath()
     Navigation:SortHotspots()
     if InformationOutput then InformationOutput = false end
@@ -405,15 +269,7 @@ function Grindbot:GetLoot()
         end
     end
 
-    self:LootSlots()
-end
-
-function Grindbot:LootSlots()
-    for i = GetNumLootItems(), 1, -1 do
-        LootSlot(i)
-        ConfirmLootSlot(i)
-    end
-    CloseLoot()
+    Misc:LootAllSlots()
 end
 
 function Grindbot:ResetMoveToLoot()
@@ -507,14 +363,14 @@ function Grindbot:SwapMode()
     end
 
     -- If our durability is less than we decided or our bag slots is less than decided, vendor task :)
-    if (Vendor:GetDurability() <= Settings.RepairPercent or self:GetFreeSlots() < Settings.MinFreeSlots) then
+    if (Vendor:GetDurability() <= Settings.RepairPercent or Misc:GetFreeSlots() < Settings.MinFreeSlots) then
         Grindbot.Mode = Modes.Vendor
         if not VendorTask then VendorTask = true end
         return
     end
 
     -- if we chose to buy food and we dont have any food, if we chose to buy water and we dont have any water, Vendor task.
-    if (Settings.BuyFood and not self:HasItem(Settings.FoodName)) or (Settings.BuyWater and not self:HasItem(Settings.WaterName)) then
+    if (Settings.BuyFood and not Misc:HasItem(Settings.FoodName)) or (Settings.BuyWater and not Misc:HasItem(Settings.WaterName)) then
         Grindbot.Mode = Modes.Vendor
         if not VendorTask then VendorTask = true end
         return

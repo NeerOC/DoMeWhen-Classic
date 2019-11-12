@@ -66,6 +66,7 @@ Bot\Navigation.lua
 
 Bot\Grindbot\Vendor.lua
 Bot\Grindbot\Combat.lua
+Bot\Grindbot\Misc.lua
 Bot\Grindbot\Grindbot.lua
 
 Bot\Pickpocket\Pickpocket.lua
