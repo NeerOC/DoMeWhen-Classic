@@ -55,23 +55,22 @@ function Misc:DeleteTask()
 end
 
 function Misc:Hotspotter()
-    if IsForeground() then
-        local cx, cy, cz, ctype = GetLastClickInfo()
-        local altdown, alttoggle = GetKeyState(0x12)
-        local shiftdown, shifttoggle = GetKeyState(0x10)
-        local leftmousedown, leftmousetoggle = GetKeyState(0x01)
-        local rightmousedown, rightmousetoggle = GetKeyState(0x02)
-        
-        if shiftdown and altdown and leftmousedown and ctype then
-            if self:RemoveClickSpot(cx, cy, cz) then
-                Log:DebugInfo('Removed Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
-            end
+    local cx, cy, cz = GetLastClickInfo()
+    local altDown = IsAltKeyDown()
+    local shiftDown = IsShiftKeyDown()
+    local ctrlDown = IsControlKeyDown()
+    local leftMouseDown = IsMouseButtonDown('LeftButton')
+    local rightMouseDown = IsMouseButtonDown('RightButton')
+    
+    if shiftDown and altDown and leftMouseDown then
+        if self:RemoveClickSpot(cx, cy, cz) then
+            Log:DebugInfo('Removed Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
         end
+    end
 
-        if altdown and not shiftdown and leftmousedown and ctype and cx ~= 0 then
-            if self:AddClickSpot(cx, cy, cz) then
-                Log:DebugInfo('Added Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
-            end
+    if altDown and not shiftDown and leftMouseDown then
+        if self:AddClickSpot(cx, cy, cz) then
+            Log:DebugInfo('Added Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
         end
     end
 end
