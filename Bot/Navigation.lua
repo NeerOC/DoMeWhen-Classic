@@ -217,7 +217,7 @@ function Navigation:DrawVisuals()
 end
 
 function Navigation:NodeDistance()
-    if IsMounted() then return 2 end return 1.3
+    if IsMounted() then return 3 end return 1.5
 end
 
 function Navigation:Movement()
@@ -253,7 +253,7 @@ function Navigation:Movement()
             --if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, lastX, lastY, lastZ) == 0 then
             if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and not IsSwimming() then
                 stuckCount = stuckCount + 1
-                if stuckCount > 10 then
+                if stuckCount > 50 then
                     Dismount()
                     if not unStucking then self:Unstuck() unStucking = true stuckCount = 0 end
                 end
