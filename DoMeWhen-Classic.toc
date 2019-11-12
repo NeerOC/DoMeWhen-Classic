@@ -69,8 +69,7 @@ Bot\Grindbot\Combat.lua
 Bot\Grindbot\Misc.lua
 Bot\Grindbot\Grindbot.lua
 
-Bot\Pickpocket\Pickpocket.lua
-Bot\Pickpocket\Picklock.lua
+Bot\Fishbot\Fishbot.lua
 Bot\Engine.lua
 
 Enums\Spells\Global.lua

@@ -18,7 +18,6 @@ local PauseFlags = {
     movingToLoot = false,
     Interacting = false,
     Skinning = false,
-    Hotspotting = false,
     Information = false,
     CantEat = false,
     CantDrink = false,

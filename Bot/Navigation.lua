@@ -196,24 +196,6 @@ function Navigation:DrawVisuals()
             end
         end
     end
-
-    if DMW.Settings.profile.HUD.BotMode == 2 then
-        local HotSpots = DMW.Settings.profile.Pickpocket.Hotspots
-        if #HotSpots > 0 then
-            for i = 1, #HotSpots do
-                if HotSpots[i] then
-                    local x, y, z, jump = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z, HotSpots[i].j
-                    if not jump then
-                        LibDraw.SetColorRaw(1, 213, 164, 100)
-                        LibDraw.Text(i, "GameFontNormalLarge", x, y, z)
-                    else
-                        LibDraw.SetColorRaw(51, 26, 213, 100)
-                        LibDraw.Text("J" .. i, "GameFontNormalLarge", x, y, z)
-                    end
-                end
-            end
-        end
-    end
 end
 
 function Navigation:NodeDistance()

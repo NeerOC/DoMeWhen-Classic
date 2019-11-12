@@ -38,8 +38,6 @@ function DMW:ChatCommand(Input)
             else
                 DMW.UI.Debug.Frame:Hide()
             end
-        elseif Commands[1] == "PICK" then
-            LibStub("AceConfigDialog-3.0"):Open("PickpocketConfig", PickpocketFrame)
         elseif Commands[1] == "GRIND" then
             LibStub("AceConfigDialog-3.0"):Open("GrindbotConfig", GrindbotFrame)
         elseif Commands[1] == "REPAIR" then

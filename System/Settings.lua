@@ -32,7 +32,6 @@ local defaults = {
         Helpers = {
             AutoLoot = false,
             AutoSkinning = false,
-
             AutoGather = false,
         },
         Grind = {
@@ -81,13 +80,6 @@ local defaults = {
             randomizeWaypointDistance = 20,
             targetBlacklist = {},
             itemSaveList = {},
-        },
-        Picklock = {
-            Hotspots = {},
-            LockpickChoice = 1
-        },
-        Pickpocket = {
-            Hotspots = {}
         },
         Tracker = {
             Herbs = false,

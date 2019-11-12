@@ -4,7 +4,6 @@ local UI = DMW.UI
 local RotationOrder = 1
 local TrackingFrame, TrackerConfig
 local GrindbotFrame, GrindbotConfig
-local PickpocketFrame, PickpocketConfig
 local base64 = LibStub('LibBase64-1.0')
 local serializer = LibStub('AceSerializer-3.0')
 local Log = DMW.Bot.Log
@@ -93,62 +92,6 @@ local function export(value)
 		Frame:AddChild(importButton)
 	end
 end
-
-local PickpocketOptionsTable = {
-    name = "[Pickpocket]",
-    handler = PickpocketConfig,
-    type = "group",
-    childGroups = "tab",
-    args = {
-        FirstTab = {
-            name = "Pickpocket",
-            type = "group",
-            order = 1,
-            args = {
-
-            }
-        },
-        SecondTab = {
-            name = "Picklock",
-            type = "group",
-            order = 2,
-            args = {
-                pickLocation = {
-                    type = "select",
-                    order = 1,
-                    name = "Where",
-                    desc = "Where are you going to look for lockboxes?",
-                    width = "full",
-                    values = {"Stationary (1-100)", "Stonetalon (100-170)", "Badlands (175-250)"},
-                    style = "dropdown",
-                    get = function()
-                        return DMW.Settings.profile.Picklock.LockpickChoice
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Picklock.LockpickChoice = value
-                        if value == 1 then
-                            --Hotspots set to none
-                            DMW.Settings.profile.Picklock.Hotspots = {}
-                            Log:DebugInfo('Will now look for nearby Lockboxes')
-                        elseif value == 2 then
-                            -- Hotspots set to Stonetalon
-                            DMW.Settings.profile.Picklock.Hotspots = {}
-                            local WP1 = {x = 1178.0462, y = 247.9277, z = 9.8961} local WP2 = {x = 1289.1876, y = 82.8209, z = -1.3299} local WP3 = {x = 1266.3471, y = -155.1189, z = -3.3934} WP4 = {x = 1101.9450, y = -116.47264, z = 3.2624}
-                            table.insert(DMW.Settings.profile.Picklock.Hotspots, WP1) table.insert(DMW.Settings.profile.Picklock.Hotspots, WP2) table.insert(DMW.Settings.profile.Picklock.Hotspots, WP3) table.insert(DMW.Settings.profile.Picklock.Hotspots, WP4)
-                            Log:DebugInfo('Will now roam Stonetalon looking for Lockboxes.')
-                        elseif value == 3 then
-                            -- Hotspots set to Badlands
-                            DMW.Settings.profile.Picklock.Hotspots = {}
-                            local WP1 = {x = -6360.5488, y = -3123.589, z = 301.1114}
-                            table.insert(DMW.Settings.profile.Picklock.Hotspots, WP1)
-                            Log:DebugInfo('Will now roam Badlands for lockboxes.. MAKE SURE YOU ATLEAST HAVE 175 SKILL!')
-                        end
-                    end
-                }
-            }
-        }
-    }
-}
 
 local GrindbotOptionsTable = {
     name = "[Grindbot]",
@@ -1347,21 +1290,7 @@ local Options = {
                             GrindbotFrame:Hide()
                         end
                     end
-                },
-                PickpocketSettings = {
-                    type = "execute",
-                    order = 14,
-                    name = "Pickpocket",
-                    desc = "Pickpocket settings",
-                    width = "full",
-                    func = function()
-                        if not PickpocketFrame:IsShown() then
-                            LibStub("AceConfigDialog-3.0"):Open("PickpocketConfig", PickpocketFrame)
-                        else
-                            PickpocketFrame:Hide()
-                        end
-                    end
-                },
+                }
             }
         },
         EnemyTab = {
@@ -1523,9 +1452,6 @@ function UI.Init()
     LibStub("AceConfig-3.0"):RegisterOptionsTable("GrindbotConfig", GrindbotOptionsTable)
     LibStub("AceConfigDialog-3.0"):SetDefaultSize("GrindbotConfig", 420, 392)
 
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("PickpocketConfig", PickpocketOptionsTable)
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize("PickpocketConfig", 400, 350)
-
     if not TrackingFrame then
         TrackingFrame = AceGUI:Create("Frame")
         TrackingFrame:Hide()
@@ -1538,13 +1464,6 @@ function UI.Init()
         GrindbotFrame:Hide()
         _G["GrindbotFrameConfig"] = GrindbotFrame.frame
         table.insert(UISpecialFrames, "GrindbotFrameConfig")
-    end
-
-    if not PickpocketFrame then
-        PickpocketFrame = AceGUI:Create("Frame")
-        PickpocketFrame:Hide()
-        _G["PickpocketFrameConfig"] = PickpocketFrame.frame
-        table.insert(UISpecialFrames, "PicketpocketFrameConfig")
     end
 
     UI.MinimapIcon = LibStub("LibDBIcon-1.0")

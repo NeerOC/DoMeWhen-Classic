@@ -2,8 +2,7 @@ local DMW = DMW
 DMW.Bot.Engine = {}
 local Engine = DMW.Bot.Engine
 local Grindbot = DMW.Bot.Grindbot
-local Pickpocket = DMW.Bot.Pickpocket
-local Picklock = DMW.Bot.Picklock
+local Fishbot = DMW.Bot.Fishbot
 local Navigation = DMW.Bot.Navigation
 local Log = DMW.Bot.Log
 
@@ -22,26 +21,17 @@ function Engine:Pulse()
         -- If we chose Grindbot then pulse Grindbot.
         if DMW.Settings.profile.HUD.BotMode == 1 then
             Grindbot:Pulse()
-        end
-        -- If we chose Pickpocket then pulse Pickpocket.
-        if DMW.Settings.profile.HUD.BotMode == 2 then
-            Pickpocket:Pulse()
-            RunMacroText('/LILIUM HUD Rotation 2')
-        end
-        -- If we chose Picklock then pulse Picklock.
-        if DMW.Settings.profile.HUD.BotMode == 3 then
-            Picklock:Pulse()
+        elseif DMW.Settings.profile.HUD.BotMode == 2 then
+            Fishbot:Pulse()
         end
     else
         if DMW.Settings.profile.HUD.BotMode == 1 then Grindbot:DisabledFunctions() end
-        if DMW.Settings.profile.HUD.BotMode == 2 then Pickpocket:Hotspotter() Pickpocket:DisabledFunctions() end
     end
 end
 
 function Engine:SetupFolders()
     CreateDirectory(GetHackDirectory() .. "/Lilium/Grindbot") 
-    CreateDirectory(GetHackDirectory() .. "/Lilium/Pickpocket") 
-    CreateDirectory(GetHackDirectory() .. "/Lilium/Dungeon")
+    CreateDirectory(GetHackDirectory() .. "/Lilium/Fishbot") 
     if #GetDirectoryFiles(GetHackDirectory() .. "/Lilium/Grindbot/*.txt") > 0 then
         self:LoadFile()
         Log:DebugInfo('ItemList Loaded.')
