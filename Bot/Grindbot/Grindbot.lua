@@ -73,7 +73,7 @@ evFrame:SetScript("OnEvent",function(self,event,msg,ply)
             PauseFlags.skinDelay = true C_Timer.After(1.8, function() PauseFlags.skinDelay = false end)
         end
     end
-end);
+end)
 
 -- < Global functions
 function ClearHotspot()

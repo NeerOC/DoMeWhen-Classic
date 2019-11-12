@@ -32,6 +32,7 @@ Spells.ROGUE = {
         Sprint = {Ranks = {2983, 8696, 11305}},
         Stealth = {Ranks = {1784, 1785, 1786, 1787}},
         Vanish = {Ranks = {1856}},
+        Preparation = {Ranks = {14185}},
         BlindingPowder = {Ranks = {6510}},
         CripplingPoison = {Ranks = {3420}},
         CripplingPoison2 = {Ranks = {3421}},

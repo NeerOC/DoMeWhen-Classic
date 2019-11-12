@@ -26,6 +26,7 @@ function Engine:Pulse()
         -- If we chose Pickpocket then pulse Pickpocket.
         if DMW.Settings.profile.HUD.BotMode == 2 then
             Pickpocket:Pulse()
+            RunMacroText('/LILIUM HUD Rotation 2')
         end
         -- If we chose Picklock then pulse Picklock.
         if DMW.Settings.profile.HUD.BotMode == 3 then
@@ -33,7 +34,7 @@ function Engine:Pulse()
         end
     else
         if DMW.Settings.profile.HUD.BotMode == 1 then Grindbot:DisabledFunctions() end
-        if DMW.Settings.profile.HUD.BotMode == 2 then Pickpocket:Hotspotter() end
+        if DMW.Settings.profile.HUD.BotMode == 2 then Pickpocket:Hotspotter() Pickpocket:DisabledFunctions() end
     end
 end
 

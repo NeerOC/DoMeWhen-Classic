@@ -294,7 +294,7 @@ function Navigation:GrindRoam()
 
     if DMW.Settings.profile.Grind.randomizeWaypoints then
         local PX, PY, PZ = ObjectPosition('player')
-        self:MoveTo(WaypointX, WaypointY, WaypointZ)
+        if WaypointX and WaypointY and WaypointZ then self:MoveTo(WaypointX, WaypointY, WaypointZ) end
         local Distance = GetDistanceBetweenPositions(PX, PY, PZ, WaypointX, WaypointY, WaypointZ)
         if HotSpotIndex == #HotSpots and Distance < 5 then
             HotSpotIndex = 1
