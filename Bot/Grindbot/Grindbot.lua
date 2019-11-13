@@ -1,9 +1,9 @@
 local DMW = DMW
 DMW.Bot.Grindbot = {}
+local Grindbot = DMW.Bot.Grindbot
 local Navigation = DMW.Bot.Navigation
 local Vendor = DMW.Bot.Vendor
 local Combat = DMW.Bot.Combat
-local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 local Misc = DMW.Bot.Misc
 

@@ -2,7 +2,6 @@ local DMW = DMW
 local LibDraw = LibStub("LibDraw-1.0")
 DMW.Bot.Navigation = {}
 local Navigation = DMW.Bot.Navigation
-local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 local NavPath = nil
 local pathIndex = 1
@@ -22,82 +21,6 @@ local timerStarted = false
 
 local ObsDistance = 4
 local ObsFlags = bit.bor(0x1, 0x10)
-
--- Movement check functions
-function Navigation:GameObjectInfront()
-    local px, py, pz = ObjectPosition('player')
-    local facing = ObjectFacing('player')
-    
-    local hitcount = 0
-    local misses = 0
-    -- Center check
-    local c = 1.2
-    for i = 1, 3 do
-       local HitFX,HitFY,HitFZ = TraceLine(px, py, pz + c, px + ObsDistance * math.cos(facing), py + ObsDistance * math.sin(facing), pz + c, ObsFlags)
-       if HitFX ~= nil then
-          hitcount = hitcount + 1
-       else
-          misses = misses + 1
-       end
-       c = c + 0.2
-    end
-    if hitcount > 0 then
-       return true, hitcount - misses
-    else
-       return false
-    end
-end
-
-function Navigation:GameObjectLeft()
-    local px, py, pz = ObjectPosition('player')
-    local facing = ObjectFacing('player')
-    local hitcount = 0
-    local misses = 0
-    -- Left check
-    local L = 0.2
-    local H = 1
-    for i = 1, 9 do
-       local plx, ply, plz = px + L * math.cos(facing+math.pi/2), py + L * math.sin(facing+math.pi/2), pz
-       local HitLX, HitLY, HitLZ = TraceLine(plx, ply, plz + H, px + ObsDistance * math.cos(facing), py + ObsDistance * math.sin(facing), pz + H, ObsFlags)
-       if HitLX ~= nil then
-          hitcount = hitcount + 1
-       else
-          misses = misses + 1
-       end
-       L = L + 0.2
-    end
-    if hitcount > 0 then
-       return true, hitcount - misses
-    else
-       return false
-    end
- end
- 
-function Navigation:GameObjectRight()
-    local px, py, pz = ObjectPosition('player')
-    local facing = ObjectFacing('player')
-    local hitcount = 0
-    local misses = 0
-    -- Right check
-    local R = 0.2
-    local H = 1
-    for i = 1, 9 do
-       local plx, ply, plz = px + R * math.cos(facing-math.pi/2), py + R * math.sin(facing-math.pi/2), pz
-       local HitRX, HitRY, HitRZ = TraceLine(plx, ply, plz + H, px + ObsDistance * math.cos(facing), py + ObsDistance * math.sin(facing), pz + H, ObsFlags)
-       if HitRX ~= nil then
-          hitcount = hitcount + 1
-       else
-          misses = misses + 1
-       end
-       R = R + 0.2
-    end
-    if hitcount > 0 then
-       return true, hitcount - misses
-    else
-       return false
-    end
-end
--- Movement check functions/>
 
 -- Misc
 function CleanNils(t)
@@ -199,7 +122,7 @@ function Navigation:DrawVisuals()
 end
 
 function Navigation:NodeDistance()
-    if IsMounted() then return 3 end return 1.5
+    if IsMounted() then return 4 end return 1.5
 end
 
 function Navigation:Movement()
@@ -217,7 +140,7 @@ function Navigation:Movement()
             return
         end
 
-        if DMW.Settings.profile.Grind.vendorMount and Grindbot.Mode == 4 and self:CanMount() then
+        if DMW.Settings.profile.Grind.vendorMount and DMW.Bot.Grindbot.Mode == 4 and self:CanMount() then
             self:Mount()
             return
         end

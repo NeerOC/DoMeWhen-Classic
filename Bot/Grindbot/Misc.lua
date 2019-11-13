@@ -2,6 +2,7 @@ local DMW = DMW
 DMW.Bot.Misc = {}
 local Misc = DMW.Bot.Misc
 local Log = DMW.Bot.Log
+local Navigation = DMW.Bot.Navigation
 
 local PauseFlags = {
     Hotspotting = false
