@@ -265,6 +265,37 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.preventPVPTime = value
                     end
                 },
+                gatherSpacer = {
+                    type = "header",
+                    order = 15,
+                    name = ""
+                },
+                gatherHerb = {
+                    type = "toggle",
+                    order = 16,
+                    name = "Gather Herbs",
+                    desc = "Wanna Gather Some Herbs while killing?",
+                    width = 0.7,
+                    get = function()
+                        return DMW.Settings.profile.Grind.gatherHerb
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.gatherHerb = value
+                    end
+                },
+                mineOre = {
+                    type = "toggle",
+                    order = 17,
+                    name = "Mine Ore",
+                    desc = "Wanna Mine Some Ore?",
+                    width = 0.6,
+                    get = function()
+                        return DMW.Settings.profile.Grind.mineOre
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.mineOre = value
+                    end
+                },
             }
         },
         SecondTab = {

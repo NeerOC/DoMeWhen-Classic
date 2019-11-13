@@ -78,6 +78,8 @@ local defaults = {
             preventPVP = false,
             preventPVPTime = 120,
             randomizeWaypointDistance = 20,
+            mineOre = false,
+            gatherHerb = false,
             targetBlacklist = {},
             itemSaveList = {},
         },
