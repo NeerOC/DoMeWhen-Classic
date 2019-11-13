@@ -122,7 +122,7 @@ function Navigation:DrawVisuals()
 end
 
 function Navigation:NodeDistance()
-    if IsMounted() then return 4 end return 1.5
+    if IsMounted() then return DMW.Settings.profile.Grind.mountNodeDistance end return 1.5
 end
 
 function Navigation:Movement()
@@ -338,10 +338,6 @@ function Navigation:StopMoving()
 end
 
 function Navigation:Unstuck()
-    local left, leftcount = self:GameObjectLeft()
-    local right, rightcount = self:GameObjectRight()
-    local front, frontcount = self:GameObjectInfront()
-
     Log:SevereInfo('Unstuck!')
     MoveBackwardStart()
     JumpOrAscendStart()

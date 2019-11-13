@@ -78,6 +78,7 @@ local defaults = {
             preventPVP = false,
             preventPVPTime = 120,
             randomizeWaypointDistance = 20,
+            mountNodeDistance = 4,
             targetBlacklist = {},
             itemSaveList = {},
         },
