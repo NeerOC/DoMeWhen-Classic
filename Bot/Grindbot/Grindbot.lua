@@ -118,6 +118,7 @@ end
 
 function Grindbot:CanLoot()
     if Misc:GetFreeSlots() == 0 then return false end
+    if DMW.Player.Casting then return false end
     if PauseFlags.skinDelay then return end
 
         local Table = {}
