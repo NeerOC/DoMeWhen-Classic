@@ -122,7 +122,15 @@ function Navigation:DrawVisuals()
 end
 
 function Navigation:NodeDistance()
-    if IsMounted() then return DMW.Settings.profile.Grind.mountNodeDistance end return 1.5
+    currentSpeed = GetUnitSpeed('player')
+    if DMW.Settings.profile.Grind.useMountedNode then
+        if IsMounted() then return DMW.Settings.profile.Grind.mountNodeDistance end return 1.5
+    else
+        if currentSpeed <= 7 then return 1.5 end
+        if currentSpeed > 8 and currentSpeed < 13 then return 4 end
+        if currentSpeed > 13 then return 5 end
+    end
+    
 end
 
 function Navigation:Movement()

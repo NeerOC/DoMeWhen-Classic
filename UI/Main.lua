@@ -618,9 +618,9 @@ local GrindbotOptionsTable = {
                 randomWaypoints = {
                     type = "toggle",
                     order = 8,
-                    name = "Randomize Waypoints",
+                    name = "Random WP",
                     desc = "Do you wanna Randomize Waypoints? (Wont work well in tunnels or caves)",
-                    width = 1,
+                    width = 0.7,
                     get = function()
                         return DMW.Settings.profile.Grind.randomizeWaypoints
                     end,
@@ -628,9 +628,22 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.randomizeWaypoints = value
                     end
                 },
+                useNodeDistance = {
+                    type = "toggle",
+                    order = 9,
+                    name = "Use Node",
+                    desc = "Do you wanna use the Mounted Node Distance Specified above or do you wanna let Lilium handle it?",
+                    width = 0.6,
+                    get = function()
+                        return DMW.Settings.profile.Grind.useMountedNode
+                    end,
+                    set = function(info, value)
+                        DMW.Settings.profile.Grind.useMountedNode = value
+                    end
+                },
                 randomDistance = {
                     type = "range",
-                    order = 9,
+                    order = 10,
                     name = "Random Distance",
                     desc = "The Distance From The Center Of Hotspot To Generate New Hotspot",
                     width = "full",
