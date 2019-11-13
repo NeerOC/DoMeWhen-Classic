@@ -70,7 +70,7 @@ local function export(value)
         exportButton:SetCallback("OnClick", OnClick)
         Frame:AddChild(exportButton)
         exportButton:SetRelativeWidth(0.5)
-    elseif value == "import" then
+        elseif value == "import" then
         Frame:SetTitle("Import")
         local importButton = AceGUI:Create("Button")
         importButton:SetText("Import")
