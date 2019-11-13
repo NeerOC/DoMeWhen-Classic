@@ -3,51 +3,57 @@ local DMW = DMW
 local UI = DMW.UI
 local RotationOrder = 1
 local TrackingFrame, TrackerConfig
-local GrindbotFrame, GrindbotConfig
-local base64 = LibStub('LibBase64-1.0')
-local serializer = LibStub('AceSerializer-3.0')
-local Log = DMW.Bot.Log
+local base64 = LibStub("LibBase64-1.0")
+local serializer = LibStub("AceSerializer-3.0")
+local CurrentTab = "GeneralTab"
+local TabIndex = 2
 
 local exportTypes = {
-	["rotation"] = "Rotation", 
-	["tracker"] = "Tracker",
-	["queue"] = "Queue"
+    ["rotation"] = "Rotation",
+    ["tracker"] = "Tracker",
+    ["queue"] = "Queue",
+    ["grindbot"] = "Grindbot"
 }
 
 local exportTypesOrder = {
     "rotation",
     "tracker",
-    "queue"
+    "queue",
+    "grindbot"
 }
 
 local exportString = ""
 local function export(value)
     local Frame = AceGUI:Create("Frame")
-	Frame:SetTitle("Import/Export")
-	Frame:SetWidth(400)
-	Frame:SetHeight(350)
-	Frame.frame:SetFrameStrata("FULLSCREEN_DIALOG")
+    Frame:SetTitle("Import/Export")
+    Frame:SetWidth(400)
+    Frame:SetHeight(350)
+    Frame.frame:SetFrameStrata("FULLSCREEN_DIALOG")
     Frame:SetLayout("Flow")
 
     local Box = AceGUI:Create("MultiLineEditBox")
-	Box:SetNumLines(15)
-	Box:DisableButton(true)
-	Box:SetWidth(600)
-	Box:SetLabel("")
+    Box:SetNumLines(15)
+    Box:DisableButton(true)
+    Box:SetWidth(600)
+    Box:SetLabel("")
     Frame:AddChild(Box)
 
     local ProfileTypeDropdown = AceGUI:Create("Dropdown")
     ProfileTypeDropdown:SetMultiselect(false)
     ProfileTypeDropdown:SetLabel("Settings To Export")
     ProfileTypeDropdown:SetList(exportTypes, exportTypesOrder)
-    ProfileTypeDropdown:SetValue("rotation") 
+    ProfileTypeDropdown:SetValue("rotation")
     Frame:AddChild(ProfileTypeDropdown)
     ProfileTypeDropdown:SetRelativeWidth(0.5)
 
     if value == "export" then
-		Frame:SetTitle("Export")
-		local exportButton = AceGUI:Create("Button")
-		exportButton:SetText("Export")
+        -- ProfileTypeDropdown:SetCallback("OnValueChanged", function(self)
+        --     exportButton:SetText("Export "..exportTypes[ProfileTypeDropdown:GetValue()])
+        --     end
+        -- )
+        Frame:SetTitle("Export")
+        local exportButton = AceGUI:Create("Button")
+        exportButton:SetText("Export")
         local function OnClick(self)
             if ProfileTypeDropdown:GetValue() == "rotation" then
                 Box:SetText(base64:encode(serializer:Serialize(DMW.Settings.profile.Rotation)))
@@ -55,21 +61,19 @@ local function export(value)
                 Box:SetText(base64:encode(serializer:Serialize(DMW.Settings.profile.Tracker)))
             elseif ProfileTypeDropdown:GetValue() == "queue" then
                 Box:SetText(base64:encode(serializer:Serialize(DMW.Settings.profile.Queue)))
+            elseif ProfileTypeDropdown:GetValue() == "grindbot" then
+                Box:SetText(base64:encode(serializer:Serialize(DMW.Settings.profile.Grind)))
             end
             Box.editBox:HighlightText()
             Box:SetFocus()
-		end
-		exportButton:SetCallback("OnClick", OnClick)
+        end
+        exportButton:SetCallback("OnClick", OnClick)
         Frame:AddChild(exportButton)
         exportButton:SetRelativeWidth(0.5)
-        -- ProfileTypeDropdown:SetCallback("OnValueChanged", function(self)
-        --     exportButton:SetText("Export "..exportTypes[ProfileTypeDropdown:GetValue()])
-        --     end
-        -- )
-	elseif value == "import" then
-		Frame:SetTitle("Import")
-		local importButton = AceGUI:Create("Button") 
-		importButton:SetText("Import")
+    elseif value == "import" then
+        Frame:SetTitle("Import")
+        local importButton = AceGUI:Create("Button")
+        importButton:SetText("Import")
         importButton:SetRelativeWidth(0.5)
         local function OnClick(self)
             if type(Box:GetText()) == "string" then
@@ -81,16 +85,18 @@ local function export(value)
                         DMW.Settings.profile.Tracker = value
                     elseif ProfileTypeDropdown:GetValue() == "queue" then
                         DMW.Settings.profile.Queue = value
+                    elseif ProfileTypeDropdown:GetValue() == "grindbot" then
+                        DMW.Settings.profile.Grind = value
                     end
                     Box:SetText("Import Successful")
                 else
                     Box:SetText(value)
                 end
             end
-		end
-		importButton:SetCallback("OnClick", OnClick)
-		Frame:AddChild(importButton)
-	end
+        end
+        importButton:SetCallback("OnClick", OnClick)
+        Frame:AddChild(importButton)
+    end
 end
 
 local GrindbotOptionsTable = {
@@ -505,9 +511,9 @@ local GrindbotOptionsTable = {
                     name = "Roam Distance",
                     desc = "How far away from the Hotspot can we go?",
                     width = "full",
-                    min = 30,
+                    min = 15,
                     max = 100,
-                    step = 10,
+                    step = 5,
                     get = function()
                         return DMW.Settings.profile.Grind.RoamDistance
                     end,
@@ -1168,7 +1174,14 @@ local Options = {
             name = "Rotation",
             type = "group",
             order = 1,
-            args = {}
+            args = {
+                GeneralTab = {
+                name = "General",
+                type = "group",
+                order = 1,
+                args = {}
+            }
+        }
         },
         GeneralTab = {
             name = "General",
@@ -1475,7 +1488,7 @@ end
 
 function UI.Init()
     LibStub("AceConfig-3.0"):RegisterOptionsTable("DMW", Options)
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize("DMW", 450, 780)
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize("DMW", 580, 780)
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("TrackerConfig", TrackingOptionsTable)
     LibStub("AceConfigDialog-3.0"):SetDefaultSize("TrackerConfig", 400, 350)
@@ -1503,7 +1516,7 @@ end
 
 function UI.AddHeader(Text)
     if RotationOrder > 1 then
-        Options.args.RotationTab.args["Blank" .. RotationOrder] = {
+        Options.args.RotationTab.args[CurrentTab].args["Blank" .. RotationOrder] = {
             type = "description",
             order = RotationOrder,
             name = " ",
@@ -1522,7 +1535,7 @@ end
 
 function UI.AddToggle(Name, Desc, Default, FullWidth)
     local Width = FullWidth and "full" or 0.9
-    Options.args.RotationTab.args[Name] = {
+    Options.args.RotationTab.args[CurrentTab].args[Name] = {
         type = "toggle",
         order = RotationOrder,
         name = Name,
@@ -1543,7 +1556,7 @@ end
 
 function UI.AddRange(Name, Desc, Min, Max, Step, Default, FullWidth)
     local Width = FullWidth and "full" or 0.9
-    Options.args.RotationTab.args[Name] = {
+    Options.args.RotationTab.args[CurrentTab].args[Name] = {
         type = "range",
         order = RotationOrder,
         name = Name,
@@ -1567,7 +1580,7 @@ end
 
 function UI.AddDropdown(Name, Desc, Values, Default, FullWidth)
     local Width = FullWidth and "full"
-    Options.args.RotationTab.args[Name] = {
+    Options.args.RotationTab.args[CurrentTab].args[Name] = {
         type = "select",
         order = RotationOrder,
         name = Name,
@@ -1590,13 +1603,25 @@ end
 
 function UI.AddBlank(FullWidth)
     local Width = FullWidth and "full" or 0.9
-    Options.args.RotationTab.args["Blank" .. RotationOrder] = {
+    Options.args.RotationTab.args[CurrentTab].args["Blank" .. RotationOrder] = {
         type = "description",
         order = RotationOrder,
         name = " ",
         width = Width
     }
     RotationOrder = RotationOrder + 1
+end
+
+function UI.AddTab(Name)
+    Options.args.RotationTab.args[Name .. "Tab"] = {
+        name = Name,
+        type = "group",
+        order = TabIndex,
+        args = {}
+    }
+    TabIndex = TabIndex + 1
+    CurrentTab = Name .. "Tab"
+    RotationOrder = 1
 end
 
 function UI.InitQueue()
