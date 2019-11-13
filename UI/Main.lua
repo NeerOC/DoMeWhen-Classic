@@ -586,25 +586,9 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.mountDistance = value
                     end
                 },
-                mountNodeDistance = {
-                    type = "range",
-                    order = 6,
-                    name = "Mounted Node Distance",
-                    desc = "Range from node to select new node.",
-                    width = "full",
-                    min = 3,
-                    max = 7,
-                    step = 1,
-                    get = function()
-                        return DMW.Settings.profile.Grind.mountNodeDistance
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.mountNodeDistance = value
-                    end
-                },
                 SkipCombat = {
                     type = "toggle",
-                    order = 7,
+                    order = 6,
                     name = "Skip Aggro",
                     desc = "Do you wanna ignore monsters if we aren't near the designated hotspots? (THIS MAKES SURE TO GET TO HOTSPOT AND VENDOR 100% EVEN IF YOU GET KILLLED)",
                     width = 0.6,
@@ -617,7 +601,7 @@ local GrindbotOptionsTable = {
                 },
                 randomWaypoints = {
                     type = "toggle",
-                    order = 8,
+                    order = 7,
                     name = "Random WP",
                     desc = "Do you wanna Randomize Waypoints? (Wont work well in tunnels or caves)",
                     width = 0.7,
@@ -628,22 +612,9 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.randomizeWaypoints = value
                     end
                 },
-                useNodeDistance = {
-                    type = "toggle",
-                    order = 9,
-                    name = "Use Node",
-                    desc = "Do you wanna use the Mounted Node Distance Specified above or do you wanna let Lilium handle it?",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.useMountedNode
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.useMountedNode = value
-                    end
-                },
                 randomDistance = {
                     type = "range",
-                    order = 10,
+                    order = 8,
                     name = "Random Distance",
                     desc = "The Distance From The Center Of Hotspot To Generate New Hotspot",
                     width = "full",
