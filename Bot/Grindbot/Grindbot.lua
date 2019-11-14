@@ -2,6 +2,7 @@ local DMW = DMW
 DMW.Bot.Grindbot = {}
 local Grindbot = DMW.Bot.Grindbot
 local Navigation = DMW.Bot.Navigation
+local Gathering = DMW.Bot.Gathering
 local Vendor = DMW.Bot.Vendor
 local Combat = DMW.Bot.Combat
 local Log = DMW.Bot.Log
@@ -31,7 +32,8 @@ local Modes = {
     Grinding = 3,
     Vendor = 4,
     Roaming = 5,
-    Looting = 6
+    Looting = 6,
+    Gathering = 7
 }
 
 Grindbot.Mode = 0
@@ -212,6 +214,11 @@ function Grindbot:Pulse()
         ModeFrame.text:SetText('Looting: ' .. 'Spent: ' .. DMW.Time - moveToLootTime)
     end
 
+    if Grindbot.Mode == Modes.Gathering then
+        Gathering:Gather()
+        ModeFrame.text:SetText('Gathering')
+    end
+
     if Grindbot.Mode == Modes.Grinding then
         Combat:Grinding()
         ModeFrame.text:SetText('Grinding')
@@ -311,6 +318,8 @@ function Grindbot:SwapMode()
     local Drinking = AuraUtil.FindAuraByName('Drink', 'player')
     local hasEnemy, theEnemy = Combat:SearchEnemy()
     local hasAttackable, theAttackable = Combat:SearchAttackable()
+    local hasOre = Gathering:OreSearch()
+    local hasHerb = Gathering:HerbSearch()
 
     -- If we arent in combat and we arent standing (if our health is less than 95 percent and we currently have the eating buff or we are a caster and our mana iss less than 95 and we have the drinking buff) then set mode to rest.
     if not DMW.Player.Combat and not DMW.Player:Standing() and (DMW.Player.HP < 95 and Eating or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95 and Drinking) then
@@ -380,6 +389,11 @@ function Grindbot:SwapMode()
     -- if we are in combat and we are near hotspot, set to combat mode.
     if hasEnemy and Combat:UnitNearHotspot(theEnemy.Pointer) then
         Grindbot.Mode = Modes.Combat
+        return
+    end
+
+    if hasOre and DMW.Settings.profile.Grind.mineOre or hasHerb and DMW.Settings.profile.Grind.gatherHerb then
+        Grindbot.Mode = Modes.Gathering
         return
     end
 
