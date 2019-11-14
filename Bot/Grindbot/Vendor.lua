@@ -181,6 +181,10 @@ function Vendor:GetDurability()
     return totalDurability
 end
 
+function Vendor:HasItem(name)
+    
+end
+
 function Vendor:useHearthstone()
     local _,secleft = GetItemCooldown(6948)
     if DMW.Settings.profile.Grind.useHearthstone and secleft < 2 and not DMW.Player.Casting then
@@ -207,10 +211,40 @@ function Vendor:DoTask()
     local WaterCount = DMW.Settings.profile.Grind.WaterAmount
     local NeedWaterCount = WaterCount - GetItemCount(WaterName)
     local NeedFoodCount = FoodCount - GetItemCount(FoodName)
+    local autoFood = DMW.Settings.profile.Grind.autoFood
+    local autoWater = DMW.Settings.profile.Grind.autoWater
+    local foodList = getBestFood()
+    local bestWater = getBestWater()
 
-    -- These are actual unit objects.
     local RepairNPC = self:GetVendor(RepairVendorName)
     local FoodNPC = self:GetVendor(FoodVendorName)
+
+    if autoWater and MerchantFrame:IsVisible() then
+        for i = 1, GetMerchantNumItems() do 
+            local vitem = GetMerchantItemLink(i) 
+            if vitem then
+                if vitem:find(bestWater) and DMW.Settings.profile.Grind.WaterName ~= bestWater then
+                    WaterName = bestWater
+                    DMW.Settings.profile.Grind.WaterName = bestWater
+                    Log:DebugInfo('Automatically set ' .. bestWater .. ' as our Water.')
+                end
+            end
+        end
+    end
+
+    if autoFood and MerchantFrame:IsVisible() then
+        for i = 1, GetMerchantNumItems() do 
+            local vitem = GetMerchantItemLink(i)
+            local itemName = GetItemInfo(vitem)
+            if vitem then
+                if ArrayContains(foodList, itemName) and DMW.Settings.profile.Grind.FoodName ~= itemName then
+                    FoodName = itemName
+                    DMW.Settings.profile.Grind.FoodName = itemName
+                    Log:DebugInfo('Automatically set ' .. itemName .. ' as our Food')
+                end
+            end
+        end
+    end
 
     if RepairVendorName == '' then Log:DebugInfo('Set Repair Vendor With /DMW Repair') return end
     if (BuyFood or BuyWater) and FoodVendorName == '' then Log:DebugInfo('Set Food Vendor with /DMW Food') return end

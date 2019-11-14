@@ -152,6 +152,7 @@ function Grindbot:Pulse()
         if DMW.Settings.profile.Grind.openClams then Misc:ClamTask() end
         Misc:DeleteTask()
         self:ClearBlackList()
+        self:SetFoodAndWater()
         if DMW.Player.Pet and not DMW.Player.Pet.Dead and DMW.Player.Pet.Target and not Combat:SearchEnemy() then PetFollow() end -- Stupid ass rotations using pets unnecesary
         Throttle = true
         C_Timer.After(0.1, function() Throttle = false end)
@@ -397,6 +398,20 @@ function Grindbot:SwapMode()
     -- if there isnt anything to attack and we arent in combat then roam around till we find something.
     if not hasAttackable and (not DMW.Player.Combat or DMW.Player.Target and UnitIsTapDenied(DMW.Player.Target.Pointer)) then
         Grindbot.Mode = Modes.Roaming
+    end
+end
+
+function Grindbot:SetFoodAndWater()
+    if DMW.Player.Class == 'MAGE' then
+        if DMW.Settings.profile.Grind.autoFood and DMW.Settings.profile.Grind.FoodName ~= getBestFood() then
+            DMW.Settings.profile.Grind.FoodName = getBestFood()
+            Log:DebugInfo('Automatically set your food to ' .. getBestFood())
+        end
+
+        if DMW.Settings.profile.Grind.autoWater and DMW.Settings.profile.Grind.WaterName ~= getBestWater() then
+            DMW.Settings.profile.Grind.WaterName = getBestWater()
+            Log:DebugInfo('Automatically set your water to ' .. getBestWater())
+        end
     end
 end
 

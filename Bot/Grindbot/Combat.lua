@@ -46,7 +46,7 @@ function Combat:IsGoodUnit(unit)
         notCritter = UnitCreatureTypeID(unit) ~= 8,
         notPet = ObjectCreator(unit) == nil,
         noTargetOrMeOrPet = UnitTarget(unit) == nil or UnitIsUnit(UnitTarget(unit), 'player') or UnitIsUnit(UnitTarget(unit), 'pet'),
-        isLevel = UnitLevel('player') == 60 or UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
+        isLevel = DMW.Settings.profile.Grind.attackAny or UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
         isPVP = not UnitIsPVP(unit),
         inRange = self:UnitNearHotspot(unit),
         notDead = not UnitIsDeadOrGhost(unit),

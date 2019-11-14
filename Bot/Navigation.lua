@@ -122,7 +122,7 @@ function Navigation:DrawVisuals()
 end
 
 function Navigation:NodeDistance()
-    currentSpeed = GetUnitSpeed('player')
+    _,currentSpeed = GetUnitSpeed('player')
 
     if currentSpeed <= 7 then return 2 end
     if currentSpeed > 8 and currentSpeed < 13 then return 4 end

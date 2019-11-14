@@ -47,10 +47,6 @@ local function export(value)
     ProfileTypeDropdown:SetRelativeWidth(0.5)
 
     if value == "export" then
-        -- ProfileTypeDropdown:SetCallback("OnValueChanged", function(self)
-        --     exportButton:SetText("Export "..exportTypes[ProfileTypeDropdown:GetValue()])
-        --     end
-        -- )
         Frame:SetTitle("Export")
         local exportButton = AceGUI:Create("Button")
         exportButton:SetText("Export")
@@ -99,587 +95,6 @@ local function export(value)
     end
 end
 
-local GrindbotOptionsTable = {
-    name = "[Grindbot]",
-    handler = GrindbotConfig,
-    type = "group",
-    childGroups = "tab",
-    args = {
-        FirstTab = {
-            name = "General",
-            type = "group",
-            order = 1,
-            args = {
-                drawPath = {
-                    type = "toggle",
-                    order = 1,
-                    name = "Draw Path",
-                    desc = "Draw the path that we are walking.",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.drawPath
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.drawPath = value
-                    end
-                },
-                drawHotspot = {
-                    type = "toggle",
-                    order = 2,
-                    name = "Draw Hotspots",
-                    desc = "Draw the hotspots we've placed",
-                    width = 0.7,
-                    get = function()
-                        return DMW.Settings.profile.Grind.drawHotspots
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.drawHotspots = value
-                    end
-                },
-                drawCircles = {
-                    type = "toggle",
-                    order = 3,
-                    name = "Draw Circles",
-                    desc = "Draw Roam Circles",
-                    width = 0.7,
-                    get = function()
-                        return DMW.Settings.profile.Grind.drawCircles
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.drawCircles = value
-                    end
-                },
-                drawSpacer = {
-                    type = "header",
-                    order = 4,
-                    name = ""
-                },
-                openClams = {
-                    type = "toggle",
-                    order = 5,
-                    name = "Open Clams",
-                    desc = "Open clams and delete shit.",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.openClams
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.openClams = value
-                    end
-                },
-                beHuman = {
-                    type = "toggle",
-                    order = 6,
-                    name = "Be Human",
-                    desc = "Will strafe and jump with good conditions.",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.beHuman
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.beHuman = value
-                    end
-                },
-                doSkin = {
-                    type = "toggle",
-                    order = 7,
-                    name = "Skin Mobs",
-                    desc = "Will skin mobs.",
-                    width = 0.7,
-                    get = function()
-                        return DMW.Settings.profile.Grind.doSkin
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.doSkin = value
-                    end
-                },
-                miscSpacer = {
-                    type = "header",
-                    order = 8,
-                    name = ""
-                },
-                useHearthstone = {
-                    type = "toggle",
-                    order = 9,
-                    name = "Hearthstone",
-                    desc = "Will use Hearthstone on vendor runs (IF IT CAN BE USED)",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.useHearthstone
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.useHearthstone = value
-                    end
-                },
-                ignoreWhisperers = {
-                    type = "toggle",
-                    order = 10,
-                    name = "Ignore Players",
-                    desc = "Will ignore players who whisper you.",
-                    width = 0.7,
-                    get = function()
-                        return DMW.Settings.profile.Grind.ignoreWhispers
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.ignoreWhispers = value
-                    end
-                },
-                ignoreLOS = {
-                    type = "toggle",
-                    order = 11,
-                    name = "Skip LOS",
-                    desc = "If you find yourself wobbling between enemies, it might be because of LOS.",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.skipLos
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.skipLos = value
-                    end
-                },
-                otherSpacer = {
-                    type = "header",
-                    order = 12,
-                    name = ""
-                },
-                preventPVP = {
-                    type = "toggle",
-                    order = 13,
-                    name = "Prevent PVP",
-                    desc = "Wanna wait a while before respawning? ",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.preventPVP
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.preventPVP = value
-                    end
-                },
-                preventPVPTime = {
-                    type = "range",
-                    order = 14,
-                    name = "Prevent Time",
-                    desc = "How many seconds do we wait for?",
-                    width = "1.5",
-                    min = 60,
-                    max = 600,
-                    step = 10,
-                    get = function()
-                        return DMW.Settings.profile.Grind.preventPVPTime
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.preventPVPTime = value
-                    end
-                },
-                gatherSpacer = {
-                    type = "header",
-                    order = 15,
-                    name = ""
-                },
-                gatherHerb = {
-                    type = "toggle",
-                    order = 16,
-                    name = "Gather Herbs",
-                    desc = "Wanna Gather Some Herbs while killing?",
-                    width = 0.7,
-                    get = function()
-                        return DMW.Settings.profile.Grind.gatherHerb
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.gatherHerb = value
-                    end
-                },
-                mineOre = {
-                    type = "toggle",
-                    order = 17,
-                    name = "Mine Ore",
-                    desc = "Wanna Mine Some Ore?",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.mineOre
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.mineOre = value
-                    end
-                },
-                exportSpacer = {
-                    type = "header",
-                    order = 18,
-                    name = ""
-                },
-            }
-        },
-        SecondTab = {
-            name = "Vendor",
-            type = "group",
-            order = 2,
-            args = {
-                FoodName = {
-                    type = "input",
-                    order = 1,
-                    name = "Food Name",
-                    desc = "Food to eat",
-                    width = "0.5",
-                    get = function()
-                        return DMW.Settings.profile.Grind.FoodName
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.FoodName = value
-                    end
-                },
-                FoodAmount = {
-                    type = "range",
-                    order = 2,
-                    name = "Food Amount",
-                    desc = "How much food do we want in our bags?",
-                    width = "0.7",
-                    min = 20,
-                    max = 400,
-                    step = 20,
-                    get = function()
-                        return DMW.Settings.profile.Grind.FoodAmount
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.FoodAmount = value
-                    end
-                },
-                WaterName = {
-                    type = "input",
-                    order = 3,
-                    name = "Water Name",
-                    desc = "Water to drink",
-                    width = "0.5",
-                    get = function()
-                        return DMW.Settings.profile.Grind.WaterName
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.WaterName = value
-                    end
-                },
-                WaterAmount = {
-                    type = "range",
-                    order = 4,
-                    name = "Water Amount",
-                    desc = "How much water do we want in our bags?",
-                    width = "0.7",
-                    min = 20,
-                    max = 400,
-                    step = 20,
-                    get = function()
-                        return DMW.Settings.profile.Grind.WaterAmount
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.WaterAmount = value
-                    end
-                },
-                VendorSpacer = {
-                    type = "header",
-                    order = 5,
-                    name = ""
-                },
-                RepairPercent = {
-                    type = "range",
-                    order = 6,
-                    name = "Repair Threshold",
-                    desc = "When below this percent the bot will go repair and sell.",
-                    width = "full",
-                    min = 15,
-                    max = 80,
-                    step = 5,
-                    get = function()
-                        return DMW.Settings.profile.Grind.RepairPercent
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.RepairPercent = value
-                    end
-                },
-                MinFreeSlots = {
-                    type = "range",
-                    order = 7,
-                    name = "Minimum Bagslots",
-                    desc = "When we have less than this amount of bagslots we go to vendor and sell.",
-                    width = "full",
-                    min = 1,
-                    max = 50,
-                    step = 1,
-                    get = function()
-                        return DMW.Settings.profile.Grind.MinFreeSlots
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.MinFreeSlots = value
-                    end
-                },
-                OptionalSpacer = {
-                    type = "header",
-                    order = 8,
-                    name = ""
-                },
-                MaximumVendorRarity = {
-                    type = "select",
-                    order = 9,
-                    name = "Maximum Rarity",
-                    desc = "Maximum Rarity Of Item To Sell",
-                    width = "",
-                    values = {"|cffa9a9a9Grey", "White", "|cff00FF00Green", "|cff0000ffBlue", "|cff800080Purple"},
-                    style = "dropdown",
-                    get = function()
-                        return DMW.Settings.profile.Grind.MaximumVendorRarity
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.MaximumVendorRarity = value
-                    end
-                },
-                BuyFood = {
-                    type = "toggle",
-                    order = 10,
-                    name = "Buy Food",
-                    desc = "Buy Food from vendor",
-                    width = 0.5,
-                    get = function()
-                        return DMW.Settings.profile.Grind.BuyFood
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.BuyFood = value
-                    end
-                },
-                BuyWater = {
-                    type = "toggle",
-                    order = 11,
-                    name = "Buy Water",
-                    desc = "Buy Water from vendor",
-                    width = 0.55,
-                    get = function()
-                        return DMW.Settings.profile.Grind.BuyWater
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.BuyWater = value
-                    end
-                }
-            }
-        },
-        ThirdTab = {
-            name = "Combat",
-            type = "group",
-            order = 3,
-            args = {
-                RestHealth = {
-                    type = "range",
-                    order = 1,
-                    name = "Rest Health",
-                    desc = "We will only Grind above this health and eat below.",
-                    width = "full",
-                    min = 20,
-                    max = 95,
-                    step = 5,
-                    get = function()
-                        return DMW.Settings.profile.Grind.RestHP
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.RestHP = value
-                    end
-                },
-                RestMana = {
-                    type = "range",
-                    order = 2,
-                    name = "Rest Mana",
-                    desc = "We will drink below this mana",
-                    width = "full",
-                    min = 20,
-                    max = 95,
-                    step = 5,
-                    get = function()
-                        return DMW.Settings.profile.Grind.RestMana
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.RestMana = value
-                    end
-                },
-                combatSpacer = {
-                    type = "header",
-                    order = 3,
-                    name = ""
-                },
-                PullDistance = {
-                    type = "range",
-                    order = 4,
-                    name = "Combat Range",
-                    desc = "At what range can you attack the mobs?",
-                    width = "full",
-                    min = 3,
-                    max = 35,
-                    step = 1,
-                    get = function()
-                        return DMW.Settings.profile.Grind.CombatDistance
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.CombatDistance = value
-                    end
-                },
-                RoamDistance = {
-                    type = "range",
-                    order = 5,
-                    name = "Roam Distance",
-                    desc = "How far away from the Hotspot can we go?",
-                    width = "full",
-                    min = 15,
-                    max = 100,
-                    step = 5,
-                    get = function()
-                        return DMW.Settings.profile.Grind.RoamDistance
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.RoamDistance = value
-                    end
-                },
-                combatSpacer2 = {
-                    type = "header",
-                    order = 6,
-                    name = ""
-                },
-                MaximumNPCLevel = {
-                    type = "select",
-                    order = 8,
-                    name = "Maximum NPC Level",
-                    desc = "Your level + This = Max to target",
-                    width = "",
-                    values = {"One", "Two", "Three", "Four", "Five"},
-                    style = "dropdown",
-                    get = function()
-                        return DMW.Settings.profile.Grind.maxNPCLevel
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.maxNPCLevel = value
-                    end
-                },
-                MinimumNPCLevel = {
-                    type = "select",
-                    order = 9,
-                    name = "Minimum NPC Level",
-                    desc = "Your level - This = Lowest to target",
-                    width = "",
-                    values = {"One", "Two", "Three", "Four", "Five"},
-                    style = "dropdown",
-                    get = function()
-                        return DMW.Settings.profile.Grind.minNPCLevel
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.minNPCLevel = value
-                    end
-                },
-            }
-        },
-        FourthTab = {
-            name = "Path",
-            type = "group",
-            order = 4,
-            args = {
-                MountName = {
-                    type = "input",
-                    order = 1,
-                    name = "Mount Name",
-                    desc = "Warlocks and Paladins automatically use their Mount Spell, otherwise you need to type in the mount item name.",
-                    width = 0.9,
-                    get = function()
-                        return DMW.Settings.profile.Grind.MountName
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.MountName = value
-                    end
-                },
-                UseMount = {
-                    type = "toggle",
-                    order = 2,
-                    name = "Use Mount",
-                    desc = "Do you wanna use the mount specified in Mount Name?",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.UseMount
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.UseMount = value
-                    end
-                },
-                vendorMount = {
-                    type = "toggle",
-                    order = 3,
-                    name = "Vendor Mount",
-                    desc = "Do you only wanna use the mount when going to vendors?",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.vendorMount
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.vendorMount = value
-                    end
-                },
-                MountDistance = {
-                    type = "range",
-                    order = 4,
-                    name = "Mount Distance",
-                    desc = "Minimum Range before we should use mount.",
-                    width = "full",
-                    min = 30,
-                    max = 200,
-                    step = 10,
-                    get = function()
-                        return DMW.Settings.profile.Grind.mountDistance
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.mountDistance = value
-                    end
-                },
-                GeneralHeader = {
-                    type = "header",
-                    order = 5,
-                    name = ""
-                },
-                SkipCombat = {
-                    type = "toggle",
-                    order = 6,
-                    name = "Skip Aggro",
-                    desc = "Do you wanna ignore monsters if we aren't near the designated hotspots? (THIS MAKES SURE TO GET TO HOTSPOT AND VENDOR 100% EVEN IF YOU GET KILLLED)",
-                    width = 0.6,
-                    get = function()
-                        return DMW.Settings.profile.Grind.SkipCombatOnTransport
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.SkipCombatOnTransport = value
-                    end
-                },
-                randomWaypoints = {
-                    type = "toggle",
-                    order = 7,
-                    name = "Random WP",
-                    desc = "Do you wanna Randomize Waypoints? (Wont work well in tunnels or caves)",
-                    width = 0.7,
-                    get = function()
-                        return DMW.Settings.profile.Grind.randomizeWaypoints
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.randomizeWaypoints = value
-                    end
-                },
-                randomDistance = {
-                    type = "range",
-                    order = 8,
-                    name = "Random Distance",
-                    desc = "The Distance From The Center Of Hotspot To Generate New Hotspot",
-                    width = "full",
-                    min = 5,
-                    max = 25,
-                    step = 1,
-                    get = function()
-                        return DMW.Settings.profile.Grind.randomizeWaypointDistance
-                    end,
-                    set = function(info, value)
-                        DMW.Settings.profile.Grind.randomizeWaypointDistance = value
-                    end
-                }
-            }
-        }
-    }
-}
-
 local TrackingOptionsTable = {
     name = "Tracking",
     handler = TrackerConfig,
@@ -691,11 +106,6 @@ local TrackingOptionsTable = {
             type = "group",
             order = 1,
             args = {
-                -- GeneralHeader = {
-                --     type = "header",
-                --     order = 1,
-                --     name = "General"
-                -- },
                 QuestieHelper = {
                     type = "toggle",
                     order = 1,
@@ -1310,7 +720,7 @@ local Options = {
                 exportProfile = {
                     type = "execute",
                     name = "Export Settings",
-                    width = 1,
+                    width = "full",
                     order = 10,
                     func = function()
                         export("export")
@@ -1319,32 +729,13 @@ local Options = {
                 importProfile = {
                     type = "execute",
                     name = "Import Settings",
-                    width = 1,
+                    width = "full",
                     order = 11,
                     func = function()
                         export("import")
                     end
-                },
-                BotHeader = {
-                    type = "header",
-                    order = 12,
-                    name = "|cfff54272[Lilium]|r"
-                },
-                GrindSettings = {
-                    type = "execute",
-                    order = 13,
-                    name = "Grindbot",
-                    desc = "Grind settings",
-                    width = "full",
-                    func = function()
-                        if not GrindbotFrame:IsShown() then
-                            LibStub("AceConfigDialog-3.0"):Open("GrindbotConfig", GrindbotFrame)
-                        else
-                            GrindbotFrame:Hide()
-                        end
-                    end
-                }
             }
+        }
         },
         EnemyTab = {
             name = "Enemy",
@@ -1450,6 +841,624 @@ local Options = {
                     end
                 }
             }
+        },
+        GrindTab = {
+            name = "|cffa2a5dfLilium|r",
+            type = "group",
+            order = 6,
+            args = {
+                GeneralTab = {
+                name = "General",
+                type = "group",
+                order = 1,
+                args = {
+                    drawPath = {
+                        type = "toggle",
+                        order = 1,
+                        name = "Draw Path",
+                        desc = "Draw the path that we are walking.",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.drawPath
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.drawPath = value
+                        end
+                    },
+                    drawHotspot = {
+                        type = "toggle",
+                        order = 2,
+                        name = "Draw Hotspots",
+                        desc = "Draw the hotspots we've placed",
+                        width = 0.7,
+                        get = function()
+                            return DMW.Settings.profile.Grind.drawHotspots
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.drawHotspots = value
+                        end
+                    },
+                    drawCircles = {
+                        type = "toggle",
+                        order = 3,
+                        name = "Draw Circles",
+                        desc = "Draw Roam Circles",
+                        width = 0.7,
+                        get = function()
+                            return DMW.Settings.profile.Grind.drawCircles
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.drawCircles = value
+                        end
+                    },
+                    drawSpacer = {
+                        type = "header",
+                        order = 4,
+                        name = ""
+                    },
+                    openClams = {
+                        type = "toggle",
+                        order = 5,
+                        name = "Open Clams",
+                        desc = "Open clams and delete shit.",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.openClams
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.openClams = value
+                        end
+                    },
+                    miscSpacer = {
+                        type = "header",
+                        order = 6,
+                        name = ""
+                    },
+                    beHuman = {
+                        type = "toggle",
+                        order = 7,
+                        name = "Be Human",
+                        desc = "Will strafe and jump with good conditions.",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.beHuman
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.beHuman = value
+                        end
+                    },
+                    useHearthstone = {
+                        type = "toggle",
+                        order = 8,
+                        name = "Hearthstone",
+                        desc = "Will use Hearthstone on vendor runs (IF IT CAN BE USED)",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.useHearthstone
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.useHearthstone = value
+                        end
+                    },
+                    ignoreWhisperers = {
+                        type = "toggle",
+                        order = 9,
+                        name = "Ignore Players",
+                        desc = "Will ignore players who whisper you.",
+                        width = 0.7,
+                        get = function()
+                            return DMW.Settings.profile.Grind.ignoreWhispers
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.ignoreWhispers = value
+                        end
+                    },
+                    ignoreLOS = {
+                        type = "toggle",
+                        order = 10,
+                        name = "Skip LOS",
+                        desc = "If you find yourself wobbling between enemies, it might be because of LOS.",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.skipLos
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.skipLos = value
+                        end
+                    },
+                    otherSpacer = {
+                        type = "header",
+                        order = 11,
+                        name = ""
+                    },
+                    preventPVP = {
+                        type = "toggle",
+                        order = 12,
+                        name = "Prevent PVP",
+                        desc = "Wanna wait a while before respawning? ",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.preventPVP
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.preventPVP = value
+                        end
+                    },
+                    preventPVPTime = {
+                        type = "range",
+                        order = 13,
+                        name = "Prevent Time",
+                        desc = "How many seconds do we wait for?",
+                        width = "1.5",
+                        min = 60,
+                        max = 600,
+                        step = 10,
+                        get = function()
+                            return DMW.Settings.profile.Grind.preventPVPTime
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.preventPVPTime = value
+                        end
+                    },
+                    gatherSpacer = {
+                        type = "header",
+                        order = 14,
+                        name = ""
+                    },
+                    doSkin = {
+                        type = "toggle",
+                        order = 15,
+                        name = "Skin Mobs",
+                        desc = "Will skin mobs.",
+                        width = 0.7,
+                        get = function()
+                            return DMW.Settings.profile.Grind.doSkin
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.doSkin = value
+                        end
+                    },
+                    gatherHerb = {
+                        type = "toggle",
+                        order = 16,
+                        name = "Gather Herbs",
+                        desc = "Wanna Gather Some Herbs while killing?",
+                        width = 0.7,
+                        get = function()
+                            return DMW.Settings.profile.Grind.gatherHerb
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.gatherHerb = value
+                        end
+                    },
+                    mineOre = {
+                        type = "toggle",
+                        order = 17,
+                        name = "Mine Ore",
+                        desc = "Wanna Mine Some Ore?",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.mineOre
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.mineOre = value
+                        end
+                    },
+                    exportSpacer = {
+                        type = "header",
+                        order = 18,
+                        name = ""
+                    }
+                }
+                },
+                VendorTab = {
+                name = "Vendor",
+                type = "group",
+                order = 2,
+                args = {
+                    FoodName = {
+                        type = "input",
+                        order = 1,
+                        name = "Food Name",
+                        desc = "Food to eat",
+                        width = "0.5",
+                        get = function()
+                            return DMW.Settings.profile.Grind.FoodName
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.FoodName = value
+                        end
+                    },
+                    FoodAmount = {
+                        type = "range",
+                        order = 2,
+                        name = "Food Amount",
+                        desc = "How much food do we want in our bags?",
+                        width = "0.7",
+                        min = 20,
+                        max = 400,
+                        step = 20,
+                        get = function()
+                            return DMW.Settings.profile.Grind.FoodAmount
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.FoodAmount = value
+                        end
+                    },
+                    autoFood = {
+                        type = "toggle",
+                        order = 3,
+                        name = "Auto",
+                        desc = "Automatically Determine Food That Is Good For Your Level",
+                        width = 0.35,
+                        get = function()
+                            return DMW.Settings.profile.Grind.autoFood
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.autoFood = value
+                        end
+                    },
+                    BuyFood = {
+                        type = "toggle",
+                        order = 4,
+                        name = "Buy",
+                        desc = "Buy Food from vendor",
+                        width = 0.3,
+                        get = function()
+                            return DMW.Settings.profile.Grind.BuyFood
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.BuyFood = value
+                        end
+                    },
+                    WaterName = {
+                        type = "input",
+                        order = 5,
+                        name = "Water Name",
+                        desc = "Water to drink",
+                        width = "0.5",
+                        get = function()
+                            return DMW.Settings.profile.Grind.WaterName
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.WaterName = value
+                        end
+                    },
+                    WaterAmount = {
+                        type = "range",
+                        order = 6,
+                        name = "Water Amount",
+                        desc = "How much water do we want in our bags?",
+                        width = "0.7",
+                        min = 20,
+                        max = 400,
+                        step = 20,
+                        get = function()
+                            return DMW.Settings.profile.Grind.WaterAmount
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.WaterAmount = value
+                        end
+                    },
+                    autoWater = {
+                        type = "toggle",
+                        order = 7,
+                        name = "Auto",
+                        desc = "Automatically Determine Water That Is Good For Your Level",
+                        width = 0.35,
+                        get = function()
+                            return DMW.Settings.profile.Grind.autoWater
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.autoWater = value
+                        end
+                    },
+                    BuyWater = {
+                        type = "toggle",
+                        order = 8,
+                        name = "Buy",
+                        desc = "Buy Water from vendor",
+                        width = 0.3,
+                        get = function()
+                            return DMW.Settings.profile.Grind.BuyWater
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.BuyWater = value
+                        end
+                    },
+                    VendorSpacer = {
+                        type = "header",
+                        order = 9,
+                        name = ""
+                    },
+                    RepairPercent = {
+                        type = "range",
+                        order = 10,
+                        name = "Repair Threshold",
+                        desc = "When below this percent the bot will go repair and sell.",
+                        width = "full",
+                        min = 15,
+                        max = 80,
+                        step = 5,
+                        get = function()
+                            return DMW.Settings.profile.Grind.RepairPercent
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.RepairPercent = value
+                        end
+                    },
+                    MinFreeSlots = {
+                        type = "range",
+                        order = 11,
+                        name = "Minimum Bagslots",
+                        desc = "When we have less than this amount of bagslots we go to vendor and sell.",
+                        width = "full",
+                        min = 1,
+                        max = 50,
+                        step = 1,
+                        get = function()
+                            return DMW.Settings.profile.Grind.MinFreeSlots
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.MinFreeSlots = value
+                        end
+                    },
+                    OptionalSpacer = {
+                        type = "header",
+                        order = 12,
+                        name = ""
+                    },
+                    MaximumVendorRarity = {
+                        type = "select",
+                        order = 13,
+                        name = "Maximum Rarity",
+                        desc = "Maximum Rarity Of Item To Sell",
+                        width = "",
+                        values = {"|cffa9a9a9Grey", "White", "|cff00FF00Green", "|cff0000ffBlue", "|cff800080Purple"},
+                        style = "dropdown",
+                        get = function()
+                            return DMW.Settings.profile.Grind.MaximumVendorRarity
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.MaximumVendorRarity = value
+                        end
+                    }
+                }
+                },
+                CombatTab = {
+                name = "Combat",
+                type = "group",
+                order = 3,
+                args = {
+                    RestHealth = {
+                        type = "range",
+                        order = 1,
+                        name = "Rest Health",
+                        desc = "We will only Grind above this health and eat below.",
+                        width = "full",
+                        min = 20,
+                        max = 95,
+                        step = 5,
+                        get = function()
+                            return DMW.Settings.profile.Grind.RestHP
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.RestHP = value
+                        end
+                    },
+                    RestMana = {
+                        type = "range",
+                        order = 2,
+                        name = "Rest Mana",
+                        desc = "We will drink below this mana",
+                        width = "full",
+                        min = 20,
+                        max = 95,
+                        step = 5,
+                        get = function()
+                            return DMW.Settings.profile.Grind.RestMana
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.RestMana = value
+                        end
+                    },
+                    combatSpacer = {
+                        type = "header",
+                        order = 3,
+                        name = ""
+                    },
+                    PullDistance = {
+                        type = "range",
+                        order = 4,
+                        name = "Combat Range",
+                        desc = "At what range can you attack the mobs?",
+                        width = "full",
+                        min = 3,
+                        max = 35,
+                        step = 1,
+                        get = function()
+                            return DMW.Settings.profile.Grind.CombatDistance
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.CombatDistance = value
+                        end
+                    },
+                    RoamDistance = {
+                        type = "range",
+                        order = 5,
+                        name = "Roam Distance",
+                        desc = "How far away from the Hotspot can we go?",
+                        width = "full",
+                        min = 15,
+                        max = 100,
+                        step = 5,
+                        get = function()
+                            return DMW.Settings.profile.Grind.RoamDistance
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.RoamDistance = value
+                        end
+                    },
+                    combatSpacer2 = {
+                        type = "header",
+                        order = 6,
+                        name = ""
+                    },
+                    MaximumNPCLevel = {
+                        type = "select",
+                        order = 8,
+                        name = "Maximum NPC Level",
+                        desc = "Your level + This = Max to target",
+                        width = "",
+                        values = {"One", "Two", "Three", "Four", "Five"},
+                        style = "dropdown",
+                        get = function()
+                            return DMW.Settings.profile.Grind.maxNPCLevel
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.maxNPCLevel = value
+                        end
+                    },
+                    MinimumNPCLevel = {
+                        type = "select",
+                        order = 9,
+                        name = "Minimum NPC Level",
+                        desc = "Your level - This = Lowest to target",
+                        width = "",
+                        values = {"One", "Two", "Three", "Four", "Five"},
+                        style = "dropdown",
+                        get = function()
+                            return DMW.Settings.profile.Grind.minNPCLevel
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.minNPCLevel = value
+                        end
+                    },
+                    attackAny = {
+                        type = "toggle",
+                        order = 10,
+                        name = "Attack Any",
+                        desc = "<< Ignore These Settings, Attack Any Monster Within The Hotspots.",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.attackAny
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.attackAny = value
+                        end
+                    },
+                }
+                },
+                PathTab = {
+                name = "Pathing",
+                type = "group",
+                order = 4,
+                args = {
+                    MountName = {
+                        type = "input",
+                        order = 1,
+                        name = "Mount Name",
+                        desc = "Warlocks and Paladins automatically use their Mount Spell, otherwise you need to type in the mount item name.",
+                        width = 0.9,
+                        get = function()
+                            return DMW.Settings.profile.Grind.MountName
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.MountName = value
+                        end
+                    },
+                    UseMount = {
+                        type = "toggle",
+                        order = 2,
+                        name = "Use Mount",
+                        desc = "Do you wanna use the mount specified in Mount Name?",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.UseMount
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.UseMount = value
+                        end
+                    },
+                    vendorMount = {
+                        type = "toggle",
+                        order = 3,
+                        name = "Vendor Mount",
+                        desc = "Do you only wanna use the mount when going to vendors? (Regardless of 'Use Mount' Setting)",
+                        width = 0.8,
+                        get = function()
+                            return DMW.Settings.profile.Grind.vendorMount
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.vendorMount = value
+                        end
+                    },
+                    MountDistance = {
+                        type = "range",
+                        order = 4,
+                        name = "Mount Distance",
+                        desc = "Minimum Range before we should use mount.",
+                        width = "full",
+                        min = 30,
+                        max = 200,
+                        step = 10,
+                        get = function()
+                            return DMW.Settings.profile.Grind.mountDistance
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.mountDistance = value
+                        end
+                    },
+                    GeneralHeader = {
+                        type = "header",
+                        order = 5,
+                        name = ""
+                    },
+                    SkipCombat = {
+                        type = "toggle",
+                        order = 6,
+                        name = "Skip Aggro",
+                        desc = "Do you wanna ignore monsters if we aren't near the designated hotspots? (THIS MAKES SURE TO GET TO HOTSPOT AND VENDOR 100% EVEN IF YOU GET KILLLED)",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.SkipCombatOnTransport
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.SkipCombatOnTransport = value
+                        end
+                    },
+                    randomWaypoints = {
+                        type = "toggle",
+                        order = 7,
+                        name = "Random WP",
+                        desc = "Do you wanna Randomize Waypoints? (Wont work well in tunnels or caves)",
+                        width = 0.7,
+                        get = function()
+                            return DMW.Settings.profile.Grind.randomizeWaypoints
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.randomizeWaypoints = value
+                        end
+                    },
+                    randomDistance = {
+                        type = "range",
+                        order = 8,
+                        name = "Random Distance",
+                        desc = "The Distance From The Center Of Hotspot To Generate New Hotspot",
+                        width = "full",
+                        min = 5,
+                        max = 25,
+                        step = 1,
+                        get = function()
+                            return DMW.Settings.profile.Grind.randomizeWaypointDistance
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.randomizeWaypointDistance = value
+                        end
+                    }
+                }
+                }
+            }
         }
     }
 }
@@ -1497,26 +1506,16 @@ end
 
 function UI.Init()
     LibStub("AceConfig-3.0"):RegisterOptionsTable("DMW", Options)
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize("DMW", 580, 780)
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize("DMW", 705, 780)
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("TrackerConfig", TrackingOptionsTable)
     LibStub("AceConfigDialog-3.0"):SetDefaultSize("TrackerConfig", 400, 350)
-
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("GrindbotConfig", GrindbotOptionsTable)
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize("GrindbotConfig", 420, 405)
 
     if not TrackingFrame then
         TrackingFrame = AceGUI:Create("Frame")
         TrackingFrame:Hide()
         _G["TrackingFrameConfig"] = TrackingFrame.frame
         table.insert(UISpecialFrames, "TrackingFrameConfig")
-    end
-
-    if not GrindbotFrame then
-        GrindbotFrame = AceGUI:Create("Frame")
-        GrindbotFrame:Hide()
-        _G["GrindbotFrameConfig"] = GrindbotFrame.frame
-        table.insert(UISpecialFrames, "GrindbotFrameConfig")
     end
 
     UI.MinimapIcon = LibStub("LibDBIcon-1.0")
