@@ -302,6 +302,11 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.mineOre = value
                     end
                 },
+                exportSpacer = {
+                    type = "header",
+                    order = 18,
+                    name = ""
+                },
             }
         },
         SecondTab = {
@@ -404,9 +409,14 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.MinFreeSlots = value
                     end
                 },
+                OptionalSpacer = {
+                    type = "header",
+                    order = 8,
+                    name = ""
+                },
                 MaximumVendorRarity = {
                     type = "select",
-                    order = 8,
+                    order = 9,
                     name = "Maximum Rarity",
                     desc = "Maximum Rarity Of Item To Sell",
                     width = "",
@@ -421,7 +431,7 @@ local GrindbotOptionsTable = {
                 },
                 BuyFood = {
                     type = "toggle",
-                    order = 9,
+                    order = 10,
                     name = "Buy Food",
                     desc = "Buy Food from vendor",
                     width = 0.5,
@@ -434,7 +444,7 @@ local GrindbotOptionsTable = {
                 },
                 BuyWater = {
                     type = "toggle",
-                    order = 10,
+                    order = 11,
                     name = "Buy Water",
                     desc = "Buy Water from vendor",
                     width = 0.55,
@@ -602,14 +612,9 @@ local GrindbotOptionsTable = {
                         DMW.Settings.profile.Grind.vendorMount = value
                     end
                 },
-                GeneralHeader = {
-                    type = "header",
-                    order = 4,
-                    name = ""
-                },
                 MountDistance = {
                     type = "range",
-                    order = 5,
+                    order = 4,
                     name = "Mount Distance",
                     desc = "Minimum Range before we should use mount.",
                     width = "full",
@@ -622,6 +627,11 @@ local GrindbotOptionsTable = {
                     set = function(info, value)
                         DMW.Settings.profile.Grind.mountDistance = value
                     end
+                },
+                GeneralHeader = {
+                    type = "header",
+                    order = 5,
+                    name = ""
                 },
                 SkipCombat = {
                     type = "toggle",
@@ -1163,7 +1173,6 @@ local TrackingOptionsTable = {
         }
     }
 }
-
 local Options = {
     name = "DoMeWhen",
     handler = DMW,
@@ -1494,7 +1503,7 @@ function UI.Init()
     LibStub("AceConfigDialog-3.0"):SetDefaultSize("TrackerConfig", 400, 350)
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("GrindbotConfig", GrindbotOptionsTable)
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize("GrindbotConfig", 420, 392)
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize("GrindbotConfig", 420, 405)
 
     if not TrackingFrame then
         TrackingFrame = AceGUI:Create("Frame")

@@ -1885,6 +1885,7 @@ globals = {
 	"GetGuildRosterShowOffline",
 	"GetGuildTabardFileNames",
 	"GetGuildTradeSkillInfo",
+	"GetHackDirectory",
 	"GetHairCustomization",
 	"GetHaste",
 	"GetHitModifier",

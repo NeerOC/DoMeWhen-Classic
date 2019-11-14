@@ -30,8 +30,9 @@ function Engine:Pulse()
 end
 
 function Engine:SetupFolders()
-    CreateDirectory(GetHackDirectory() .. "/Lilium/Grindbot") 
-    CreateDirectory(GetHackDirectory() .. "/Lilium/Fishbot") 
+    CreateDirectory(GetHackDirectory() .. "/Lilium/Grindbot/Profiles") 
+    CreateDirectory(GetHackDirectory() .. "/Lilium/Fishbot")
+    profileVariable = GetDirectoryFiles(GetHackDirectory() .. "/Lilium/Grindbot/Profiles*.txt")
     if #GetDirectoryFiles(GetHackDirectory() .. "/Lilium/Grindbot/*.txt") > 0 then
         self:LoadFile()
         Log:DebugInfo('ItemList Loaded.')

@@ -81,7 +81,7 @@ local defaults = {
             mineOre = false,
             gatherHerb = false,
             targetBlacklist = {},
-            itemSaveList = {},
+            itemSaveList = {}
         },
         Tracker = {
             Herbs = false,

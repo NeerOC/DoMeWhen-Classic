@@ -63,13 +63,13 @@ evFrame:RegisterEvent("CHAT_MSG_WHISPER");
 evFrame:RegisterEvent("LOOT_CLOSED");
 evFrame:SetScript("OnEvent",function(self,event,msg,ply)
     if DMW.Settings.profile.Grind.ignoreWhispers then
-        if event=="CHAT_MSG_WHISPER" then
+        if event == "CHAT_MSG_WHISPER" then
             Log:DebugInfo('Added [' .. ply .. '] To Ignore List')
             RunMacroText('/Ignore ' .. ply)
         end
     end
     if DMW.Settings.profile.Grind.doSkin then
-        if event== "LOOT_CLOSED" then
+        if event == "LOOT_CLOSED" then
             PauseFlags.skinDelay = true C_Timer.After(1.8, function() PauseFlags.skinDelay = false end)
         end
     end
