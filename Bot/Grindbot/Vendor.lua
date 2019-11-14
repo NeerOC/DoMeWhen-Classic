@@ -232,15 +232,17 @@ function Vendor:DoTask()
         end
     end
 
-    if autoFood and MerchantFrame:IsVisible() then
-        for i = 1, GetMerchantNumItems() do 
-            local vitem = GetMerchantItemLink(i)
-            local itemName = GetItemInfo(vitem)
-            if vitem then
-                if ArrayContains(foodList, itemName) and DMW.Settings.profile.Grind.FoodName ~= itemName then
-                    FoodName = itemName
-                    DMW.Settings.profile.Grind.FoodName = itemName
-                    Log:DebugInfo('Automatically set ' .. itemName .. ' as our Food')
+    if DMW.Player.Class ~= 'MAGE' then
+        if autoFood and MerchantFrame:IsVisible() then
+            for i = 1, GetMerchantNumItems() do 
+                local vitem = GetMerchantItemLink(i)
+                local itemName = GetItemInfo(vitem)
+                if vitem then
+                    if ArrayContains(foodList, itemName) and DMW.Settings.profile.Grind.FoodName ~= itemName then
+                        FoodName = itemName
+                        DMW.Settings.profile.Grind.FoodName = itemName
+                        Log:DebugInfo('Automatically set ' .. itemName .. ' as our Food')
+                    end
                 end
             end
         end
