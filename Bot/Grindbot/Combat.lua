@@ -199,7 +199,7 @@ function Combat:AttackCombat()
 end
 
 function Combat:InitiateAttack(Unit)
-    if (Unit.Distance > DMW.Settings.profile.Grind.CombatDistance or not Unit:LineOfSight()) then
+    if (Unit.Distance > DMW.Settings.profile.Grind.CombatDistance or not self:CanSeeUnit(Unit)) then
         Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
         
         if Navigation:ReturnPathEnd() ~= nil then
