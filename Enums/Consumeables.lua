@@ -117,7 +117,7 @@ function getBestWater()
     end
 
     for k, v in pairs(DMW.Enums.Waterlist) do
-        if v.LevelReq <= playerLevel or bestWater and v.LevelReq > bestWater.LevelReq and v.LevelReq <= playerLevel then
+        if not bestWater and v.LevelReq <= playerLevel or bestWater and v.LevelReq > bestWater.LevelReq and v.LevelReq <= playerLevel then
             bestWater = v
         end
     end

@@ -218,26 +218,26 @@ function Vendor:DoTask()
 
     local RepairNPC = self:GetVendor(RepairVendorName)
     local FoodNPC = self:GetVendor(FoodVendorName)
-
-    if autoWater and MerchantFrame:IsVisible() then
-        for i = 1, GetMerchantNumItems() do 
-            local vitem = GetMerchantItemLink(i) 
-            if vitem then
-                if vitem:find(bestWater) and DMW.Settings.profile.Grind.WaterName ~= bestWater then
-                    WaterName = bestWater
-                    DMW.Settings.profile.Grind.WaterName = bestWater
-                    Log:DebugInfo('Automatically set ' .. bestWater .. ' as our Water.')
+    
+    if DMW.Player.Class ~= 'MAGE' then
+        if autoWater and MerchantFrame:IsVisible() then
+            for i = 1, GetMerchantNumItems() do 
+                local vitem = GetMerchantItemLink(i) 
+                if vitem then
+                    if vitem:find(bestWater) and DMW.Settings.profile.Grind.WaterName ~= bestWater then
+                        WaterName = bestWater
+                        DMW.Settings.profile.Grind.WaterName = bestWater
+                        Log:DebugInfo('Automatically set ' .. bestWater .. ' as our Water.')
+                    end
                 end
             end
         end
-    end
-
-    if DMW.Player.Class ~= 'MAGE' then
+    
         if autoFood and MerchantFrame:IsVisible() then
             for i = 1, GetMerchantNumItems() do 
                 local vitem = GetMerchantItemLink(i)
-                local itemName = GetItemInfo(vitem)
                 if vitem then
+                    local itemName = GetItemInfo(vitem)
                     if ArrayContains(foodList, itemName) and DMW.Settings.profile.Grind.FoodName ~= itemName then
                         FoodName = itemName
                         DMW.Settings.profile.Grind.FoodName = itemName
