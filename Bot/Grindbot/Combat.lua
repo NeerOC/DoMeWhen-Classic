@@ -77,7 +77,7 @@ end
 function Combat:SearchAttackable()
     -- Search for hostiles around us and attack them first.
     for _, Unit in pairs(DMW.Attackable) do
-        if UnitClassification(Unit.Pointer) == 'normal' and UnitReaction(Unit.Pointer, 'player') < 4 and Unit.Distance <= Unit:AggroDistance() + 8 and not UnitIsPVP(Unit.Pointer) then
+        if UnitClassification(Unit.Pointer) == 'normal' and UnitReaction(Unit.Pointer, 'player') < 4 and Unit.Distance <= Unit:AggroDistance() + 8 and not UnitIsPVP(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) then
             return true, Unit
         end
     end
@@ -155,6 +155,7 @@ function Combat:SearchEnemy()
         if not Unit.Player and Unit.Target == GetActivePlayer() and Unit.HP < 50 then
             return true, Unit
         end
+        
         if not Unit.Player and Unit.Target == GetActivePlayer() and Casting then
             return true, Unit
         end
@@ -199,7 +200,7 @@ function Combat:AttackCombat()
 end
 
 function Combat:InitiateAttack(Unit)
-    if (Unit.Distance > DMW.Settings.profile.Grind.CombatDistance or not self:CanSeeUnit(Unit)) then
+    if (Unit.Distance > DMW.Settings.profile.Grind.CombatDistance or not Unit:LineOfSight()) then
         Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
         
         if Navigation:ReturnPathEnd() ~= nil then

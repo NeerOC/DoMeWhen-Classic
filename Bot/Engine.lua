@@ -15,7 +15,7 @@ function Engine:Pulse()
     if DMW.Settings.profile.HUD.DrawVisuals == 1 then Navigation:DrawVisuals() end
     if not IsHackEnabled('antiafk') then SetHackEnabled ('antiafk', true) Log:DebugInfo('AntiAFK Enabled') end
     if not folderChecks then self:SetupFolders() folderChecks = true end
-    if not readItemFile then self:LoadFile() readItemFile = true C_Timer.After(1, function() readItemFile = false end) end
+    if not readItemFile then self:LoadFile() SetProfiles() readItemFile = true C_Timer.After(1, function() readItemFile = false end) end
     -- If Engine is enabled then start choice of bot.
     if DMW.Settings.profile.HUD.Engine == 1 and self:IsReady() then
         -- If we chose Grindbot then pulse Grindbot.
@@ -32,7 +32,6 @@ end
 function Engine:SetupFolders()
     CreateDirectory(GetHackDirectory() .. "/Lilium/Grindbot/Profiles") 
     CreateDirectory(GetHackDirectory() .. "/Lilium/Fishbot")
-    profileVariable = GetDirectoryFiles(GetHackDirectory() .. "/Lilium/Grindbot/Profiles*.txt")
     if #GetDirectoryFiles(GetHackDirectory() .. "/Lilium/Grindbot/*.txt") > 0 then
         self:LoadFile()
         Log:DebugInfo('ItemList Loaded.')

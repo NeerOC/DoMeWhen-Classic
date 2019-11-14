@@ -7,6 +7,9 @@ local base64 = LibStub("LibBase64-1.0")
 local serializer = LibStub("AceSerializer-3.0")
 local CurrentTab = "GeneralTab"
 local TabIndex = 2
+local currentProfile
+local currentLoadedProfiles = {}
+local profileName
 
 local exportTypes = {
     ["rotation"] = "Rotation",
@@ -583,6 +586,7 @@ local TrackingOptionsTable = {
         }
     }
 }
+
 local Options = {
     name = "DoMeWhen",
     handler = DMW,
@@ -1044,7 +1048,7 @@ local Options = {
                             DMW.Settings.profile.Grind.mineOre = value
                         end
                     },
-                    exportSpacer = {
+                    anotherSpacer = {
                         type = "header",
                         order = 18,
                         name = ""
@@ -1457,11 +1461,97 @@ local Options = {
                         end
                     }
                 }
+            },
+                ProfilesTab = {
+                    name = "Profiles",
+                    type = "group",
+                    order = 5,
+                    args = {
+                        loadProfiles = {
+                            type = "execute",
+                            order = 1,
+                            name = "Load Profiles",
+                            desc = "Load Profiles Located In Lilium/Grindbot/Profiles",
+                            width = "1",
+                            func = function()
+                                LoadProfile()
+                            end
+                        },
+                        loadedProfiles = {
+                            type = "select",
+                            order = 2,
+                            name = "Profiles",
+                            desc = "Loaded Profiles From Profiles Folder",
+                            width = "1",
+                            values = {},
+                            style = "dropdown",
+                            get = function()
+                                return currentProfile
+                            end,
+                            set = function(info, value)
+                                currentProfile = value
+                            end
+                        },
+                        saveProfile = {
+                            type = "execute",
+                            order = 3,
+                            name = "Save Profile",
+                            desc = "Save Your Profile",
+                            width = "1",
+                            func = function()
+                                if profileName and profileName ~= "" then
+                                    DMW.Bot.Log:DebugInfo('Saved file [' .. profileName .. ']')
+                                    SaveProfile(profileName)
+                                else
+                                    DMW.Bot.Log:DebugInfo('Invalid FileName')
+                                end
+                            end
+                        },
+                        profileNom = {
+                            type = "input",
+                            order = 4,
+                            name = "Profile Name",
+                            desc = "Name Of The Profile To Save As",
+                            width = "1",
+                            get = function()
+                                return profileName
+                            end,
+                            set = function(info, value)
+                                profileName = value
+                            end
+                        }
+                    }
                 }
             }
         }
     }
 }
+
+function LoadProfile()
+    if currentProfile then
+        local profileContent = ReadFile(GetHackDirectory() .. "/Lilium/Grindbot/Profiles/" .. currentLoadedProfiles[currentProfile])
+        local check, content = serializer:Deserialize(base64:decode(profileContent))
+        if profileContent and check then
+            DMW.Settings.profile.Grind = content
+            DMW.Bot.Log:DebugInfo('Loaded Profile ' .. currentLoadedProfiles[currentProfile])
+        end
+    end
+end
+
+function SetProfiles()
+    local Files = GetDirectoryFiles(GetHackDirectory() .. "/Lilium/Grindbot/Profiles/*.txt")
+    local Pleasant = {}
+    for i = 1, #Files do content = Files[i]:gsub(".txt", "") table.insert(Pleasant, content) end
+
+    currentLoadedProfiles = Files
+    Options.args.GrindTab.args.ProfilesTab.args.loadedProfiles.values = Pleasant
+end
+
+function SaveProfile(name)
+    local fileContent = base64:encode(serializer:Serialize(DMW.Settings.profile.Grind))
+    WriteFile(GetHackDirectory() .. "/Lilium/Grindbot/Profiles/" .. name .. '.txt', fileContent)
+end
+
 local MinimapIcon =
     LibStub("LibDataBroker-1.1"):NewDataObject(
     "DMWMinimapIcon",
