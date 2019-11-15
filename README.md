@@ -11,8 +11,11 @@
 ## Grindbot
 - Target repair vendor and type /lil Repair to set repair vendor
 - Target food vendor and type /lil Food to set Food vendor.
-- SHIFT + CLICK WHILE BOT IS DISABLED marks the location you clicked as a hotspot.
-- ALT + SHIFT + CLICK Will remove the hotspot closest to the position you clicked.
+- ALT + MIDDLE CLICK WHILE BOT IS DISABLED marks the location you clicked as a hotspot.
+- ALT + SHIFT + MIDDLE CLICK Will remove the hotspot closest to the position you clicked.
 - Clear all current hotspots with /lil clear
-- Press the Heroic Strike icon near your Minimap and then Click the GRINDBOT Button under "Lilium"
+- Press the Heroic Strike icon near your Minimap and there you can find the "Lilium" Tab.
 - Choose your preferred settings.
+
+## Discord
+- https://discord.gg/FJger4u
