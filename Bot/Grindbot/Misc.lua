@@ -131,7 +131,7 @@ end
 function Misc:RotationToggle()
     if DMW.Settings.profile.Grind.SkipCombatOnTransport then
         -- if we have skip aggro enabled then if we are near hotspot(150 yards) enable rotation otherwise disable it.
-        if Navigation:NearHotspot(130) then
+        if Navigation:NearHotspot(150) then
             RunMacroText('/LILIUM HUD Rotation 1')
         else
             RunMacroText('/LILIUM HUD Rotation 2')

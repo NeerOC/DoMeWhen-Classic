@@ -391,14 +391,15 @@ function Grindbot:SwapMode()
         return
     end
 
-    if hasOre and DMW.Settings.profile.Grind.mineOre or hasHerb and DMW.Settings.profile.Grind.gatherHerb then
-        Grindbot.Mode = Modes.Gathering
-        return
-    end
-
     -- if we are not within 150 yards of the hotspots then walk to them no matter what. (IF WE CHOSE THE SKIP AGGRO SETTING)
     if not Navigation:NearHotspot(150) and DMW.Settings.profile.Grind.SkipCombatOnTransport then
         Grindbot.Mode = Modes.Roaming
+        return
+    end
+
+    -- Gather when we are within 100 yards of hotspot
+    if Navigation:NearHotspot(100) and (hasOre and DMW.Settings.profile.Grind.mineOre or hasHerb and DMW.Settings.profile.Grind.gatherHerb) then
+        Grindbot.Mode = Modes.Gathering
         return
     end
 
