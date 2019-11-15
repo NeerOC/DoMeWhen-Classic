@@ -1,5 +1,6 @@
 local DMW = DMW
 DMW.Bot.Misc = {}
+local LibDraw = LibStub("LibDraw-1.0")
 local Misc = DMW.Bot.Misc
 local Log = DMW.Bot.Log
 local Navigation = DMW.Bot.Navigation
@@ -60,18 +61,31 @@ function Misc:Hotspotter()
     local altDown = IsAltKeyDown()
     local shiftDown = IsShiftKeyDown()
     local ctrlDown = IsControlKeyDown()
-    local leftMouseDown = IsMouseButtonDown('LeftButton')
-    local rightMouseDown = IsMouseButtonDown('RightButton')
+    local middleMouseDown = GetKeyState(0x04)
+    local roamSize = DMW.Settings.profile.Grind.RoamDistance / 2
+    local deleteSize = 10
+    local x, y = GetMousePosition()
+    local mx, my, mz = ScreenToWorld(x, y)
     
-    if shiftDown and altDown and leftMouseDown then
-        if self:RemoveClickSpot(cx, cy, cz) then
-            Log:DebugInfo('Removed Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
+    if mx and my and mz then
+        if shiftDown and altDown then
+            LibDraw.SetColor(255, 0, 0, 100)
+            LibDraw.GroundCircle(mx, my, mz, deleteSize)
+            LibDraw.Text("DELETE", "GameFontNormalLarge", mx, my, mz + 3)
+            if middleMouseDown and mx ~= 0 and not PauseFlags.Hotspotting then
+                if self:RemoveClickSpot(mx, my, mz) then
+                    Log:DebugInfo('Removed Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, mx, my, mz)) .. ']')
+                end
+            end
         end
-    end
 
-    if altDown and not shiftDown and leftMouseDown then
-        if self:AddClickSpot(cx, cy, cz) then
-            Log:DebugInfo('Added Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, cx, cy, cz)) .. ']')
+        if altDown and not shiftDown then
+            LibDraw.GroundCircle(mx, my, mz, roamSize) 
+            if middleMouseDown and mx ~= 0 and not PauseFlags.Hotspotting then
+                if self:AddClickSpot(mx, my, mz) then
+                    Log:DebugInfo('Added Grind Hotspot [X: ' .. Round(mx) .. '] [Y: ' .. Round(my) .. '] [Z: ' .. Round(mz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, mx, my, mz)) .. ']')
+                end
+            end
         end
     end
 end

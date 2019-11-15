@@ -231,7 +231,7 @@ function Grindbot:Pulse()
 end
 
 function Grindbot:DisabledFunctions()
-    if not PauseFlags.Hotspotting then Misc:Hotspotter() end
+    Misc:Hotspotter()
     Navigation:ResetPath()
     Navigation:SortHotspots()
     if InformationOutput then InformationOutput = false end
