@@ -80,6 +80,7 @@ local defaults = {
             randomizeWaypoints = false,
             preventPVP = false,
             preventPVPTime = 120,
+            safeRess = false,
             randomizeWaypointDistance = 20,
             mineOre = false,
             gatherHerb = false,

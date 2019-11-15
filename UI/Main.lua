@@ -1004,14 +1004,27 @@ local Options = {
                             DMW.Settings.profile.Grind.preventPVPTime = value
                         end
                     },
+                    safeRess = {
+                        type = "toggle",
+                        order = 14,
+                        name = "Safe Ress",
+                        desc = "Wanna avoid hostile mobs around corpse?",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.safeRess
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.safeRess = value
+                        end
+                    },
                     gatherSpacer = {
                         type = "header",
-                        order = 14,
+                        order = 15,
                         name = ""
                     },
                     doSkin = {
                         type = "toggle",
-                        order = 15,
+                        order = 16,
                         name = "Skin Mobs",
                         desc = "Will skin mobs.",
                         width = 0.7,
@@ -1024,7 +1037,7 @@ local Options = {
                     },
                     gatherHerb = {
                         type = "toggle",
-                        order = 16,
+                        order = 17,
                         name = "Gather Herbs",
                         desc = "Wanna Gather Some Herbs while killing?",
                         width = 0.7,
@@ -1037,7 +1050,7 @@ local Options = {
                     },
                     mineOre = {
                         type = "toggle",
-                        order = 17,
+                        order = 18,
                         name = "Mine Ore",
                         desc = "Wanna Mine Some Ore?",
                         width = 0.6,
@@ -1050,7 +1063,7 @@ local Options = {
                     },
                     anotherSpacer = {
                         type = "header",
-                        order = 18,
+                        order = 19,
                         name = ""
                     }
                 }
