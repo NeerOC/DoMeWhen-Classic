@@ -1467,22 +1467,12 @@ local Options = {
                     type = "group",
                     order = 5,
                     args = {
-                        loadProfiles = {
-                            type = "execute",
-                            order = 1,
-                            name = "Load Profiles",
-                            desc = "Load Profiles Located In Lilium/Grindbot/Profiles",
-                            width = "1",
-                            func = function()
-                                LoadProfile()
-                            end
-                        },
                         loadedProfiles = {
                             type = "select",
-                            order = 2,
+                            order = 1,
                             name = "Profiles",
                             desc = "Loaded Profiles From Profiles Folder",
-                            width = "1",
+                            width = "full",
                             values = {},
                             style = "dropdown",
                             get = function()
@@ -1492,12 +1482,40 @@ local Options = {
                                 currentProfile = value
                             end
                         },
+                        loadProfiles = {
+                            type = "execute",
+                            order = 2,
+                            name = "Load Profile",
+                            desc = "Load Profiles Located In Lilium/Grindbot/Profiles",
+                            width = "full",
+                            func = function()
+                                LoadProfile()
+                            end
+                        },
+                        profileSpacer = {
+                            type = "header",
+                            order = 3,
+                            name = ""
+                        },
+                        profileNom = {
+                            type = "input",
+                            order = 4,
+                            name = "Profile Name",
+                            desc = "Name Of The Profile To Save As",
+                            width = "full",
+                            get = function()
+                                return profileName
+                            end,
+                            set = function(info, value)
+                                profileName = value
+                            end
+                        },
                         saveProfile = {
                             type = "execute",
-                            order = 3,
+                            order = 5,
                             name = "Save Profile",
                             desc = "Save Your Profile",
-                            width = "1",
+                            width = "full",
                             func = function()
                                 if profileName and profileName ~= "" then
                                     DMW.Bot.Log:DebugInfo('Saved file [' .. profileName .. ']')
@@ -1507,19 +1525,7 @@ local Options = {
                                 end
                             end
                         },
-                        profileNom = {
-                            type = "input",
-                            order = 4,
-                            name = "Profile Name",
-                            desc = "Name Of The Profile To Save As",
-                            width = "1",
-                            get = function()
-                                return profileName
-                            end,
-                            set = function(info, value)
-                                profileName = value
-                            end
-                        }
+                        
                     }
                 }
             }

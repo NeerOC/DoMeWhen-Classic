@@ -175,7 +175,6 @@ function Grindbot:Pulse()
     Misc:RotationToggle()
     -- Call movement
     Navigation:Movement()
-    if not Combat:EnemyBehind() then MoveForwardStop() end -- Just extra to make sure we dont walk like a moron
     if DMW.Player.Casting then self:ResetMoveToLoot() end -- Reset if casting
 
     if not InformationOutput then
