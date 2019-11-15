@@ -18,6 +18,10 @@ function Unit:GetNavDistance()
     return 999
 end
 
+function Unit:GetDistanceToPosition(x, y, z)
+    return GetDistanceBetweenPositions(self.PosX, self.PosY, self.PosZ, x, y, z)
+end
+
 function Unit:AggroDistance()
     local maxRadius = 45 --.0 * sWorld->getRate(RATE_CREATURE_AGGRO));
     local minRadius = 5 --.0 * sWorld->getRate(RATE_CREATURE_AGGRO));

@@ -7,6 +7,7 @@ local NavPath = nil
 local pathIndex = 1
 local HotSpotIndex = 1
 local lastX, lastY, lastZ = 0, 0, 0
+local safeX, safeY, safeZ
 local DestX, DestY, DestZ
 local WaypointX, WaypointY, WaypointZ
 local EndX, EndY, EndZ
@@ -18,6 +19,7 @@ local strafeTime = false
 local RandomedWaypoint = false
 local pvpTimer
 local timerStarted = false
+local acceptedRess = false
 
 local ObsDistance = 4
 local ObsFlags = bit.bor(0x1, 0x10)
@@ -295,44 +297,61 @@ end
 function Navigation:ResetPath()
     NavPath = nil
     pathIndex = 1
-    DestX = nil
-    DestY = nil
-    DestZ = nil
-    EndX = nil
-    EndY = nil 
-    EndZ = nil
+    DestX, DestY, DestZ = nil, nil, nil
+    EndX, EndY, EndZ = nil, nil, nil
+    safeX, safeY, safeZ = nil, nil, nil
     stuckCount = 0
 end
 
 function Navigation:MoveToCorpse()
     if not UnitIsGhost('player') then RepopMe() return end
-
     local PosX, PosY, PosZ = GetCorpsePosition()
-    self:MoveTo(PosX, PosY, PosZ)
+    local DistanceToCorpse = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, PosX, PosY, PosZ)
 
-    if DMW.Settings.profile.Grind.preventPVP then
-        if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() then
-            if not timerStarted then
-                Log:DebugInfo('Will now wait for ' .. DMW.Settings.profile.Grind.preventPVPTime .. ' seconds.')
-                timerStarted = true
-                pvpTimer = DMW.Time
-            else
-                if DMW.Time - pvpTimer >= DMW.Settings.profile.Grind.preventPVPTime then
-                    StaticPopup1Button1:Click()
-                    timerStarted = false
-                    NavPath = nil
-                    pvpTimer = 0
-                    return
-                end
-            end
-        end
+    if DistanceToCorpse > 30 then
+        self:MoveTo(PosX, PosY, PosZ)
     else
-        if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() then
-            StaticPopup1Button1:Click()
-            NavPath = nil
+        local safeSpot, resultX, resultY, resultZ = self:GetSafetyPosition(PosX, PosY, PosZ, 28)
+        if safeSpot then if not safeX or DMW.Bot.Combat:GetUnitsNear(safeX, safeY, safeZ) then safeX, safeY, safeZ = resultX, resultY, resultZ end end
+        if safeSpot and GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, safeX, safeY, safeZ) > 1 then
+            self:MoveTo(safeX, safeY, safeZ)
             return
         end
+        if DMW.Settings.profile.Grind.preventPVP then
+            if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() then
+                if not timerStarted then
+                    Log:DebugInfo('Will now wait for ' .. DMW.Settings.profile.Grind.preventPVPTime .. ' seconds.')
+                    timerStarted = true
+                    pvpTimer = DMW.Time
+                else
+                    if DMW.Time - pvpTimer >= DMW.Settings.profile.Grind.preventPVPTime then
+                        StaticPopup1Button1:Click()
+                        timerStarted = false
+                        NavPath = nil
+                        pvpTimer = 0
+                        return
+                    end
+                end
+            end
+        else
+            if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() and not acceptedRess then
+                acceptedRess = true
+                C_Timer.After(2, function() StaticPopup1Button1:Click() NavPath = nil acceptedRess = false end)
+                return
+            end
+        end
     end
+end
+
+function Navigation:GetSafetyPosition(x, y, z, distance)
+    for i = 0, 360 do
+        local rx, ry, rz = GetPositionFromPosition(x, y, z, distance, i, 360)
+        local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
+        if not hasHostile then
+            rz = select(3, TraceLine(rx, ry, 9999, rx, ry, -9999, 0x110))
+            return true, rx, ry, rz end
+    end
+    return false
 end
 
 function Navigation:StopMoving()

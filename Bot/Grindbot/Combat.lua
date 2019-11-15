@@ -174,6 +174,16 @@ function Combat:SearchEnemy()
     end
 end
 
+function Combat:GetUnitsNear(x, y, z)
+    if x ~= nil then
+        for _, Unit in pairs(DMW.Units) do
+            if UnitReaction(Unit.Pointer, 'player') < 4 and GetDistanceBetweenPositions(Unit.PosX, Unit.PosY, Unit.PosZ, x, y, z) < Unit:AggroDistance() + 20 and not UnitIsTapDenied(Unit.Pointer) then
+                return true
+            end
+        end
+    end
+end
+
 function Combat:EnemyBehind()
     for _, Unit in pairs(DMW.Attackable) do
         if Unit.Distance < 10 and Unit:UnitThreatSituation(DMW.Player) > 1 and ObjectIsBehind(Unit.Pointer, 'player') then
