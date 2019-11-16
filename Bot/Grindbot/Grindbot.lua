@@ -33,7 +33,8 @@ local Modes = {
     Vendor = 4,
     Roaming = 5,
     Looting = 6,
-    Gathering = 7
+    Gathering = 7,
+    Idle = 8
 }
 
 Grindbot.Mode = 0
@@ -242,7 +243,7 @@ function Grindbot:GetLoot()
     local px, py, pz = ObjectPosition('player')
     local lx, ly, lz = ObjectPosition(LootUnit)
 
-    if LootUnit then
+    if hasLoot and ObjectExists(LootUnit.Pointer) then
         if LootUnit.Distance >= 5 then
             Navigation:MoveTo(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ)
             if Navigation:ReturnPathEnd() ~= nil then
@@ -411,8 +412,11 @@ function Grindbot:SwapMode()
 
     -- if there isnt anything to attack and we arent in combat then roam around till we find something.
     if not hasAttackable and (not DMW.Player.Combat or DMW.Player.Target and UnitIsTapDenied(DMW.Player.Target.Pointer)) then
-        Grindbot.Mode = Modes.Roaming
+        Grindbot.Mode = Modes.Roaming        
+        return
     end
+
+    Grindbot.Mode = Modes.Idle
 end
 
 function Grindbot:SetFoodAndWater()

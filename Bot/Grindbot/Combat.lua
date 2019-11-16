@@ -133,7 +133,7 @@ function Combat:SearchEnemy()
             end
 
             -- Nearby fleeing targets then
-            if UnitAffectingCombat(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) and Unit.Distance < 15 and Unit.HP < 100 then
+            if UnitAffectingCombat(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) and Unit.Distance < 15 and (Unit.HP < 100 or DMW.Player.Debuffs.Polymorph:Exist(Unit, true)) then
                 return true, Unit
             end
         end
