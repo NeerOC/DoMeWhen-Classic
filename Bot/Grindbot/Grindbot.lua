@@ -211,7 +211,7 @@ function Grindbot:Pulse()
 
     if Grindbot.Mode == Modes.Looting then
         self:GetLoot()
-        ModeFrame.text:SetText('Looting: ' .. 'Spent: ' .. DMW.Time - moveToLootTime)
+        ModeFrame.text:SetText('Looting')
     end
 
     if Grindbot.Mode == Modes.Gathering then
