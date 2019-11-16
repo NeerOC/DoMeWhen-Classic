@@ -298,7 +298,6 @@ function Grindbot:Rest()
 
     if Settings.WaterName ~= '' then
         if UnitPower('player', 0) / UnitPowerMax('player', 0) * 100 < Settings.RestMana and not Drinking and not PauseFlags.CantDrink then
-            if DMW.Player.Class == 'MAGE' and DMW.Player.Spells.Evocation:IsReady() then if DMW.Player.Spells.Evocation:Cast(Player) then return true end end
             UseItemByName(Settings.WaterName)
             PauseFlags.CantDrink = true
             C_Timer.After(1, function() PauseFlags.CantDrink = false end)
