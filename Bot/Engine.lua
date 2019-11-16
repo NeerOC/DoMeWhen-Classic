@@ -9,6 +9,7 @@ local Log = DMW.Bot.Log
 local Ready = false
 local folderChecks = false
 local readItemFile = false
+FlashClientIcon = function() end
 
 function Engine:Pulse()
     -- Lets draw visuals if the user made the choice.
