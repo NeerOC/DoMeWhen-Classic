@@ -318,14 +318,14 @@ function Navigation:MoveToCorpse()
             self:MoveTo(safeX, safeY, safeZ)
         else
             if DMW.Settings.profile.Grind.preventPVP then
-                if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() then
+                if StaticPopup1Button1:IsVisible() and StaticPopup1Button1:IsEnabled() then
                     if not timerStarted then
                         Log:DebugInfo('Will now wait for ' .. DMW.Settings.profile.Grind.preventPVPTime .. ' seconds.')
                         timerStarted = true
                         pvpTimer = DMW.Time
                     else
                         if DMW.Time - pvpTimer >= DMW.Settings.profile.Grind.preventPVPTime then
-                            StaticPopup1Button1:Click()
+                            RetrieveCorpse()
                             timerStarted = false
                             NavPath = nil
                             pvpTimer = 0
@@ -334,9 +334,9 @@ function Navigation:MoveToCorpse()
                     end
                 end
             else
-                if StaticPopup1 and StaticPopup1:IsVisible() and (StaticPopup1.which == "DEATH" or StaticPopup1.which == "RECOVER_CORPSE") and StaticPopup1Button1 and StaticPopup1Button1:IsEnabled() and not acceptedRess then
+                if StaticPopup1Button1:IsVisible() and StaticPopup1Button1:IsEnabled() and not acceptedRess then
                     acceptedRess = true
-                    C_Timer.After(0.5, function() StaticPopup1Button1:Click() NavPath = nil acceptedRess = false end)
+                    C_Timer.After(0.5, function() RetrieveCorpse() NavPath = nil acceptedRess = false end)
                     return
                 end
             end
