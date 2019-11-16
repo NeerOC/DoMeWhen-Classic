@@ -142,7 +142,7 @@ function Unit:GetHostiles(Yards)
     local Table = {}
     local Count = 0
     for _, Unit in pairs(DMW.Attackable) do
-        if self:GetDistance(Unit) <= Yards and UnitReaction(Unit.Pointer, 'player') < 4 and not UnitIsTapDenied(Unit.Pointer) and Unit:AggroDistance() < self:GetDistance(Unit) then
+        if self:GetDistance(Unit) <= Yards and UnitReaction(Unit.Pointer, 'player') < 4 and not UnitIsTapDenied(Unit.Pointer) and Unit:AggroDistance() + 5 < self:GetDistance(Unit) then
             table.insert(Table, Unit)
             Count = Count + 1
         end

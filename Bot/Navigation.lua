@@ -314,7 +314,7 @@ function Navigation:MoveToCorpse()
         local safeSpot
         safeSpot, safeX, safeY, safeZ = self:GetSafetyPosition(PosX, PosY, PosZ, 25)
         if safeSpot then if not safeX or DMW.Bot.Combat:GetUnitsNear(safeX, safeY, safeZ) then safeSpot, safeX, safeY, safeZ = self:GetSafetyPosition(PosX, PosY, PosZ, 25) end end
-        if DMW.Settings.profile.Grind.safeRess and safeSpot and (GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, safeX, safeY, safeZ) > 1 or DMW.Bot.Combat:GetUnitsNear(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ)) then
+        if DMW.Settings.profile.Grind.safeRess and (safeSpot and (GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, safeX, safeY, safeZ) > 1 or DMW.Bot.Combat:GetUnitsNear(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ)) or DMW.Bot.Combat:GetUnitsNear(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ)) then
             self:MoveTo(safeX, safeY, safeZ)
         else
             if DMW.Settings.profile.Grind.preventPVP then
