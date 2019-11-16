@@ -9,6 +9,8 @@ local Log = DMW.Bot.Log
 local Ready = false
 local folderChecks = false
 local readItemFile = false
+
+-- Let's not have flashing icons, can get anoying :)
 FlashClientIcon = function() end
 
 function Engine:Pulse()

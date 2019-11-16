@@ -228,6 +228,10 @@ function Grindbot:Pulse()
         Navigation:GrindRoam()
         ModeFrame.text:SetText('Roaming')
     end
+
+    if Grindbot.Mode == Modes.Idle then
+        ModeFrame.text:SetText('Idle')
+    end
 end
 
 function Grindbot:DisabledFunctions()
@@ -331,7 +335,7 @@ function Grindbot:SwapMode()
     end
 
     -- (TRIAL!)
-    if Navigation:NearHotspot(130) and hasEnemy then
+    if Navigation:NearHotspot(110) and hasEnemy then
         Grindbot.Mode = Modes.Combat
         return
     end 
@@ -351,12 +355,6 @@ function Grindbot:SwapMode()
     -- Loot out of combat?
     if self:CanLoot() and not hasEnemy then
         Grindbot.Mode = Modes.Looting
-        return
-    end
-
-    -- If we got dismounted and we are near hotspot and we have an enemy and its closer than 10 yrds, attack it.
-    if not IsMounted() and hasEnemy and Combat:UnitNearHotspot(theEnemy.Pointer) then
-        Grindbot.Mode = Modes.Combat
         return
     end
 
@@ -386,21 +384,15 @@ function Grindbot:SwapMode()
         return
     end
 
-    -- if we are in combat and we are near hotspot, set to combat mode.
-    if hasEnemy and Combat:UnitNearHotspot(theEnemy.Pointer) then
-        Grindbot.Mode = Modes.Combat
-        return
-    end
-
-    -- if we are not within 150 yards of the hotspots then walk to them no matter what. (IF WE CHOSE THE SKIP AGGRO SETTING)
-    if not Navigation:NearHotspot(150) and DMW.Settings.profile.Grind.SkipCombatOnTransport then
-        Grindbot.Mode = Modes.Roaming
-        return
-    end
-
     -- Gather when we are within 100 yards of hotspot
-    if Navigation:NearHotspot(100) and (hasOre and DMW.Settings.profile.Grind.mineOre or hasHerb and DMW.Settings.profile.Grind.gatherHerb) then
+    if (hasOre and DMW.Settings.profile.Grind.mineOre or hasHerb and DMW.Settings.profile.Grind.gatherHerb) then
         Grindbot.Mode = Modes.Gathering
+        return
+    end
+
+     -- if we are not within 105 yards of the hotspots then walk to them no matter what. (IF WE CHOSE THE SKIP AGGRO SETTING)
+    if not Navigation:NearHotspot(105) and DMW.Settings.profile.Grind.SkipCombatOnTransport then
+        Grindbot.Mode = Modes.Roaming
         return
     end
 
