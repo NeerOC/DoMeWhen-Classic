@@ -308,6 +308,11 @@ function Navigation:MoveToCorpse()
     local PosX, PosY, PosZ = GetCorpsePosition()
     local DistanceToCorpse = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, PosX, PosY, PosZ)
 
+    if PosX == 0 and PosY == 0 and PosZ == 0 then
+        Logout()
+        return
+    end
+
     if DistanceToCorpse > 30 then
         self:MoveTo(PosX, PosY, PosZ)
     else

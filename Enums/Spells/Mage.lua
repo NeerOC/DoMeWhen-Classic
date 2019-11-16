@@ -40,7 +40,8 @@ Spells.MAGE = {
         Pyroblast = {Ranks = {11366, 12505, 12522, 12523, 12524, 12525, 12526, 18809}},
         RemoveLesserCurse = {Ranks = {475}},
         Scorch = {Ranks = {2948, 8444, 8445, 8446, 10205, 10206, 10207}},
-        SlowFall = {Ranks = {130}}
+        SlowFall = {Ranks = {130}},
+        Evocation = {Ranks = {12051}}
     },
     Buffs = {
         AmplifyMagic = {Ranks = {1008, 8455, 10169, 10170}},
