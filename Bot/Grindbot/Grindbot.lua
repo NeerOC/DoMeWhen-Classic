@@ -296,20 +296,20 @@ function Grindbot:Rest()
     if DMW.Player.Moving then Navigation:StopMoving() return end
     if DMW.Player.Casting then return end
 
-    if Settings.FoodName ~= '' then
-        if DMW.Player.HP < Settings.RestHP and not Eating and not PauseFlags.CantEat then
-            UseItemByName(Settings.FoodName)
-            PauseFlags.CantEat = true
-            C_Timer.After(1, function() PauseFlags.CantEat = false end)
-        end
-    end
-
     if Settings.WaterName ~= '' then
         if UnitPower('player', 0) / UnitPowerMax('player', 0) * 100 < Settings.RestMana and not Drinking and not PauseFlags.CantDrink then
             if DMW.Player.Class == 'MAGE' and DMW.Player.Spells.Evocation:IsReady() then if DMW.Player.Spells.Evocation:Cast(Player) then return true end end
             UseItemByName(Settings.WaterName)
             PauseFlags.CantDrink = true
             C_Timer.After(1, function() PauseFlags.CantDrink = false end)
+        end
+    end
+
+    if Settings.FoodName ~= '' then
+        if DMW.Player.HP < Settings.RestHP and not Eating and not PauseFlags.CantEat then
+            UseItemByName(Settings.FoodName)
+            PauseFlags.CantEat = true
+            C_Timer.After(1, function() PauseFlags.CantEat = false end)
         end
     end
 end

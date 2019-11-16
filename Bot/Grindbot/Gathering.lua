@@ -9,7 +9,7 @@ function Gathering:NodeNearHotspot(Node)
 
     for i = 1, #Hotspots do
         local hx, hy, hz = Hotspots[i].x, Hotspots[i].y, Hotspots[i].z
-        if GetDistanceBetweenPositions(Node.PosX, Node.PosY, Node.PosZ, hx, hy, hz) <= 100 then
+        if GetDistanceBetweenPositions(Node.PosX, Node.PosY, Node.PosZ, hx, hy, hz) <= 100 and GetDistanceBetweenPositions(Node.PosX, Node.PosY, Node.PosZ, DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ) < 80 then
             return true
         end
     end

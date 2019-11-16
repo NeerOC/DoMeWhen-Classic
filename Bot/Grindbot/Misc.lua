@@ -80,7 +80,8 @@ function Misc:Hotspotter()
         end
 
         if altDown and not shiftDown then
-            LibDraw.GroundCircle(mx, my, mz, roamSize) 
+            LibDraw.GroundCircle(mx, my, mz, roamSize)
+            LibDraw.Text("x", "GameFontNormalLarge", mx, my, mz + 1)
             if middleMouseDown and mx ~= 0 and not PauseFlags.Hotspotting then
                 if self:AddClickSpot(mx, my, mz) then
                     Log:DebugInfo('Added Grind Hotspot [X: ' .. Round(mx) .. '] [Y: ' .. Round(my) .. '] [Z: ' .. Round(mz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, mx, my, mz)) .. ']')
