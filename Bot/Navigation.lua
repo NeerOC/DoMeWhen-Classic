@@ -308,9 +308,11 @@ function Navigation:MoveToCorpse()
     local PosX, PosY, PosZ = GetCorpsePosition()
     local DistanceToCorpse = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, PosX, PosY, PosZ)
 
-    if PosX == 0 and PosY == 0 and PosZ == 0 then
+    if UnitIsDeadOrGhost('player') and PosX == 0 and PosY == 0 and PosZ == 0 then
         Logout()
         return
+    else
+        CancelLogout()
     end
 
     if DistanceToCorpse > 30 then
@@ -351,12 +353,12 @@ end
 
 function Navigation:GetSafetyPosition(x, y, z, distance)
     for i = 0, 360 do
-        local rx, ry, rz = GetPositionFromPosition(x, y, z, distance, i, 360)
+        local rx, ry, rz = GetPositionFromPosition(x, y, z, distance, i, i)
         local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
         if not hasHostile then
             rz = select(3, TraceLine(rx, ry, 9999, rx, ry, -9999, 0x110))
             local heightdiff = math.abs(rz - DMW.Player.PosZ)
-            if heightdiff > -1 and heightdiff < 4 then
+            if heightdiff > -1 and heightdiff < 12 then
                 return true, rx, ry, rz
             end
         end

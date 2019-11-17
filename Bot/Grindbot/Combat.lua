@@ -176,7 +176,7 @@ end
 
 function Combat:GetUnitsNear(x, y, z)
     for _, Unit in pairs(DMW.Attackable) do
-        local unitAggro = Unit:AggroDistance() + 12
+        local unitAggro = Unit:AggroDistance() + 6
         if UnitReaction(Unit.Pointer, 'player') < 4 and Unit:GetDistanceToPosition(x, y, z) < unitAggro and not UnitIsTapDenied(Unit.Pointer) then
             return true
         end
