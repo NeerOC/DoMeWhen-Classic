@@ -334,7 +334,7 @@ function Navigation:MoveToCorpse()
                         if DMW.Time - pvpTimer >= DMW.Settings.profile.Grind.preventPVPTime then
                             RetrieveCorpse()
                             timerStarted = false
-                            NavPath = nil
+                            self:ResetPath()
                             pvpTimer = 0
                             return
                         end
@@ -343,7 +343,7 @@ function Navigation:MoveToCorpse()
             else
                 if StaticPopup1Button1:IsVisible() and StaticPopup1Button1:IsEnabled() and not acceptedRess then
                     acceptedRess = true
-                    C_Timer.After(0.5, function() RetrieveCorpse() NavPath = nil acceptedRess = false end)
+                    C_Timer.After(0.5, function() RetrieveCorpse() self:ResetPath() acceptedRess = false end)
                     return
                 end
             end
