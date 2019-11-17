@@ -308,7 +308,7 @@ function Navigation:MoveToCorpse()
     local PosX, PosY, PosZ = GetCorpsePosition()
     local DistanceToCorpse = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, PosX, PosY, PosZ)
 
-    if UnitIsDeadOrGhost('player') and PosX == 0 and PosY == 0 and PosZ == 0 then
+    if UnitIsDeadOrGhost('player') and DMW.Player.HP > 10 then
         Logout()
         return
     else
@@ -319,9 +319,9 @@ function Navigation:MoveToCorpse()
         self:MoveTo(PosX, PosY, PosZ)
     else
         local safeSpot
-        safeSpot, safeX, safeY, safeZ = self:GetSafetyPosition(PosX, PosY, PosZ, 25)
-        if safeSpot then if not safeX or DMW.Bot.Combat:GetUnitsNear(safeX, safeY, safeZ) then safeSpot, safeX, safeY, safeZ = self:GetSafetyPosition(PosX, PosY, PosZ, 25) end end
-        if DMW.Settings.profile.Grind.safeRess and (safeSpot and (GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, safeX, safeY, safeZ) > 1 or DMW.Bot.Combat:GetUnitsNear(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ)) or DMW.Bot.Combat:GetUnitsNear(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ)) then
+        safeSpot, safeX, safeY, safeZ = self:GetSafetyPosition(PosX, PosY, PosZ, 25, 10)
+        if not safeX or DMW.Bot.Combat:GetUnitsNear(safeX, safeY, safeZ) then safeSpot, safeX, safeY, safeZ = self:GetSafetyPosition(PosX, PosY, PosZ, 25, 10) end
+        if DMW.Settings.profile.Grind.safeRess and safeSpot and GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, safeX, safeY, safeZ) > 1 and DMW.Bot.Combat:GetUnitsNear(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ) then
             self:MoveTo(safeX, safeY, safeZ)
         else
             if DMW.Settings.profile.Grind.preventPVP then
@@ -351,14 +351,14 @@ function Navigation:MoveToCorpse()
     end
 end
 
-function Navigation:GetSafetyPosition(x, y, z, distance)
+function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
     for i = 0, 360 do
         local rx, ry, rz = GetPositionFromPosition(x, y, z, distance, i, i)
         local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
         if not hasHostile then
             rz = select(3, TraceLine(rx, ry, 9999, rx, ry, -9999, 0x110))
             local heightdiff = math.abs(rz - DMW.Player.PosZ)
-            if heightdiff > -1 and heightdiff < 12 then
+            if heightdiff > -1 and heightdiff < hdiff then
                 return true, rx, ry, rz
             end
         end
