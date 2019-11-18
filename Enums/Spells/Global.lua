@@ -16,6 +16,7 @@ DMW.Enums.Spells = {
             SoulstoneResurrection = {Ranks = {20707}}
         },
         Debuffs = {
+            Daze = {Ranks = {1604}},
             LivingBomb = {Ranks = {20475}}
         },
         Talents = {}
