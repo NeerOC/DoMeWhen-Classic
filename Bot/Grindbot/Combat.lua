@@ -148,7 +148,7 @@ function Combat:SearchEnemy()
             -- Totems first
             if UnitCreatureTypeID(Unit.Pointer) == 11 or UnitCreatureTypeID(Unit.Pointer) == 10 then
                 for _, totemLord in ipairs(Table) do
-                    if ObjectCreator(Unit.Pointer) == totemLord.Pointer then
+                    if ObjectCreator(Unit.Pointer) == totemLord.Pointer or UnitIsDead(ObjectCreator(Unit.Pointer)) then
                         return true, Unit
                     end
                 end
