@@ -146,9 +146,9 @@ function Combat:SearchEnemy()
     if DMW.Player.Combat then
         for _, Unit in ipairs(Table) do
             -- Totems first
-            if UnitCreatureTypeID(Unit.Pointer) == 11 then
+            if UnitCreatureTypeID(Unit.Pointer) == 11 or UnitCreatureTypeID(Unit.Pointer) == 10 then
                 for _, totemLord in ipairs(Table) do
-                    if ObjectCreator(Unit.Pointer) == totemLord.Pointer or UnitIsDead(ObjectCreator(Unit.Pointer)) or not ObjectExists(ObjectCreator(Unit.Pointer)) then
+                    if ObjectCreator(Unit.Pointer) == totemLord.Pointer then
                         return true, Unit
                     end
                 end
