@@ -6,6 +6,7 @@ local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 
 local Kiting = false
+local kitePause = false
 local Juggling = false
 local badBlacklist = {}
 local BotTarget
@@ -242,16 +243,22 @@ function Combat:InitiateAttack(Unit)
         -- This is for ranged attackers
         if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 then JumpOrAscendStart() end end
 
-        if DMW.Settings.profile.Grind.rangeKite then
-            if #DMW.Player:GetHostiles(10) > 0 and #DMW.Player:GetHostiles(10) < 2 then
-                -- If we have hostiles we should kite
-                Kiting = true
-                local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 25, 3)
-                if not DMW.Player.Moving and not DMW.Player.Casting then
-                    if safeX and not self:GetUnitsNear(safeX, safeY, safeZ) then Navigation:MoveTo(safeX, safeY, safeZ) end
+        if DMW.Settings.profile.Grind.rangeKite and not kitePause then
+            if #DMW.Player:GetHostiles(12) > 0 and #DMW.Player:GetHostiles(12) < 2 and DMW.Player.Target then
+                local _,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
+                local _,playerSpeed = GetUnitSpeed('player')
+                if unitSpeed < playerSpeed * 0.85 then
+                    -- if their speed is less than our speed -15% then kite
+                    Kiting = true
+                    local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 20, 3)
+                    if not DMW.Player.Moving and not DMW.Player.Casting then
+                        if safeX and not self:GetUnitsNear(safeX, safeY, safeZ) then Navigation:MoveTo(safeX, safeY, safeZ) end
+                    end
+                    return
                 end
-                return
             else
+                kitePause = true
+                C_Timer.After(1, function() kitePause = false end)
                 Kiting = false
             end
         end
