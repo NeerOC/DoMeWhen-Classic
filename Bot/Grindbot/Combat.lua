@@ -84,7 +84,7 @@ function Combat:SearchAttackable()
 
     local Table = {}
     for _, Unit in pairs(DMW.Units) do
-        if UnitClassification(Unit.Pointer) == 'normal' and self:IsGoodUnit(Unit.Pointer) and (Unit:LineOfSight() or DMW.Settings.profile.Grind.skipLOS) and #Unit:GetHostiles(20) < 2 then
+        if Unit.Distance < 80 and UnitClassification(Unit.Pointer) == 'normal' and self:IsGoodUnit(Unit.Pointer) and (Unit:LineOfSight() or DMW.Settings.profile.Grind.skipLOS) and #Unit:GetHostiles(20) < 2 then
             table.insert(Table, Unit)
         end
     end

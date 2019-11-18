@@ -23,7 +23,7 @@ function Unit:New(Pointer)
     self.Level = UnitLevel(Pointer)
     self.DistanceAggro = self:AggroDistance()
     self.CreatureType = DMW.Enums.CreatureType[UnitCreatureTypeID(Pointer)]
-    self.NavDistance = 999
+    self.NavDistance = self:GetNavDistance()
     DMW.Functions.AuraCache.Refresh(Pointer)
 end
 
@@ -35,7 +35,7 @@ function Unit:Update()
         DMW.Tables.AuraUpdate[self.Pointer] = nil
     end
     self.Distance = self:GetDistance()
-    if not Throttle then self.NavDistance = self:GetNavDistance() Throttle = true C_Timer.After(0.05, function() Throttle = false end) end
+    if not Throttle then self.NavDistance = self:GetNavDistance() Throttle = true C_Timer.After(0.1, function() Throttle = false end) end
     self.Dead = UnitIsDeadOrGhost(self.Pointer)
     if RealMobHealth_CreatureHealthCache and self.ObjectID and RealMobHealth_CreatureHealthCache[self.ObjectID .. "-" .. self.Level] then
         self.HealthMax = RealMobHealth_CreatureHealthCache[self.ObjectID .. "-" .. self.Level]
