@@ -257,7 +257,7 @@ function Combat:InitiateAttack(Unit)
                 local cuSpeed,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local _,playerSpeed = GetUnitSpeed('player')
                 if unitSpeed <= playerSpeed * 0.80 or DMW.Player.Target:HasMovementFlag(DMW.Enums.MovementFlags.Root) then
-                    -- if their speed is less than our speed -15% then kite
+                    -- if their speed is less than our speed -20% or they are rooted then kite
                     Kiting = true
                     local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 20, 3)
                     if not DMW.Player.Moving and not DMW.Player.Casting then

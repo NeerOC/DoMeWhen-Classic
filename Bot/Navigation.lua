@@ -328,7 +328,7 @@ function Navigation:MoveToCorpse()
             if DMW.Settings.profile.Grind.preventPVP then
                 if StaticPopup1Button1:IsVisible() and StaticPopup1Button1:IsEnabled() then
                     if not timerStarted then
-                        Log:DebugInfo('Will now wait for ' .. DMW.Settings.profile.Grind.preventPVPTime .. ' seconds ' .. ' or until no enemy players nearby.')
+                        Log:DebugInfo('Will now wait for ' .. DMW.Settings.profile.Grind.preventPVPTime .. ' seconds ' .. 'or until no enemy players nearby.')
                         timerStarted = true
                         pvpTimer = DMW.Time
                     else
