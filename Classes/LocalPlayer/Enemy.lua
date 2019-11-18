@@ -106,6 +106,18 @@ function LocalPlayer:GetAttackable(Yards)
     return Table, Count
 end
 
+function LocalPlayer:GetHostiles(Yards)
+    local Table = {}
+    local Count = 0
+    for _, v in pairs(DMW.Attackable) do
+        if v.Distance <= Yards and UnitReaction(v.Pointer, 'player') < 4 and not UnitIsTapDenied(v.Pointer) then
+            table.insert(Table, v)
+            Count = Count + 1
+        end
+    end
+    return Table, Count
+end
+
 function LocalPlayer:GetEnemiesRect(Length, Width, TTD)
     local Count = 0
     local Table, TableCount = self:GetEnemies(Length)

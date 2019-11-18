@@ -5,8 +5,10 @@ local Navigation = DMW.Bot.Navigation
 local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 
+local Kiting = false
 local Juggling = false
 local badBlacklist = {}
+local BotTarget
 
 function Combat:CanSeeUnit(unit)
     local los1 = TraceLine(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ + 1, unit.PosX, unit.PosY, unit.PosZ + 1, 0x100111)
@@ -15,12 +17,16 @@ function Combat:CanSeeUnit(unit)
     return los1 == nil and los2 == nil and los3 == nil
 end
 
+function Combat:HasTarget()
+    return BotTarget and not BotTarget.Dead and not UnitIsTapDenied(BotTarget.Pointer)
+end
+
 function Combat:UnitNearHotspot(unit)
     local HotSpots = DMW.Settings.profile.Grind.HotSpots
     local ux, uy, uz = ObjectPosition(unit)
     for i = 1, #HotSpots do
         local hx, hy, hz = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
-        if GetDistanceBetweenPositions(ux, uy, uz, hx, hy, hz) < DMW.Settings.profile.Grind.RoamDistance then
+        if GetDistanceBetweenPositions(ux, uy, uz, hx, hy, hz) < DMW.Settings.profile.Grind.RoamDistance * 1.5 then
             return true
         end
     end
@@ -210,6 +216,7 @@ function Combat:AttackCombat()
 end
 
 function Combat:InitiateAttack(Unit)
+    BotTarget = Unit
     if (Unit.Distance > DMW.Settings.profile.Grind.CombatDistance or not Unit:LineOfSight()) then
         Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
         
@@ -223,7 +230,7 @@ function Combat:InitiateAttack(Unit)
             end
         end
     else
-        if DMW.Player.Moving then
+        if DMW.Player.Moving and (not Kiting or not DMW.Settings.profile.Grind.rangeKite) then
             Navigation:StopMoving()
             Navigation:ResetPath()
         end
@@ -235,7 +242,21 @@ function Combat:InitiateAttack(Unit)
         -- This is for ranged attackers
         if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 then JumpOrAscendStart() end end
 
-        if not UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance < DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
+        if DMW.Settings.profile.Grind.rangeKite then
+            if #DMW.Player:GetHostiles(10) > 0 and #DMW.Player:GetHostiles(10) < 2 then
+                -- If we have hostiles we should kite
+                Kiting = true
+                local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 25, 3)
+                if not DMW.Player.Moving and not DMW.Player.Casting then
+                    if safeX and not self:GetUnitsNear(safeX, safeY, safeZ) then Navigation:MoveTo(safeX, safeY, safeZ) end
+                end
+                return
+            else
+                Kiting = false
+            end
+        end
+
+        if not UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance < DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() and not Kiting then
             FaceDirection(Unit.Pointer, true)
         end
 

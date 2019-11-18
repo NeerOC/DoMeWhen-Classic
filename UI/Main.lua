@@ -1364,6 +1364,24 @@ local Options = {
                             DMW.Settings.profile.Grind.attackAny = value
                         end
                     },
+                    skipHeader = {
+                        type = "header",
+                        order = 11,
+                        name = ""
+                    },
+                    rangeKite = {
+                        type = "toggle",
+                        order = 12,
+                        name = "Range Kite (BETA)",
+                        desc = "Kite at range ( Keep away when enemies are within 12 yards )",
+                        width = 0.6,
+                        get = function()
+                            return DMW.Settings.profile.Grind.rangeKite
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.rangeKite = value
+                        end
+                    }
                 }
                 },
                 PathTab = {

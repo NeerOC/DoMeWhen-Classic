@@ -230,7 +230,8 @@ function Grindbot:Pulse()
     end
 
     if Grindbot.Mode == Modes.Idle then
-        ModeFrame.text:SetText('Idle')
+        Navigation:StopMoving()
+        ModeFrame.text:SetText('Rotation?')
     end
 end
 
@@ -336,7 +337,7 @@ function Grindbot:SwapMode()
     end
 
     -- (TRIAL!)
-    if Navigation:NearHotspot(110) and hasEnemy then
+    if Navigation:NearHotspot(200) and hasEnemy then
         Grindbot.Mode = Modes.Combat
         return
     end 
@@ -392,7 +393,7 @@ function Grindbot:SwapMode()
     end
 
      -- if we are not within 105 yards of the hotspots then walk to them no matter what. (IF WE CHOSE THE SKIP AGGRO SETTING)
-    if not Navigation:NearHotspot(DMW.Settings.profile.Grind.RoamDistance * 1.5) and DMW.Settings.profile.Grind.SkipCombatOnTransport then
+    if not Navigation:NearHotspot(DMW.Settings.profile.Grind.RoamDistance) and DMW.Settings.profile.Grind.SkipCombatOnTransport and not Combat:HasTarget() then
         Grindbot.Mode = Modes.Roaming
         return
     end
