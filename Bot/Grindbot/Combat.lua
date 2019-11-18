@@ -149,7 +149,6 @@ function Combat:SearchEnemy()
             if UnitCreatureTypeID(Unit.Pointer) == 11 then
                 for _, totemLord in ipairs(Table) do
                     if ObjectCreator(Unit.Pointer) == totemLord.Pointer or UnitIsDeadOrGhost(ObjectCreator(Unit.Pointer)) then
-                        print('Found bad totem')
                         return true, Unit
                     end
                 end
