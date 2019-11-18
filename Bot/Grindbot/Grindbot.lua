@@ -412,6 +412,11 @@ function Grindbot:SwapMode()
         return
     end
 
+    if not Navigation:NearHotspot(100) then
+        Grindbot.Mode = Modes.Roaming
+        return
+    end
+
     Grindbot.Mode = Modes.Idle
 end
 
