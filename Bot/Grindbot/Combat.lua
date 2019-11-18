@@ -146,8 +146,14 @@ function Combat:SearchEnemy()
     if DMW.Player.Combat then
         for _, Unit in ipairs(Table) do
             -- Totems first
-            if Unit.Distance <= 8 and UnitCreatureTypeID(Unit.Pointer) == 11 then
-                return true, Unit
+
+            if UnitCreatureTypeID(Unit.Pointer) == 11 then
+                for _, totemLord in ipairs(Table) do
+                    if ObjectCreator(Unit) == totemLord.Pointer then
+                        print('Found bad totem')
+                        return true, Unit
+                    end
+                end
             end
 
             -- Nearby fleeing targets then
