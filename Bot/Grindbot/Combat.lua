@@ -146,10 +146,9 @@ function Combat:SearchEnemy()
     if DMW.Player.Combat then
         for _, Unit in ipairs(Table) do
             -- Totems first
-
             if UnitCreatureTypeID(Unit.Pointer) == 11 then
                 for _, totemLord in ipairs(Table) do
-                    if ObjectCreator(Unit) == totemLord.Pointer then
+                    if ObjectCreator(Unit.Pointer) == totemLord.Pointer or UnitIsDeadOrGhost(ObjectCreator(Unit.Pointer)) then
                         print('Found bad totem')
                         return true, Unit
                     end
@@ -262,7 +261,7 @@ function Combat:InitiateAttack(Unit)
 
         if DMW.Settings.profile.Grind.rangeKite and not kitePause then
             if Kiting and not DMW.Player.Moving then Kiting = false end
-            if DMW.Player.Target and #DMW.Player:GetHostiles(12) > 0 and #DMW.Player:GetHostiles(12) < 2 then
+            if DMW.Player.Target and #DMW.Player:GetHostiles(12) > 0 then
                 local cuSpeed,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local cpSpeed,playerSpeed = GetUnitSpeed('player')
                 if not DMW.Player.Debuffs.Daze:Exist() and (unitSpeed <= playerSpeed * 0.80 or DMW.Player.Target:HasMovementFlag(DMW.Enums.MovementFlags.Root)) then
