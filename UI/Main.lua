@@ -1374,7 +1374,7 @@ local Options = {
                         order = 12,
                         name = "Range Kite (BETA)",
                         desc = "Kite at range ( Keep away when enemies are within 12 yards )",
-                        width = 0.6,
+                        width = 1,
                         get = function()
                             return DMW.Settings.profile.Grind.rangeKite
                         end,
