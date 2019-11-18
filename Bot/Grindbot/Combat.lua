@@ -252,10 +252,11 @@ function Combat:InitiateAttack(Unit)
         if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 then JumpOrAscendStart() end end
 
         if DMW.Settings.profile.Grind.rangeKite and not kitePause then
-            if #DMW.Player:GetHostiles(12) > 0 and #DMW.Player:GetHostiles(12) < 2 and DMW.Player.Target then
-                local _,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
+            if Kiting and not DMW.Player.Moving then Kiting = false end
+            if DMW.Player.Target and #DMW.Player:GetHostiles(12) > 0 and #DMW.Player:GetHostiles(12) < 2 then
+                local cuSpeed,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local _,playerSpeed = GetUnitSpeed('player')
-                if unitSpeed <= playerSpeed * 0.85 then
+                if unitSpeed <= playerSpeed * 0.80 or DMW.Player.Target:HasMovementFlag(DMW.Enums.MovementFlags.Root) then
                     -- if their speed is less than our speed -15% then kite
                     Kiting = true
                     local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 20, 3)

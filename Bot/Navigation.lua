@@ -334,7 +334,7 @@ function Navigation:MoveToCorpse()
                     else
                         if DMW.Time - pvpTimer >= DMW.Settings.profile.Grind.preventPVPTime or not DMW.Bot.Combat:EnemyPlayerNearby() then
                             RetrieveCorpse()
-                            timerStarted = false
+                            C_Timer.After(1, function() timerStarted = false end)
                             self:ResetPath()
                             pvpTimer = 0
                             return
