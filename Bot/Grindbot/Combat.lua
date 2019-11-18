@@ -225,7 +225,7 @@ function Combat:AttackCombat()
 end
 
 function Combat:InitiateAttack(Unit)
-    BotTarget = Unit
+    if not self:HasTarget() then BotTarget = Unit end
     if (Unit.Distance > DMW.Settings.profile.Grind.CombatDistance or not Unit:LineOfSight()) then
         Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
         
