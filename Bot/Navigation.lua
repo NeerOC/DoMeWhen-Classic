@@ -308,7 +308,7 @@ function Navigation:MoveToCorpse()
     local PosX, PosY, PosZ = GetCorpsePosition()
     local DistanceToCorpse = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, PosX, PosY, PosZ)
 
-    if UnitIsDeadOrGhost('player') and DMW.Player.HP > 10 then
+    if UnitIsDeadOrGhost('player') and DMW.Player.HP > 10 and not StaticPopup1:IsVisible() then
         Logout()
         return
     else
