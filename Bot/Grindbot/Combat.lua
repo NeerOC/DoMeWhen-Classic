@@ -22,6 +22,14 @@ function Combat:HasTarget()
     return BotTarget and not BotTarget.Dead and not UnitIsTapDenied(BotTarget.Pointer)
 end
 
+function Combat:EnemyPlayerNearby()
+    for _, Unit in pairs(DMW.Attackable) do
+        if Unit.Level >= DMW.Player.Level and Unit.Player then
+            return true
+        end
+    end
+end
+
 function Combat:UnitNearHotspot(unit)
     local HotSpots = DMW.Settings.profile.Grind.HotSpots
     local ux, uy, uz = ObjectPosition(unit)
@@ -247,7 +255,7 @@ function Combat:InitiateAttack(Unit)
             if #DMW.Player:GetHostiles(12) > 0 and #DMW.Player:GetHostiles(12) < 2 and DMW.Player.Target then
                 local _,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local _,playerSpeed = GetUnitSpeed('player')
-                if unitSpeed < playerSpeed * 0.85 then
+                if unitSpeed <= playerSpeed * 0.85 then
                     -- if their speed is less than our speed -15% then kite
                     Kiting = true
                     local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 20, 3)

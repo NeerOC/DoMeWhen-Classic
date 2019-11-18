@@ -328,11 +328,11 @@ function Navigation:MoveToCorpse()
             if DMW.Settings.profile.Grind.preventPVP then
                 if StaticPopup1Button1:IsVisible() and StaticPopup1Button1:IsEnabled() then
                     if not timerStarted then
-                        Log:DebugInfo('Will now wait for ' .. DMW.Settings.profile.Grind.preventPVPTime .. ' seconds.')
+                        Log:DebugInfo('Will now wait for ' .. DMW.Settings.profile.Grind.preventPVPTime .. ' seconds ' .. ' or until no enemy players nearby.')
                         timerStarted = true
                         pvpTimer = DMW.Time
                     else
-                        if DMW.Time - pvpTimer >= DMW.Settings.profile.Grind.preventPVPTime then
+                        if DMW.Time - pvpTimer >= DMW.Settings.profile.Grind.preventPVPTime or not DMW.Bot.Combat:EnemyPlayerNearby() then
                             RetrieveCorpse()
                             timerStarted = false
                             self:ResetPath()
@@ -357,7 +357,7 @@ function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
         local rx, ry, rz = GetPositionFromPosition(x, y, z, distance, i, i)
         local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
         if not hasHostile then
-            rz = select(3, TraceLine(rx, ry, 9999, rx, ry, -9999, 0x110))
+            rz = select(3, TraceLine(rx, ry, 9999, rx, ry, -9999, 0x110)) or 0
             local heightdiff = math.abs(rz - DMW.Player.PosZ)
             if heightdiff > -1 and heightdiff < hdiff then
                 return true, rx, ry, rz
