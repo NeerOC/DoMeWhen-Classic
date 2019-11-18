@@ -194,7 +194,7 @@ end
 
 function Combat:GetUnitsNear(x, y, z)
     for _, Unit in pairs(DMW.Attackable) do
-        local unitAggro = Unit:AggroDistance() + 6
+        local unitAggro = Unit:AggroDistance() + 10
         if UnitReaction(Unit.Pointer, 'player') < 4 and Unit:GetDistanceToPosition(x, y, z) < unitAggro and not UnitIsTapDenied(Unit.Pointer) then
             return true
         end
@@ -262,7 +262,7 @@ function Combat:InitiateAttack(Unit)
                 if not DMW.Player.Debuffs.Daze:Exist() and (unitSpeed <= playerSpeed * 0.80 or DMW.Player.Target:HasMovementFlag(DMW.Enums.MovementFlags.Root)) then
                     -- if their speed is less than our speed -20% or they are rooted then kite
                     Kiting = true
-                    local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 20, 3)
+                    local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 30, 5)
                     if not DMW.Player.Moving and not DMW.Player.Casting then
                         if safeX and not self:GetUnitsNear(safeX, safeY, safeZ) then Navigation:MoveTo(safeX, safeY, safeZ) end
                     end
