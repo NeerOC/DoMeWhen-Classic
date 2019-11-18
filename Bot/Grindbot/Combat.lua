@@ -263,7 +263,7 @@ function Combat:InitiateAttack(Unit)
                     if not DMW.Player.Moving and not DMW.Player.Casting then
                         if safeX and not self:GetUnitsNear(safeX, safeY, safeZ) then Navigation:MoveTo(safeX, safeY, safeZ) end
                     end
-                    return
+                    --return
                 end
             else
                 kitePause = true
