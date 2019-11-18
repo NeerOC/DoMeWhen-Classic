@@ -324,6 +324,7 @@ function Navigation:MoveToCorpse()
         if DMW.Settings.profile.Grind.safeRess and safeSpot and GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, safeX, safeY, safeZ) > 1 and DMW.Bot.Combat:GetUnitsNear(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ) then
             self:MoveTo(safeX, safeY, safeZ)
         else
+            if DMW.Settings.profile.Grind.safeRess and DMW.Bot.Combat:GetUnitsNear(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ) then return end
             if DMW.Settings.profile.Grind.preventPVP then
                 if StaticPopup1Button1:IsVisible() and StaticPopup1Button1:IsEnabled() then
                     if not timerStarted then
