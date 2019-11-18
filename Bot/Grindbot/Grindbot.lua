@@ -392,7 +392,7 @@ function Grindbot:SwapMode()
     end
 
      -- if we are not within 105 yards of the hotspots then walk to them no matter what. (IF WE CHOSE THE SKIP AGGRO SETTING)
-    if not Navigation:NearHotspot(105) and DMW.Settings.profile.Grind.SkipCombatOnTransport then
+    if not Navigation:NearHotspot(DMW.Settings.profile.Grind.RoamDistance * 1.5) and DMW.Settings.profile.Grind.SkipCombatOnTransport then
         Grindbot.Mode = Modes.Roaming
         return
     end
