@@ -134,6 +134,8 @@ end
 function Navigation:Movement()
     local NoMoveFlags = bit.bor(DMW.Enums.UnitFlags.Stunned, DMW.Enums.UnitFlags.Confused, DMW.Enums.UnitFlags.Pacified, DMW.Enums.UnitFlags.Feared)
     if IsMounted() and mountTries > 0 then mountTries = 0 end
+    AscendStop()
+    
     if NavPath and not DMW.Player.Casting and not DMW.Player:HasFlag(NoMoveFlags) and not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Root) then
         DestX = NavPath[pathIndex][1]
         DestY = NavPath[pathIndex][2]
