@@ -54,8 +54,9 @@ end
 function Combat:IsGoodUnit(unit)
     local minLvl = UnitLevel('player') - DMW.Settings.profile.Grind.minNPCLevel
     local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
-
+    local unitX, unitY, unitZ = ObjectPosition(unit)
     local Flags = {
+        notInWater = TraceLine(unitX, unitY, unitZ, unitX, unitY, unitZ - 5, bit.bor(0x10000)) == nil,
         notUnitBad = not self:UnitBad(unit),
         notBlacklisted = not self:BlacklistedUnit(UnitName(unit)),
         notCritter = UnitCreatureTypeID(unit) ~= 8,
@@ -264,7 +265,7 @@ function Combat:InitiateAttack(Unit)
                 local cuSpeed,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local cpSpeed,playerSpeed = GetUnitSpeed('player')
                 if not DMW.Player.Debuffs.Daze:Exist() and (unitSpeed <= playerSpeed * 0.60 or DMW.Player.Target:HasMovementFlag(DMW.Enums.MovementFlags.Root)) then
-                    -- if their speed is less than our speed -20% or they are rooted then kite
+                    -- if their speed is less than our speed -40% or they are rooted then kite
                     Kiting = true
                     local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 30, 5)
                     if not DMW.Player.Moving and not DMW.Player.Casting then
