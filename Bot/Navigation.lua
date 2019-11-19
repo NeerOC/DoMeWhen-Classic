@@ -398,6 +398,7 @@ function Navigation:Unstuck()
     Log:SevereInfo('Unstuck!')
     MoveBackwardStart()
     JumpOrAscendStart()
+    AscendStop()
     C_Timer.After(1.4, function() unStucking = false end)
     C_Timer.After(0.7, function() MoveBackwardStop() strafeTime = true end)
     if strafeTime then
