@@ -6,8 +6,11 @@ local Log = DMW.Bot.Log
 local Navigation = DMW.Bot.Navigation
 
 local PauseFlags = {
-    Hotspotting = false
+    Hotspotting = false,
+    Mapwalking = false
 }
+
+local mapX, mapY, mapZ
 
 function Misc:ClamTask()
     -- instantly opens clams and deletes meat
@@ -156,6 +159,37 @@ function Misc:HasItem(itemname)
         end
     end
     return false
+end
+
+function Misc:WorldMapHook()
+    if WorldMapFrame:IsVisible() and IsControlKeyDown() and IsMouseButtonDown("LeftButton") and not Mapwalking then
+        local x, y = WorldMapFrame.ScrollContainer:GetNormalizedCursorPosition()
+        local continentID, worldPosition = C_Map.GetWorldPosFromMapPos(WorldMapFrame:GetMapID(), CreateVector2D(x, y))
+        local WX, WY = worldPosition:GetXY()
+        local WZ = select(3, TraceLine(WX, WY, 10000, WX, WY, -10000, 0x110))
+        if not WZ and WorldPreload(WX, WY, DMW.Player.PosZ) then
+            WZ = select(3, TraceLine(WX, WY, 9999, WX, WY, -9999, 0x110))
+        end
+        if WZ then
+            Log:NormalInfo('Moving to your selected destination.')
+            mapX, mapY, mapZ = WX, WY, WZ
+            Mapwalking = true
+            C_Timer.After(1, function() Mapwalking = false end)
+        end
+    end
+
+    if not mapX then return false end
+
+    if mapX then
+        local Distance = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, mapX, mapY, mapZ)
+        if Distance > 1 then
+            Navigation:MoveTo(mapX, mapY, mapZ, true)
+            return true
+        else
+            Log:NormalInfo('Destination reached.')
+            mapX = nil
+        end
+    end
 end
 
 function Misc:GetFreeSlots()
