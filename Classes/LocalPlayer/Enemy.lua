@@ -110,7 +110,7 @@ function LocalPlayer:GetHostiles(Yards)
     local Table = {}
     local Count = 0
     for _, v in pairs(DMW.Attackable) do
-        if v.Distance <= Yards and UnitReaction(v.Pointer, 'player') < 4 and not UnitIsTapDenied(v.Pointer) then
+        if v.Distance <= Yards and (UnitReaction(v.Pointer, 'player') < 4 or v.Target == self.Pointer) and not UnitIsTapDenied(v.Pointer) then
             table.insert(Table, v)
             Count = Count + 1
         end
