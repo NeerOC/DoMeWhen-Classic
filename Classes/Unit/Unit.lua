@@ -56,6 +56,7 @@ function Unit:Update()
     if self.Distance < 50 and not self.Dead then
         self.LoS = self:LineOfSight()
     end
+    self.Rooted = self:HasMovementFlag(DMW.Enums.MovementFlags.Root)
     self.Attackable = self.LoS and UnitCanAttack("player", self.Pointer) or false
     self.ValidEnemy = self.Attackable and self:IsEnemy() or false
     self.Target = UnitTarget(self.Pointer)
