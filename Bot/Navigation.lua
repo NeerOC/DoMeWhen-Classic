@@ -179,7 +179,6 @@ end
 function Navigation:MoveTo(toX, toY, toZ, straight)
     if DMW.Player.Casting or EndX and GetDistanceBetweenPositions(toX, toY, toZ, EndX, EndY, EndZ) < 0.1 and NavPath then return end
     straight = straight or false
-    if DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Swimming) then straight = true end
 
     pathIndex = 1
     NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, straight, true, 1)
@@ -397,8 +396,7 @@ end
 function Navigation:Unstuck()
     Log:SevereInfo('Unstuck!')
     MoveBackwardStart()
-    JumpOrAscendStart()
-    AscendStop()
+    if not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Swimming) then JumpOrAscendStart() end
     C_Timer.After(1.4, function() unStucking = false end)
     C_Timer.After(0.7, function() MoveBackwardStop() strafeTime = true end)
     if strafeTime then
