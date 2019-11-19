@@ -181,13 +181,13 @@ function Misc:WorldMapHook()
     if not mapX then return false end
 
     if mapX then
-        local Distance = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, mapX, mapY, mapZ)
+        local Distance = sqrt((mapX - DMW.Player.PosX) ^ 2) + ((mapY - DMW.Player.PosY) ^ 2)
         if Distance > 1 then
             Navigation:MoveTo(mapX, mapY, mapZ, true)
             return true
         else
             Log:NormalInfo('Destination reached.')
-            mapX = nil
+            mapX = nil mapY = nil mapZ = nil
         end
     end
 end
