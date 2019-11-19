@@ -175,6 +175,7 @@ function Grindbot:Pulse()
     -- Call the enable and disable function of rotation when going to and from vendor.
     Misc:RotationToggle()
     if DMW.Player.Casting then self:ResetMoveToLoot() end -- Reset if casting
+    if DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Falling) then AscendStop() end
 
     if not InformationOutput then
         Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]') 

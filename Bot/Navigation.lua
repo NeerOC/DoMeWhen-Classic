@@ -181,7 +181,7 @@ function Navigation:MoveTo(toX, toY, toZ, straight)
     straight = straight or false
 
     pathIndex = 1
-    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, straight, false, 1)
+    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, straight, true, 1)
 
     if NavPath then
         EndX, EndY, EndZ = toX, toY, toZ

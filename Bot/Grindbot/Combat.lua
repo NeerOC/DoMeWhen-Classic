@@ -54,9 +54,10 @@ end
 function Combat:IsGoodUnit(unit)
     local minLvl = UnitLevel('player') - DMW.Settings.profile.Grind.minNPCLevel
     local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
-    local unitX, unitY, unitZ = ObjectPosition(unit)
+    local UnitFlags = UnitMovementFlags(unit)
+    
     local Flags = {
-        notInWater = TraceLine(unitX, unitY, unitZ, unitX, unitY, unitZ - 5, bit.bor(0x10000)) == nil,
+        notSwimming = not UnitFlags or bit.band(UnitFlags, DMW.Enums.MovementFlags.Swimming) == 0,
         notUnitBad = not self:UnitBad(unit),
         notBlacklisted = not self:BlacklistedUnit(UnitName(unit)),
         notCritter = UnitCreatureTypeID(unit) ~= 8,
