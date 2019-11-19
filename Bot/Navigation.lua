@@ -352,7 +352,25 @@ function Navigation:MoveToCorpse()
     end
 end
 
+function Navigation:GetPositionBehind(dist)
+    local bX, bY, bZ = GetPositionFromPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, -dist, ObjectFacing('Player'))
+    bZ = select(3, TraceLine(bX, bY, 9999, bX, bY, -9999, 0x110)) or 0
+    if bZ then
+        local hdiff = math.abs(bZ - DMW.Player.PosZ)
+        if hdiff > - 2 and hdiff < 5 and not DMW.Bot.Combat:GetUnitsNear(bX, bY, bZ) then
+            return bX, bY, bZ
+        end
+    end
+end
+
 function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
+    if DMW.Player.Combat then
+        local bX, bY, bZ = self:GetPositionBehind(20)
+        if bX then
+            return true, bX, bY, bZ
+        end 
+    end
+ 
     for i = 0, 720 do
         local rx, ry, rz = GetPositionFromPosition(x, y, z, distance, i, i / 2)
         local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
