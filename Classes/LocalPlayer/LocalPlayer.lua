@@ -60,6 +60,7 @@ function LocalPlayer:Update()
     end
     self.Instance = select(2, IsInInstance())
     self.Moving = self:HasMovementFlag(DMW.Enums.MovementFlags.Moving)
+    self.Swimming = self:HasMovementFlag(DMW.Enums.MovementFlags.Swimming)
     self.PetActive = UnitIsVisible("pet")
     self.InGroup = IsInGroup()
     self.CombatTime = self.Combat and (DMW.Time - self.Combat) or 0

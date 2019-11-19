@@ -139,7 +139,6 @@ function Navigation:Movement()
         DestY = NavPath[pathIndex][2]
         DestZ = NavPath[pathIndex][3]
 
-        if IsSwimming() then AscendStop() end
         if self:CalcPathDistance(NavPath) > DMW.Settings.profile.Grind.mountDistance and DMW.Settings.profile.Grind.UseMount and self:CanMount() then
             self:Mount()
             return
@@ -161,7 +160,7 @@ function Navigation:Movement()
             end
         else
             --if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, lastX, lastY, lastZ) == 0 then
-            if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and not IsSwimming() then
+            if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and not DMW.Player.Swimming then
                 stuckCount = stuckCount + 1
                 if stuckCount > 50 then
                     Dismount()
@@ -171,7 +170,8 @@ function Navigation:Movement()
             if DestX then MoveTo(DestX, DestY, DestZ)
                 lastX = DMW.Player.PosX
                 lastY = DMW.Player.PosY
-                lastZ = DMW.Player.PosZ end
+                lastZ = DMW.Player.PosZ 
+            end
         end
     end
 end
@@ -179,6 +179,7 @@ end
 function Navigation:MoveTo(toX, toY, toZ, straight)
     if DMW.Player.Casting or EndX and GetDistanceBetweenPositions(toX, toY, toZ, EndX, EndY, EndZ) < 0.1 and NavPath then return end
     straight = straight or false
+    if DMW.Player.Swimming then straight = true end
 
     pathIndex = 1
     NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, straight, true, 1)
@@ -235,7 +236,7 @@ function Navigation:GrindRoam()
 end
 
 function Navigation:CanMount()
-    return not unStucking and not IsSwimming() and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
+    return not unStucking and not DMW.Player.Swimming and not UnitIsDeadOrGhost('player') and not IsIndoors() and not IsMounted() and not self:NearBlacklist() and not DMW.Player.Combat
 end
 
 function Navigation:Mount()
@@ -396,7 +397,7 @@ end
 function Navigation:Unstuck()
     Log:SevereInfo('Unstuck!')
     MoveBackwardStart()
-    if not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Swimming) then JumpOrAscendStart() end
+    if not DMW.Player.Swimming then JumpOrAscendStart() end
     C_Timer.After(1.4, function() unStucking = false end)
     C_Timer.After(0.7, function() MoveBackwardStop() strafeTime = true end)
     if strafeTime then

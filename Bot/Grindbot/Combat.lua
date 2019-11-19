@@ -258,7 +258,7 @@ function Combat:InitiateAttack(Unit)
 
     if DMW.Settings.profile.Grind.CombatDistance > 9 then
         -- This is for ranged attackers
-        if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 and not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Swimming) then JumpOrAscendStart() end end
+        if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 and not DMW.Player.Swimming then JumpOrAscendStart() end end
 
         if DMW.Settings.profile.Grind.rangeKite and not kitePause then
             if Kiting and not DMW.Player.Moving then Kiting = false end
@@ -290,7 +290,7 @@ function Combat:InitiateAttack(Unit)
         end
     else
         -- This is for melee attackers
-        if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance + 3 and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 and not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Swimming) then JumpOrAscendStart() end end
+        if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance + 3 and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 and not DMW.Player.Swimming then JumpOrAscendStart() end end
 
         if not UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             FaceDirection(Unit.Pointer, true)

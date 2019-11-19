@@ -175,7 +175,6 @@ function Grindbot:Pulse()
     -- Call the enable and disable function of rotation when going to and from vendor.
     Misc:RotationToggle()
     if DMW.Player.Casting then self:ResetMoveToLoot() end -- Reset if casting
-    if DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Falling) then AscendStop() end
 
     if not InformationOutput then
         Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]') 
@@ -329,7 +328,7 @@ function Grindbot:SwapMode()
     local hasHerb = Gathering:HerbSearch()
 
     -- If we arent in combat and we arent standing (if our health is less than 95 percent and we currently have the eating buff or we are a caster and our mana iss less than 95 and we have the drinking buff) then set mode to rest.
-    if not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Swimming) and not DMW.Player.Combat and not DMW.Player:Standing() and (DMW.Player.HP < 95 and Eating or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95 and Drinking) then
+    if not DMW.Player.Swimming and not DMW.Player.Combat and not DMW.Player:Standing() and (DMW.Player.HP < 95 and Eating or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < 95 and Drinking) then
         Grindbot.Mode = Modes.Resting
         return
     else
@@ -350,7 +349,7 @@ function Grindbot:SwapMode()
     end
 
     -- If we are not in combat and not mounted and our health is less than we decided or if we use mana and its less than decided do the rest function.
-    if not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Swimming) and not DMW.Player.Combat and not IsMounted() and (DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana) then
+    if not DMW.Player.Swimming and not DMW.Player.Combat and not IsMounted() and (DMW.Player.HP < Settings.RestHP or UnitPower('player', 0) > 0 and (UnitPower('player', 0) / UnitPowerMax('player', 0) * 100) < Settings.RestMana) then
         Grindbot.Mode = Modes.Resting
         return
     end
