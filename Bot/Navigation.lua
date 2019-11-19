@@ -179,6 +179,7 @@ end
 function Navigation:MoveTo(toX, toY, toZ, straight)
     if DMW.Player.Casting or EndX and GetDistanceBetweenPositions(toX, toY, toZ, EndX, EndY, EndZ) < 0.1 and NavPath then return end
     straight = straight or false
+    if DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Swimming) then straight = true end
 
     pathIndex = 1
     NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, straight, true, 1)
