@@ -368,7 +368,7 @@ end
 
 function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
     if DMW.Player.Combat then
-        local bX, bY, bZ = self:GetPositionBehind(16)
+        local bX, bY, bZ = self:GetPositionBehind(14)
         if bX then
             return true, bX, bY, bZ
         end 
