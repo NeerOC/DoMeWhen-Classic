@@ -181,7 +181,7 @@ function Navigation:MoveTo(toX, toY, toZ, straight)
     straight = straight or false
 
     pathIndex = 1
-    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, straight, true, 1)
+    NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, straight, false, 1)
 
     if NavPath then
         EndX, EndY, EndZ = toX, toY, toZ
@@ -190,7 +190,7 @@ end
 
 function Navigation:RandomizePosition(x, y, z, dist)
     local rx, ry, rz = GetPositionFromPosition(x, y, z, dist, math.random(20, 360), 360)
-    local CalcedPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, rx, ry, rz, true, true, 1)
+    local CalcedPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, rx, ry, rz, true, false, 1)
     local GroundX, GroundY, GroundZ = TraceLine(CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] + 2, CalcedPath[#CalcedPath][1], CalcedPath[#CalcedPath][2], CalcedPath[#CalcedPath][3] - 200, bit.bor(0x110))
     if not GroundZ and WorldPreload(GroundX, GroundY, DMW.Player.PosZ) then
         GroundZ = select(3, TraceLine(GroundX, GroundY, 9999, GroundX, GroundY, -9999, 0x110))
@@ -357,7 +357,7 @@ function Navigation:GetPositionBehind(dist)
     bZ = select(3, TraceLine(bX, bY, 9999, bX, bY, -9999, 0x110)) or 0
     if bZ then
         local hdiff = math.abs(bZ - DMW.Player.PosZ)
-        if hdiff > - 2 and hdiff < 5 and not DMW.Bot.Combat:GetUnitsNear(bX, bY, bZ) then
+        if hdiff > -3 and hdiff < 6 and not DMW.Bot.Combat:GetUnitsNear(bX, bY, bZ) then
             return bX, bY, bZ
         end
     end
