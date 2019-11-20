@@ -20,6 +20,7 @@ local RandomedWaypoint = false
 local pvpTimer
 local timerStarted = false
 local acceptedRess = false
+local LoggingOut = false
 
 local ObsDistance = 4
 local ObsFlags = bit.bor(0x1, 0x10)
@@ -311,12 +312,14 @@ function Navigation:MoveToCorpse()
     local PosX, PosY, PosZ = GetCorpsePosition()
     local DistanceToCorpse = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, PosX, PosY, PosZ)
 
-    if UnitIsDeadOrGhost('player') and DMW.Player.HP > 10 and not StaticPopup1:IsVisible() then
+    if UnitIsDeadOrGhost('player') and DMW.Player.HP > 10 and not LoggingOut then
         Logout()
+        LoggingOut = true
+        C_Timer.After(40, function() LoggingOut = false end)
         return
-    else
-        CancelLogout()
     end
+
+    if LoggingOut then return end
 
     if DistanceToCorpse > 30 then
         self:MoveTo(PosX, PosY, PosZ)
