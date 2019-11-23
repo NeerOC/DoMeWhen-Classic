@@ -388,6 +388,7 @@ function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
             end
         end
     end
+
     return false
 end
 

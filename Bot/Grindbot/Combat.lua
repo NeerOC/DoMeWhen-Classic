@@ -265,7 +265,7 @@ function Combat:InitiateAttack(Unit)
             if (not DMW.Player.Debuffs.Daze:Exist() or DMW.Player.Target and DMW.Player.Target.Rooted and #DMW.Player:Gethostiles(25) == 1) and DMW.Player.Target and #DMW.Player:GetHostiles(14) > 0 then
                 local cuSpeed,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local cpSpeed,playerSpeed = GetUnitSpeed('player')
-                if unitSpeed <= playerSpeed * 0.60 or DMW.Player.Target.Rooted then
+                if unitSpeed <= playerSpeed * 0.8 or DMW.Player.Target.Rooted then
                     -- if their speed is less than our speed -40% or they are rooted then kite
                     Kiting = true
                     local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 25, 5)
