@@ -265,11 +265,11 @@ function Combat:InitiateAttack(Unit)
             if (not DMW.Player.Debuffs.Daze:Exist() or DMW.Player.Target and DMW.Player.Target.Rooted and #DMW.Player:Gethostiles(25) == 1) and DMW.Player.Target and #DMW.Player:GetHostiles(14) > 0 then
                 local cuSpeed,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local cpSpeed,playerSpeed = GetUnitSpeed('player')
-                if unitSpeed <= playerSpeed * 0.8 or DMW.Player.Target.Rooted then
+                if unitSpeed <= playerSpeed * 0.7 or DMW.Player.Target.Rooted then
                     Kiting = true
-                    local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 25, 5)
-                    if not DMW.Player.Moving and not DMW.Player.Casting then
-                        if safeX and not self:GetUnitsNear(safeX, safeY, safeZ) then Navigation:MoveTo(safeX, safeY, safeZ) end
+                    local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 20, 5)
+                    if not DMW.Player.Moving then
+                        if safeX then Navigation:MoveTo(safeX, safeY, safeZ) end
                     end
                 end
             else
