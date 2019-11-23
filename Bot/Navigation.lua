@@ -389,6 +389,18 @@ function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
         end
     end
 
+    for i = 0, 720 do
+        local rx, ry, rz = GetPositionFromPosition(x, y, z, -distance, i, i / 2)
+        local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
+        if not hasHostile then
+            rz = select(3, TraceLine(rx, ry, 9999, rx, ry, -9999, 0x110)) or 0
+            local heightdiff = math.abs(rz - DMW.Player.PosZ)
+            if heightdiff > -3 and heightdiff < hdiff then
+                return true, rx, ry, rz
+            end
+        end
+    end
+
     return false
 end
 

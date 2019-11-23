@@ -266,13 +266,11 @@ function Combat:InitiateAttack(Unit)
                 local cuSpeed,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local cpSpeed,playerSpeed = GetUnitSpeed('player')
                 if unitSpeed <= playerSpeed * 0.8 or DMW.Player.Target.Rooted then
-                    -- if their speed is less than our speed -40% or they are rooted then kite
                     Kiting = true
                     local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 25, 5)
                     if not DMW.Player.Moving and not DMW.Player.Casting then
                         if safeX and not self:GetUnitsNear(safeX, safeY, safeZ) then Navigation:MoveTo(safeX, safeY, safeZ) end
                     end
-                    --return
                 end
             else
                 Navigation:ResetPath()
