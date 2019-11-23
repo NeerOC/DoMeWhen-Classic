@@ -165,7 +165,7 @@ function Navigation:Movement()
             --if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, lastX, lastY, lastZ) == 0 then
             if lastX == DMW.Player.PosX and lastY == DMW.Player.PosY and not DMW.Player.Swimming then
                 stuckCount = stuckCount + 1
-                if stuckCount > 50 then
+                if stuckCount > 85 then
                     Dismount()
                     if not unStucking then self:Unstuck() unStucking = true stuckCount = 0 end
                 end
