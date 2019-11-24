@@ -68,6 +68,12 @@ end
 function Gathering:Gather()
     local hasHerb, theHerb = self:HerbSearch()
     local hasOre, theOre = self:OreSearch()
+    local Enemy = DMW.Player:GetHostiles(20)[1]
+
+    if Enemy then
+        DMW.Bot.Combat:InitiateAttack(Enemy)
+        return
+    end
 
     if hasHerb then
         local Distance = GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, theHerb.PosX, theHerb.PosY, theHerb.PosZ)
