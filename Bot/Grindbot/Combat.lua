@@ -282,7 +282,6 @@ function Combat:InitiateAttack(Unit)
         end
 
         if not UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance < DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() and not Kiting then
-            print('face!')
             FaceDirection(Unit.Pointer, true)
         end
 
