@@ -38,6 +38,7 @@ function LocalPlayer:Update()
     self.HealthMax = UnitHealthMax(self.Pointer)
     self.HP = self.Health / self.HealthMax * 100
     self.Casting = CastingInfo(self.Pointer) or ChannelInfo(self.Pointer)
+    self.Wanding = IsAutoRepeatSpell(self.Spells.Shoot.SpellName)
     self.Power = UnitPower(self.Pointer)
     self.Power = self:PredictedPower()
     self.PowerMax = UnitPowerMax(self.Pointer)

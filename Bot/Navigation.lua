@@ -137,7 +137,7 @@ function Navigation:Movement()
     if IsMounted() and mountTries > 0 then mountTries = 0 end
     AscendStop()
     
-    if NavPath and not DMW.Player.Casting and not DMW.Player:HasFlag(NoMoveFlags) and not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Root) then
+    if NavPath and not DMW.Player.Casting and not DMW.Player.Wanding and not DMW.Player:HasFlag(NoMoveFlags) and not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Root) then
         DestX = NavPath[pathIndex][1]
         DestY = NavPath[pathIndex][2]
         DestZ = NavPath[pathIndex][3]
