@@ -261,13 +261,15 @@ function Combat:InitiateAttack(Unit)
         if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 and not DMW.Player.Swimming then JumpOrAscendStart() end end
 
         if DMW.Settings.profile.Grind.rangeKite and not kitePause then
+            
             if Kiting and not DMW.Player.Moving then Kiting = false end
-            if (not DMW.Player.Debuffs.Daze:Exist() or DMW.Player.Target and DMW.Player.Target.Rooted and #DMW.Player:Gethostiles(25) == 1) and DMW.Player.Target and #DMW.Player:GetHostiles(14) > 0 then
-                local cuSpeed,unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
-                local cpSpeed,playerSpeed = GetUnitSpeed('player')
-                if unitSpeed <= playerSpeed * 0.7 or DMW.Player.Target.Rooted then
+            if (not DMW.Player.Debuffs.Daze:Exist() or DMW.Player.Target and DMW.Player.Target.Rooted and #DMW.Player:Gethostiles(25) == 1) and DMW.Player.Target and DMW.Player.Target.Distance <= 14 and DMW.Player.Target.Target == DMW.Player.Pointer then
+                local cuSpeed, unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
+                local cpSpeed, playerSpeed = GetUnitSpeed('player')
+
+                if unitSpeed <= playerSpeed * 0.70 or DMW.Player.Target.Rooted then
                     Kiting = true
-                    local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 20, 5)
+                    local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 28, 5)
                     if not DMW.Player.Moving then
                         if safeX then Navigation:MoveTo(safeX, safeY, safeZ) end
                     end
