@@ -39,6 +39,8 @@ function LocalPlayer:Update()
     self.HP = self.Health / self.HealthMax * 100
     self.Casting = CastingInfo(self.Pointer) or ChannelInfo(self.Pointer)
     self.Wanding = IsAutoRepeatSpell(self.Spells.Shoot.SpellName)
+    self.Rooted = self:HasMovementFlag(DMW.Enums.MovementFlags.Root)
+    self.Disabled = self:HasMovementFlag(bit.bor(DMW.Enums.UnitFlags.Stunned, DMW.Enums.UnitFlags.Confused, DMW.Enums.UnitFlags.Pacified, DMW.Enums.UnitFlags.Feared))
     self.Power = UnitPower(self.Pointer)
     self.Power = self:PredictedPower()
     self.PowerMax = UnitPowerMax(self.Pointer)

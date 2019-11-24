@@ -263,7 +263,7 @@ function Combat:InitiateAttack(Unit)
         if DMW.Settings.profile.Grind.rangeKite and not kitePause then
             
             if Kiting and not DMW.Player.Moving then Kiting = false end
-            if (not DMW.Player.Debuffs.Daze:Exist() or DMW.Player.Target and DMW.Player.Target.Rooted and #DMW.Player:Gethostiles(25) == 1) and DMW.Player.Target and DMW.Player.Target.Distance <= 14 and DMW.Player.Target.Target == DMW.Player.Pointer then
+            if not DMW.Player.Rooted and not DMW.Player.Disabled and (not DMW.Player.Debuffs.Daze:Exist() or DMW.Player.Target and DMW.Player.Target.Rooted and #DMW.Player:Gethostiles(25) == 1) and DMW.Player.Target and DMW.Player.Target.Distance <= 14 and DMW.Player.Target.Target == DMW.Player.Pointer then
                 local cuSpeed, unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local cpSpeed, playerSpeed = GetUnitSpeed('player')
 

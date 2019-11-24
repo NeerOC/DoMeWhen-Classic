@@ -133,11 +133,10 @@ function Navigation:NodeDistance()
 end
 
 function Navigation:Movement()
-    local NoMoveFlags = bit.bor(DMW.Enums.UnitFlags.Stunned, DMW.Enums.UnitFlags.Confused, DMW.Enums.UnitFlags.Pacified, DMW.Enums.UnitFlags.Feared)
     if IsMounted() and mountTries > 0 then mountTries = 0 end
     AscendStop()
     
-    if NavPath and not DMW.Player.Casting and not DMW.Player.Wanding and not DMW.Player:HasFlag(NoMoveFlags) and not DMW.Player:HasMovementFlag(DMW.Enums.MovementFlags.Root) then
+    if NavPath and not DMW.Player.Casting and not DMW.Player.Wanding and not DMW.Player.Disabled and not DMW.Player.Rooted then
         DestX = NavPath[pathIndex][1]
         DestY = NavPath[pathIndex][2]
         DestZ = NavPath[pathIndex][3]
