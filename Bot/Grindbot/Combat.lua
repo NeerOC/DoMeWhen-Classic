@@ -94,7 +94,6 @@ end
 
 function Combat:SearchAttackable()
     -- Search for hostiles around us and attack them first.
-    
     if not self:HasTarget() then
         for _, Unit in pairs(DMW.Attackable) do
             if UnitClassification(Unit.Pointer) == 'normal' and UnitReaction(Unit.Pointer, 'player') < 4 and Unit.Distance <= Unit:AggroDistance() + 8 and not UnitIsPVP(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) then
@@ -261,9 +260,9 @@ function Combat:InitiateAttack(Unit)
         -- This is for ranged attackers
         if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 and not DMW.Player.Swimming then JumpOrAscendStart() end end
 
-        if Kiting and (not DMW.Player.Moving or DMW.Player.Rooted or DMW.Player.Disabled) then Kiting = false end
+        if Kiting and (not DMW.Player.Moving or DMW.Player.Rooted or DMW.Player.Disabled or DMW.Player.Dazed) then Kiting = false end
         if DMW.Settings.profile.Grind.rangeKite and not kitePause then
-            if not DMW.Player.Rooted and not DMW.Player.Disabled and (not DMW.Player.Debuffs.Daze:Exist() or DMW.Player.Target and DMW.Player.Target.Rooted and #DMW.Player:Gethostiles(25) == 1) and DMW.Player.Target and DMW.Player.Target.Distance <= 14 and DMW.Player.Target.Target == DMW.Player.Pointer then
+            if not DMW.Player.Rooted and not DMW.Player.Disabled and (not DMW.Player.Dazed or DMW.Player.Target and DMW.Player.Target.Rooted and #DMW.Player:Gethostiles(25) == 1) and DMW.Player.Target and DMW.Player.Target.Distance <= 14 and DMW.Player.Target.Target == DMW.Player.Pointer then
                 local cuSpeed, unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local cpSpeed, playerSpeed = GetUnitSpeed('player')
 
