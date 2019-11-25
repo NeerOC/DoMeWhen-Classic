@@ -5,6 +5,7 @@ local Navigation = DMW.Bot.Navigation
 local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 
+local facePause = false
 local Kiting = false
 local kitePause = false
 local Juggling = false
@@ -282,7 +283,11 @@ function Combat:InitiateAttack(Unit)
         end
 
         if not UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance < DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() and not Kiting then
-            FaceDirection(Unit.Pointer, true)
+            if not facePause then
+                FaceDirection(Unit.Pointer, true)
+                facePause = true
+                C_Timer.After(0.1, function() facePause = false end)
+            end
         end
 
         if Unit.Distance <= DMW.Settings.profile.Grind.CombatDistance and IsMounted() then
@@ -293,7 +298,11 @@ function Combat:InitiateAttack(Unit)
         if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance + 3 and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 and not DMW.Player.Swimming then JumpOrAscendStart() end end
 
         if not UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
-            FaceDirection(Unit.Pointer, true)
+            if not facePause then
+                FaceDirection(Unit.Pointer, true)
+                facePause = true
+                C_Timer.After(0.1, function() facePause = false end)
+            end
         elseif UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
             -- If random is true then if theres not adds around us, juggle the enemy(Strafe) 
             if math.random(1, 1000) < 4 and DMW.Settings.profile.Grind.beHuman and not DMW.Player.Casting then
