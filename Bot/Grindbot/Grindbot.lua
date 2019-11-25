@@ -421,15 +421,17 @@ function Grindbot:SwapMode()
 end
 
 function Grindbot:SetFoodAndWater()
-    if DMW.Player.Class == 'MAGE' then
-        if DMW.Settings.profile.Grind.autoFood and DMW.Settings.profile.Grind.FoodName ~= getBestFood() then
-            DMW.Settings.profile.Grind.FoodName = getBestFood()
-            Log:DebugInfo('Automatically set your food to ' .. getBestFood())
-        end
+    if getBestFood() and getBestWater() then
+        if DMW.Player.Class == 'MAGE' then
+            if DMW.Settings.profile.Grind.autoFood and DMW.Settings.profile.Grind.FoodName ~= getBestFood() then
+                DMW.Settings.profile.Grind.FoodName = getBestFood()
+                Log:DebugInfo('Automatically set your food to ' .. getBestFood())
+            end
 
-        if DMW.Settings.profile.Grind.autoWater and DMW.Settings.profile.Grind.WaterName ~= getBestWater() then
-            DMW.Settings.profile.Grind.WaterName = getBestWater()
-            Log:DebugInfo('Automatically set your water to ' .. getBestWater())
+            if DMW.Settings.profile.Grind.autoWater and DMW.Settings.profile.Grind.WaterName ~= getBestWater() then
+                DMW.Settings.profile.Grind.WaterName = getBestWater()
+                Log:DebugInfo('Automatically set your water to ' .. getBestWater())
+            end
         end
     end
 end
