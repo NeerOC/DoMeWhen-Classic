@@ -94,11 +94,9 @@ end
 
 function Combat:SearchAttackable()
     -- Search for hostiles around us and attack them first.
-    if not DMW.Player.Target then
-        for _, Unit in pairs(DMW.Attackable) do
-            if UnitClassification(Unit.Pointer) == 'normal' and UnitReaction(Unit.Pointer, 'player') < 4 and Unit.Distance <= Unit:AggroDistance() + 8 and not UnitIsPVP(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) then
-                return true, Unit
-            end
+    for _, Unit in pairs(DMW.Attackable) do
+        if UnitClassification(Unit.Pointer) == 'normal' and UnitReaction(Unit.Pointer, 'player') < 4 and Unit.Distance <= Unit:AggroDistance() + 10 and not UnitIsPVP(Unit.Pointer) and not UnitIsTapDenied(Unit.Pointer) then
+            return true, Unit
         end
     end
 
@@ -158,7 +156,7 @@ function Combat:SearchEnemy()
             -- Totems first
             if UnitCreatureTypeID(Unit.Pointer) == 11 or UnitCreatureTypeID(Unit.Pointer) == 10 then
                 for _, totemLord in ipairs(Table) do
-                    if ObjectCreator(Unit.Pointer) == totemLord.Pointer or UnitIsDead(ObjectCreator(Unit.Pointer)) then
+                    if ObjectCreator(Unit.Pointer) == totemLord.Pointer or ObjectCreator(Unit.Pointer) and UnitIsDead(ObjectCreator(Unit.Pointer)) then
                         return true, Unit
                     end
                 end
@@ -267,14 +265,14 @@ function Combat:InitiateAttack(Unit)
     if DMW.Settings.profile.Grind.CombatDistance > 9 then
         -- This is for ranged attackers
         if DMW.Settings.profile.Grind.beHuman and Unit.Distance > DMW.Settings.profile.Grind.CombatDistance and self:CanSeeUnit(Unit) and UnitIsFacing('player', Unit.Pointer, 60) and DMW.Player.Moving then if math.random(1, 1000) < 4 and not DMW.Player.Swimming then JumpOrAscendStart() end end
-
-        if Kiting and (not DMW.Player.Moving or DMW.Player.Rooted or DMW.Player.Disabled or DMW.Player.Dazed) then Kiting = false end
+        if Kiting and (not DMW.Player.Moving or DMW.Player.Rooted or DMW.Player.Disabled) then Kiting = false end
         if DMW.Settings.profile.Grind.rangeKite and not kitePause then
-            if not DMW.Player.Rooted and not DMW.Player.Disabled and (not DMW.Player.Dazed or DMW.Player.Target and DMW.Player.Target.Rooted and #DMW.Player:Gethostiles(25) == 1) and DMW.Player.Target and DMW.Player.Target.Distance <= 14 and DMW.Player.Target.Target == DMW.Player.Pointer then
+            if not DMW.Player.Rooted and not DMW.Player.Disabled and (not DMW.Player.Dazed or DMW.Player.Target and DMW.Player.Target.Rooted and #DMW.Player:GetHostiles(25) == 1) and DMW.Player.Target and DMW.Player.Target.Distance <= 14 and DMW.Player.Target.Target == DMW.Player.Pointer then
                 local cuSpeed, unitSpeed = GetUnitSpeed(DMW.Player.Target.Pointer)
                 local cpSpeed, playerSpeed = GetUnitSpeed('player')
 
-                if unitSpeed <= playerSpeed * 0.70 or DMW.Player.Target.Rooted then
+                if unitSpeed/playerSpeed < 0.7 or DMW.Player.Target.Rooted then
+                    if unitSpeed/playerSpeed < 0.6 then print(unitSpeed/playerSpeed) end
                     Kiting = true
                     local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 28, 5)
                     if not DMW.Player.Moving then
@@ -282,6 +280,7 @@ function Combat:InitiateAttack(Unit)
                     end
                 end
             else
+                Navigation:StopMoving()
                 Navigation:ResetPath()
                 kitePause = true
                 C_Timer.After(1, function() kitePause = false end)
