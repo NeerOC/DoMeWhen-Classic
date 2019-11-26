@@ -272,7 +272,6 @@ function Combat:InitiateAttack(Unit)
                 local cpSpeed, playerSpeed = GetUnitSpeed('player')
 
                 if unitSpeed/playerSpeed < 0.7 or DMW.Player.Target.Rooted then
-                    if unitSpeed/playerSpeed < 0.6 then print(unitSpeed/playerSpeed) end
                     Kiting = true
                     local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 28, 5)
                     if not DMW.Player.Moving then
