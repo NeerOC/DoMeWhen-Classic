@@ -874,7 +874,7 @@ local Options = {
                         order = 2,
                         name = "Draw Hotspots",
                         desc = "Draw the hotspots we've placed",
-                        width = 0.7,
+                        width = 0.75,
                         get = function()
                             return DMW.Settings.profile.Grind.drawHotspots
                         end,
