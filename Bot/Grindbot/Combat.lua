@@ -103,7 +103,7 @@ function Combat:SearchAttackable()
     -- Anti fucking wobble anoying fucking shit
     if DMW.Player.Target then
         local Enemy = DMW.Player.Target
-        if not UnitIsTapDenied(Enemy.Pointer) and not UnitIsDeadOrGhost(Enemy.Pointer) then
+        if not UnitIsTapDenied(Enemy.Pointer) and not UnitIsDeadOrGhost(Enemy.Pointer) and Enemy.Attackable then
             return true, Enemy
         end
     end
