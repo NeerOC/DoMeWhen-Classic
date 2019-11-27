@@ -71,6 +71,8 @@ function getBestFood()
             return select(1, GetItemInfo(8076))
         elseif FoodRank == 7 then
             return select(1, GetItemInfo(22895))
+        else
+            return ""
         end
     else
         for k,v in pairs(DMW.Enums.Foodlist) do
@@ -113,6 +115,8 @@ function getBestWater()
             return GetItemInfo(8078)
         elseif waterRank == 7 then
             return GetItemInfo(8079)
+        else
+            return ""
         end
     end
 
