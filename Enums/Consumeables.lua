@@ -58,39 +58,39 @@ function getBestFood()
     if DMW.Player.Class == 'MAGE' then
         local FoodRank = DMW.Player.Spells.ConjureFood:HighestRank()
         if FoodRank == 1 then
-            return GetItemInfo(5349)
+            return select(1, GetItemInfo(5349))
         elseif FoodRank == 2 then
-            return GetItemInfo(1113)
+            return select(1, GetItemInfo(1113))
         elseif FoodRank == 3 then
-            return GetItemInfo(1114)
+            return select(1, GetItemInfo(1114))
         elseif FoodRank == 4 then
-            return GetItemInfo(1487)
+            return select(1, GetItemInfo(1487))
         elseif FoodRank == 5 then
-            return GetItemInfo(8075)
+            return select(1, GetItemInfo(8075))
         elseif FoodRank == 6 then
-            return GetItemInfo(8076)
+            return select(1, GetItemInfo(8076))
         elseif FoodRank == 7 then
-            return GetItemInfo(22895)
+            return select(1, GetItemInfo(22895))
         end
-    end
-    
-    for k,v in pairs(DMW.Enums.Foodlist) do
-        if playerLevel >= 45 then
-            if v.LevelReq == 45 then table.insert(bestFood, v.Name) end
-        elseif playerLevel < 45 and playerLevel >= 35 then
-            if v.LevelReq == 35 then table.insert(bestFood, v.Name) end
-        elseif playerLevel < 35 and playerLevel >= 25 then
-            if v.LevelReq == 25 then table.insert(bestFood, v.Name) end
-        elseif playerLevel < 25 and playerLevel >= 15 then
-            if v.LevelReq == 15 then table.insert(bestFood, v.Name) end
-        elseif playerLevel < 15 and playerLevel >= 5 then
-            if v.LevelReq == 5 then table.insert(bestFood, v.Name) end
-        else
-            if v.LevelReq == 1 then table.insert(bestFood, v.Name) end
+    else
+        for k,v in pairs(DMW.Enums.Foodlist) do
+            if playerLevel >= 45 then
+                if v.LevelReq == 45 then table.insert(bestFood, v.Name) end
+            elseif playerLevel < 45 and playerLevel >= 35 then
+                if v.LevelReq == 35 then table.insert(bestFood, v.Name) end
+            elseif playerLevel < 35 and playerLevel >= 25 then
+                if v.LevelReq == 25 then table.insert(bestFood, v.Name) end
+            elseif playerLevel < 25 and playerLevel >= 15 then
+                if v.LevelReq == 15 then table.insert(bestFood, v.Name) end
+            elseif playerLevel < 15 and playerLevel >= 5 then
+                if v.LevelReq == 5 then table.insert(bestFood, v.Name) end
+            else
+                if v.LevelReq == 1 then table.insert(bestFood, v.Name) end
+            end
         end
-    end
 
-    return bestFood
+        return bestFood
+    end
 end
 
 function getBestWater()
