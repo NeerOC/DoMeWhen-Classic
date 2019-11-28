@@ -5,6 +5,7 @@ local Navigation = DMW.Bot.Navigation
 local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
 
+local blackListPause = false
 local facePause = false
 local Kiting = false
 local kitePause = false
@@ -247,10 +248,12 @@ function Combat:InitiateAttack(Unit)
         if Navigation:ReturnPathEnd() ~= nil then
             local endX, endY, endZ = Navigation:ReturnPathEnd()
             local endPathToUnitDist = GetDistanceBetweenPositions(Unit.PosX, Unit.PosY, Unit.PosZ, endX, endY, endZ)
-            if endPathToUnitDist > 4 then
+            if endPathToUnitDist > 4 and not blackListPause then
                 -- Blacklist unit
-                Log:SevereInfo('Added Unit to badBlacklist')
+                Log:SevereInfo('Added Unit to badBlacklist ' .. ' End Distance: ' .. endPathToUnitDist)
                 table.insert(badBlacklist, Unit.Pointer)
+                blackListPause = true
+                C_Timer.After(1.5, function() blackListPause = false end)
             end
         end
     else
