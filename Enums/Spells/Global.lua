@@ -5,6 +5,7 @@ DMW.Enums.Spells = {
         Abilities = {
             Attack = {Ranks = {6603}},
             Shoot = {Ranks = {5019}},
+            Fishing = {Ranks = {7620, 7731, 7732, 18248}},
             --Racials
             BloodFury = {Ranks = {20572}},
             BerserkingTroll = {Ranks = {20554}},
