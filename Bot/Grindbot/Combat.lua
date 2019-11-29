@@ -250,7 +250,7 @@ function Combat:InitiateAttack(Unit)
             local endPathToUnitDist = GetDistanceBetweenPositions(Unit.PosX, Unit.PosY, Unit.PosZ, endX, endY, endZ)
             if endPathToUnitDist > 4 and not blackListPause then
                 -- Blacklist unit
-                Log:SevereInfo('Added Unit to badBlacklist ' .. ' End Distance: ' .. endPathToUnitDist)
+                Log:SevereInfo('Added Unit to badBlacklist ' .. ' End Distance: ' .. math.floor(endPathToUnitDist))
                 table.insert(badBlacklist, Unit.Pointer)
                 blackListPause = true
                 C_Timer.After(1.5, function() blackListPause = false end)
