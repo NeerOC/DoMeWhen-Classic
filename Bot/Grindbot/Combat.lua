@@ -278,7 +278,9 @@ function Combat:InitiateAttack(Unit)
                     Kiting = true
                     local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 28, 5)
                     if not DMW.Player.Moving then
-                        if safeX then Navigation:MoveTo(safeX, safeY, safeZ) end
+                        if safeX then
+                            Navigation:MoveTo(safeX, safeY, safeZ) 
+                        end
                     end
                 end
             else

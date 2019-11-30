@@ -4,10 +4,11 @@ local Fishbot = DMW.Bot.Fishbot
 local Log = DMW.Bot.Log
 
 local AnimationOffset = 0
+local CastPause = false
 
 function Fishbot:Pulse()
     if AnimationOffset == 0 then AnimationOffset = GetOffset("CGGameObject_C__Animation") end
-    if not IsEquippedItemType("Fishing Poles") then Log:SevereInfo('No Fishing Pole Equipped!') return end
+    if not IsEquippedItemType("Fishing Pole") then Log:SevereInfo('No Fishing Pole Equipped!') return end
     self:Fish()
 end
 
@@ -32,10 +33,10 @@ function Fishbot:Fish()
         end
     else
         if not DMW.Player.Casting then
-            if DMW.Player.Spells.Fishing:IsReady() and DMW.Player.Spells.Fishing:TimeSinceLastCast() > 0.7 then
-                if DMW.Player.Spells.Fishing:Cast() then
-                    return true
-                end
+            if DMW.Player.Spells.Fishing:IsReady() and not CastPause then
+                DMW.Player.Spells.Fishing:FacingCast(DMW.Player)
+                CastPause = true
+                C_Timer.After(0.8, function() CastPause = false end)
             end
         end
     end
