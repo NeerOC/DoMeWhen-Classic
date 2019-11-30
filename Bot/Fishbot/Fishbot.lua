@@ -7,7 +7,7 @@ local AnimationOffset = 0
 local CastPause = false
 
 function Fishbot:Pulse()
-    if AnimationOffset == 0 then AnimationOffset = GetOffset("CGGameObject_C__Animation") end
+    if AnimationOffset == 0 or not AnimationOffset then AnimationOffset = GetOffset("CGGameObject_C__Animation") end
     if not IsEquippedItemType("Fishing Pole") then Log:SevereInfo('No Fishing Pole Equipped!') return end
     self:Fish()
 end
