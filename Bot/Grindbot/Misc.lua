@@ -14,25 +14,27 @@ local mapX, mapY, mapZ
 
 function Misc:ClamTask()
     -- instantly opens clams and deletes meat
-    for BagID = 0, 4 do
-        for BagSlot = 1, GetContainerNumSlots(BagID) do
-            CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
-            if CurrentItemLink then
-                name = GetItemInfo(CurrentItemLink)
-                if string.find(name, 'Clam Meat') then
-                    PickupContainerItem(BagID,BagSlot); 
-                    DeleteCursorItem();
-                    return
-                end
-                
-                if name == 'Big-mouth Clam' or name == 'Thick-shelled Clam' or name == 'Small Barnacled Clam' then
-                    UseContainerItem(BagID, BagSlot)
-                    return
+    if not DMW.Player.Casting then
+        for BagID = 0, 4 do
+            for BagSlot = 1, GetContainerNumSlots(BagID) do
+                CurrentItemLink = GetContainerItemLink(BagID, BagSlot)
+                if CurrentItemLink then
+                    name = GetItemInfo(CurrentItemLink)
+                    if string.find(name, 'Clam Meat') then
+                        PickupContainerItem(BagID,BagSlot); 
+                        DeleteCursorItem();
+                        return
+                    end
+                    
+                    if name == 'Big-mouth Clam' or name == 'Thick-shelled Clam' or name == 'Small Barnacled Clam' then
+                        UseContainerItem(BagID, BagSlot)
+                        return
+                    end
                 end
             end
         end
+        self:LootAllSlots()
     end
-    self:LootAllSlots()
 end
 
 function Misc:LootAllSlots()
