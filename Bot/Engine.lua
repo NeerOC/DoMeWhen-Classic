@@ -10,6 +10,7 @@ local Log = DMW.Bot.Log
 local Ready = false
 local folderChecks = false
 local readItemFile = false
+local passwordSet = false
 
 -- Let's not have flashing icons, can get anoying :)
 FlashClientIcon = function() end
@@ -18,6 +19,8 @@ function Engine:Pulse()
     -- Lets draw visuals if the user made the choice.
     if DMW.Settings.profile.HUD.DrawVisuals == 1 then Navigation:DrawVisuals() end
     if not IsHackEnabled('antiafk') then SetHackEnabled ('antiafk', true) Log:DebugInfo('AntiAFK Enabled') end
+    if not IsHackEnabled('relog') then SetHackEnabled ('relog', true) Log:DebugInfo('Auto Relog Enabled') end
+    if not passwordSet and DMW.Settings.profile.Lilium.Password ~= "" then RunMacroText('.login ' .. DMW.Settings.profile.Lilium.Password) Log:DebugInfo('Auto Relog Set With Password Specified') passwordSet = true end
     if not folderChecks then self:SetupFolders() folderChecks = true end
     if not readItemFile then self:LoadFile() SetProfiles() readItemFile = true C_Timer.After(1, function() readItemFile = false end) end
     Navigation:Movement()

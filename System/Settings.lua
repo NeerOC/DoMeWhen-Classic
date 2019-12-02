@@ -34,6 +34,9 @@ local defaults = {
             AutoSkinning = false,
             AutoGather = false,
         },
+        Lilium = {
+            Password = ""
+        },
         Grind = {
             FoodVendorX = 0,
             FoodVendorY = 0,

@@ -40,5 +40,4 @@ function Fishbot:Fish()
             end
         end
     end
-
 end

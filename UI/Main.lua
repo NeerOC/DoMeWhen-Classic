@@ -1493,72 +1493,91 @@ local Options = {
                     }
                 }
             },
-                ProfilesTab = {
-                    name = "Profiles",
-                    type = "group",
-                    order = 5,
-                    args = {
-                        loadedProfiles = {
-                            type = "select",
-                            order = 1,
-                            name = "Profiles",
-                            desc = "Loaded Profiles From Profiles Folder",
-                            width = "full",
-                            values = {},
-                            style = "dropdown",
-                            get = function()
-                                return currentProfile
-                            end,
-                            set = function(info, value)
-                                currentProfile = value
+            ProfilesTab = {
+                name = "Profiles",
+                type = "group",
+                order = 5,
+                args = {
+                    loadedProfiles = {
+                        type = "select",
+                        order = 1,
+                        name = "Profiles",
+                        desc = "Loaded Profiles From Profiles Folder",
+                        width = "full",
+                        values = {},
+                        style = "dropdown",
+                        get = function()
+                            return currentProfile
+                        end,
+                        set = function(info, value)
+                            currentProfile = value
+                        end
+                    },
+                    loadProfiles = {
+                        type = "execute",
+                        order = 2,
+                        name = "Load Profile",
+                        desc = "Load Profiles Located In Lilium/Grindbot/Profiles",
+                        width = "full",
+                        func = function()
+                            LoadProfile()
+                        end
+                    },
+                    profileSpacer = {
+                        type = "header",
+                        order = 3,
+                        name = ""
+                    },
+                    profileNom = {
+                        type = "input",
+                        order = 4,
+                        name = "Profile Name",
+                        desc = "Name Of The Profile To Save As",
+                        width = "full",
+                        get = function()
+                            return profileName
+                        end,
+                        set = function(info, value)
+                            profileName = value
+                        end
+                    },
+                    saveProfile = {
+                        type = "execute",
+                        order = 5,
+                        name = "Save Profile",
+                        desc = "Save Your Profile",
+                        width = "full",
+                        func = function()
+                            if profileName and profileName ~= "" then
+                                DMW.Bot.Log:DebugInfo('Saved file [' .. profileName .. ']')
+                                SaveProfile(profileName)
+                            else
+                                DMW.Bot.Log:DebugInfo('Invalid FileName')
                             end
-                        },
-                        loadProfiles = {
-                            type = "execute",
-                            order = 2,
-                            name = "Load Profile",
-                            desc = "Load Profiles Located In Lilium/Grindbot/Profiles",
-                            width = "full",
-                            func = function()
-                                LoadProfile()
-                            end
-                        },
-                        profileSpacer = {
-                            type = "header",
-                            order = 3,
-                            name = ""
-                        },
-                        profileNom = {
-                            type = "input",
-                            order = 4,
-                            name = "Profile Name",
-                            desc = "Name Of The Profile To Save As",
-                            width = "full",
-                            get = function()
-                                return profileName
-                            end,
-                            set = function(info, value)
-                                profileName = value
-                            end
-                        },
-                        saveProfile = {
-                            type = "execute",
-                            order = 5,
-                            name = "Save Profile",
-                            desc = "Save Your Profile",
-                            width = "full",
-                            func = function()
-                                if profileName and profileName ~= "" then
-                                    DMW.Bot.Log:DebugInfo('Saved file [' .. profileName .. ']')
-                                    SaveProfile(profileName)
-                                else
-                                    DMW.Bot.Log:DebugInfo('Invalid FileName')
-                                end
-                            end
-                        },
-                        
+                        end
+                    }
+                    }
+                },
+            UserTab = {
+                name = "Login",
+                type = "group",
+                order = 6,
+                args = {
+                    userPass = {
+                        type = "input",
+                        order = 1,
+                        name = "Account Password",
+                        desc = "Password to your account. (RELOG IS ENABLED BY DEFAULT)",
+                        width = "full",
+                        get = function()
+                            return DMW.Settings.profile.Lilium.Password
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Lilium.Password = value
+                        end
                     }
                 }
+            }
             }
         }
     }
