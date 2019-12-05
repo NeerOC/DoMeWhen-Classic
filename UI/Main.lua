@@ -957,19 +957,6 @@ local Options = {
                             DMW.Settings.profile.Grind.ignoreWhispers = value
                         end
                     },
-                    ignoreLOS = {
-                        type = "toggle",
-                        order = 10,
-                        name = "Skip LOS",
-                        desc = "If you find yourself wobbling between enemies, it might be because of LOS.",
-                        width = 0.6,
-                        get = function()
-                            return DMW.Settings.profile.Grind.skipLos
-                        end,
-                        set = function(info, value)
-                            DMW.Settings.profile.Grind.skipLos = value
-                        end
-                    },
                     otherSpacer = {
                         type = "header",
                         order = 11,

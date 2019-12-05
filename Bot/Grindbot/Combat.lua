@@ -57,8 +57,10 @@ function Combat:IsGoodUnit(unit)
     local minLvl = UnitLevel('player') - DMW.Settings.profile.Grind.minNPCLevel
     local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
     local UnitFlags = UnitMovementFlags(unit)
+    local uX, uY, uZ = ObjectPosition(unit)
     
     local Flags = {
+        inLOS = TraceLine(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ + 1.5, uX, uY, uZ + 1.5, 0x100111) == nil,
         notSwimming = not UnitFlags or bit.band(UnitFlags, DMW.Enums.MovementFlags.Swimming) == 0,
         notUnitBad = not self:UnitBad(unit),
         notBlacklisted = not self:BlacklistedUnit(UnitName(unit)),
@@ -111,7 +113,7 @@ function Combat:SearchAttackable()
 
     local Table = {}
     for _, Unit in pairs(DMW.Units) do
-        if Unit.Distance < 80 and UnitClassification(Unit.Pointer) == 'normal' and self:IsGoodUnit(Unit.Pointer) and (Unit:LineOfSight() or DMW.Settings.profile.Grind.skipLOS) and #Unit:GetHostiles(20) < 2 then
+        if Unit.Distance < 80 and UnitClassification(Unit.Pointer) == 'normal' and self:IsGoodUnit(Unit.Pointer) and #Unit:GetHostiles(20) < 2 then
             table.insert(Table, Unit)
         end
     end

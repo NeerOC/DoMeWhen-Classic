@@ -180,8 +180,8 @@ function LibDraw.Draw2DLine(sx, sy, ex, ey)
 
 end
 
-local full_circle = rad(365)
-local small_circle_step = rad(3)
+local full_circle = rad(360)
+local small_circle_step = rad(25)
 
 function LibDraw.Circle(x, y, z, size)
 	local lx, ly, nx, ny, fx, fy = false, false, false, false, false, false

@@ -199,7 +199,7 @@ function Navigation:RandomizePosition(x, y, z, dist)
         GroundZ = select(3, TraceLine(GroundX, GroundY, 9999, GroundX, GroundY, -9999, 0x110))
     end
 
-    if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, GroundX, GroundY, GroundZ) < 200 then
+    if GroundX and GroundZ and GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, GroundX, GroundY, GroundZ) < 200 then
         return GroundX, GroundY, GroundZ
     else
         return false
@@ -377,7 +377,8 @@ end
 function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
     if DMW.Player.Combat then
         local bX, bY, bZ = self:GetPositionBehind(14)
-        if bX then
+        local inWater = TraceLine(bX, bY, bZ, bX, bY, bZ - 100, 0x10000)
+        if bX and not inWater then
             return true, bX, bY, bZ
         end 
     end
@@ -385,7 +386,9 @@ function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
     for i = 0, 3000 do
         local rx, ry, rz = GetPositionFromPosition(x, y, z, -distance, i, i / 1000)
         local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
-        if not hasHostile then
+        local inWater = TraceLine(rx, ry, rz, rx, ry, rz - 100, 0x10000)
+
+        if not hasHostile and not inWater then
             rz = select(3, TraceLine(rx, ry, 9999, rx, ry, -9999, 0x110)) or 0
             local heightdiff = math.abs(rz - DMW.Player.PosZ)
             if heightdiff > -3 and heightdiff < hdiff then
@@ -397,7 +400,9 @@ function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
     for i = 0, 3000 do
         local rx, ry, rz = GetPositionFromPosition(x, y, z, distance, i, i / 1000)
         local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
-        if not hasHostile then
+        local inWater = TraceLine(rx, ry, rz, rx, ry, rz - 100, 0x10000)
+
+        if not hasHostile and not inWater then
             rz = select(3, TraceLine(rx, ry, 9999, rx, ry, -9999, 0x110)) or 0
             local heightdiff = math.abs(rz - DMW.Player.PosZ)
             if heightdiff > -3 and heightdiff < hdiff then

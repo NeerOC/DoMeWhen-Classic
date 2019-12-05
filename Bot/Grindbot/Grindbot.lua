@@ -177,6 +177,7 @@ function Grindbot:Pulse()
     -- Call the enable and disable function of rotation when going to and from vendor.
     Misc:RotationToggle()
     if DMW.Player.Casting then self:ResetMoveToLoot() end -- Reset if casting
+    self:AntiCampfire()
 
     if not InformationOutput then
         Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]') 
@@ -241,6 +242,15 @@ function Grindbot:DisabledFunctions()
     Navigation:SortHotspots()
     if InformationOutput then InformationOutput = false end
     ModeFrame.text:SetText('Disabled')
+end
+
+function Grindbot:AntiCampfire()
+    for _, Object in pairs(DMW.GameObjects) do
+        if Object.Name == "Campfire" and Object.Distance <= 5 then
+            local px, py, pz = ObjectPosition('player')
+            MoveTo(px + 5, py + 5, pz + 1)
+        end
+    end
 end
 
 function Grindbot:GetLoot()
