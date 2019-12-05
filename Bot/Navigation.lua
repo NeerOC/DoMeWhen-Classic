@@ -377,7 +377,7 @@ end
 function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
     if DMW.Player.Combat then
         local bX, bY, bZ = self:GetPositionBehind(14)
-        local inWater = TraceLine(bX, bY, bZ, bX, bY, bZ - 100, 0x10000)
+        local inWater = bX and TraceLine(bX, bY, bZ, bX, bY, bZ - 100, 0x10000) == nil
         if bX and not inWater then
             return true, bX, bY, bZ
         end 
