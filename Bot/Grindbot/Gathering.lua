@@ -16,7 +16,6 @@ function Gathering:NodeNearHotspot(Node)
     return false
 end
 
-
 function Gathering:HerbSearch()
     local Table = {}
     for _, Object in pairs(DMW.GameObjects) do
