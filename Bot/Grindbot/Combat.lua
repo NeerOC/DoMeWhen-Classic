@@ -60,7 +60,7 @@ function Combat:IsGoodUnit(unit)
     local uX, uY, uZ = ObjectPosition(unit)
     
     local Flags = {
-        inLOS = TraceLine(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ + 1.5, uX, uY, uZ + 1.5, 0x100111) == nil,
+        --inLOS = TraceLine(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ + 1.5, uX, uY, uZ + 1.5, 0x100111) == nil,
         notSwimming = not UnitFlags or bit.band(UnitFlags, DMW.Enums.MovementFlags.Swimming) == 0,
         notUnitBad = not self:UnitBad(unit),
         notBlacklisted = not self:BlacklistedUnit(UnitName(unit)),
@@ -69,7 +69,7 @@ function Combat:IsGoodUnit(unit)
         noTargetOrMeOrPet = UnitTarget(unit) == nil or UnitIsUnit(UnitTarget(unit), 'player') or UnitIsUnit(UnitTarget(unit), 'pet'),
         isLevel = DMW.Settings.profile.Grind.attackAny or UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
         isPVP = not UnitIsPVP(unit),
-        inRange = self:UnitNearHotspot(unit),
+        --inRange = self:UnitNearHotspot(unit),
         notDead = not UnitIsDeadOrGhost(unit),
         notPlayer = not ObjectIsPlayer(unit),
         canAttack = UnitCanAttack("player", unit),
@@ -113,7 +113,7 @@ function Combat:SearchAttackable()
 
     local Table = {}
     for _, Unit in pairs(DMW.Units) do
-        if Unit.Distance < 80 and UnitClassification(Unit.Pointer) == 'normal' and self:IsGoodUnit(Unit.Pointer) and #Unit:GetHostiles(20) < 2 then
+        if Unit.Distance < 80 and UnitClassification(Unit.Pointer) == 'normal' and self:IsGoodUnit(Unit.Pointer) and #Unit:GetHostiles(20) < 2 and Unit.NavDistance < DMW.Settings.profile.Grind.RoamDistance * 1.5 then
             table.insert(Table, Unit)
         end
     end
