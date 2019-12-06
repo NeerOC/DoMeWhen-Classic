@@ -199,7 +199,7 @@ function Navigation:RandomizePosition(x, y, z, dist)
         GroundZ = select(3, TraceLine(GroundX, GroundY, 9999, GroundX, GroundY, -9999, 0x110))
     end
 
-    if GroundX and GroundZ and GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, GroundX, GroundY, GroundZ) < 200 then
+    if GroundX and GroundZ then
         return GroundX, GroundY, GroundZ
     else
         return false
@@ -210,6 +210,7 @@ function Navigation:GrindRoam()
     local HotSpots = DMW.Settings.profile.Grind.HotSpots
 
     if not RandomedWaypoint and DMW.Settings.profile.Grind.randomizeWaypoints and self:NearHotspot(150) then
+        
         WaypointX, WaypointY, WaypointZ = self:RandomizePosition(HotSpots[HotSpotIndex].x, HotSpots[HotSpotIndex].y, HotSpots[HotSpotIndex].z, DMW.Settings.profile.Grind.randomizeWaypointDistance)
         if WaypointX and WaypointZ then RandomedWaypoint = true end
         return
@@ -217,7 +218,9 @@ function Navigation:GrindRoam()
 
     if DMW.Settings.profile.Grind.randomizeWaypoints and self:NearHotspot(150) then
         local PX, PY, PZ = ObjectPosition('player')
+        
         if WaypointX and WaypointY and WaypointZ then 
+            
             self:MoveTo(WaypointX, WaypointY, WaypointZ)
             local Distance = GetDistanceBetweenPositions(PX, PY, PZ, WaypointX, WaypointY, WaypointZ)
             if HotSpotIndex == #HotSpots and Distance < 5 then
