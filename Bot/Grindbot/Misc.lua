@@ -59,6 +59,11 @@ function Misc:DeleteTask()
             end
         end
     end
+    -- Uses oozing bags
+    if self:HasItem('Oozing Bag') then
+        UseItemByName('Oozing Bag')
+        self:LootAllSlots()
+    end
 end
 
 function Misc:Hotspotter()

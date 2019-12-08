@@ -248,7 +248,7 @@ function Grindbot:AntiCampfire()
     for _, Object in pairs(DMW.GameObjects) do
         if Object.Name == "Campfire" and Object.Distance <= 5 then
             local px, py, pz = ObjectPosition('player')
-            MoveTo(px + 5, py + 5, pz + 1)
+            MoveTo(px + 5, py + 5, pz + 1, true)
         end
     end
 end
@@ -291,7 +291,6 @@ function Grindbot:GetLoot()
             end
         end
     end
-
     Misc:LootAllSlots()
 end
 
