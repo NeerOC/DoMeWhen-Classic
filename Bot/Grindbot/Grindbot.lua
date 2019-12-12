@@ -232,7 +232,7 @@ function Grindbot:Pulse()
 
     if Grindbot.Mode == Modes.Idle then
         Navigation:StopMoving()
-        ModeFrame.text:SetText('Rotation?')
+        ModeFrame.text:SetText('Rotation')
     end
 end
 
@@ -300,8 +300,8 @@ function Grindbot:ResetMoveToLoot()
 end
 
 function Grindbot:Rest()
-    local Eating = AuraUtil.FindAuraByName('Food', 'player')
-    local Drinking = AuraUtil.FindAuraByName('Drink', 'player')
+    local Eating = DMW.Player.Eating
+    local Drinking = DMW.Player.Drinking
 
     if DMW.Player.Moving then Navigation:StopMoving() return end
     if DMW.Player.Casting then return end

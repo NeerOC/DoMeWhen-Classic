@@ -140,7 +140,7 @@ end
 function Combat:SearchEnemy()
     local Table = {}
     for _, Unit in pairs(DMW.Attackable) do
-        if Unit.Distance < 60 then
+        if Unit.Distance < 100 then
             table.insert(Table, Unit)
         end
     end

@@ -38,6 +38,8 @@ function LocalPlayer:Update()
     self.HealthMax = UnitHealthMax(self.Pointer)
     self.HP = self.Health / self.HealthMax * 100
     self.Casting = CastingInfo(self.Pointer) or ChannelInfo(self.Pointer)
+    self.Drinking = AuraUtil.FindAuraByName('Drink', 'player')
+    self.Eating = AuraUtil.FindAuraByName('Food', 'player')
     self.Wanding = IsAutoRepeatSpell(self.Spells.Shoot.SpellName)
     self.Rooted = self:HasMovementFlag(DMW.Enums.MovementFlags.Root)
     self.Disabled = self:HasMovementFlag(bit.bor(DMW.Enums.UnitFlags.Stunned, DMW.Enums.UnitFlags.Confused, DMW.Enums.UnitFlags.Pacified, DMW.Enums.UnitFlags.Feared))

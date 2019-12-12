@@ -216,11 +216,10 @@ function Navigation:GrindRoam()
         return
     end
 
-    if DMW.Settings.profile.Grind.randomizeWaypoints and self:NearHotspot(150) then
+    if DMW.Settings.profile.Grind.randomizeWaypoints and self:NearHotspot(250) then
         local PX, PY, PZ = ObjectPosition('player')
         
         if WaypointX and WaypointY and WaypointZ then 
-            
             self:MoveTo(WaypointX, WaypointY, WaypointZ)
             local Distance = GetDistanceBetweenPositions(PX, PY, PZ, WaypointX, WaypointY, WaypointZ)
             if HotSpotIndex == #HotSpots and Distance < 5 then
@@ -307,9 +306,11 @@ function Navigation:CalcPathDistance(peff)
 end
 
 function Navigation:ResetPath()
+    RandomedWaypoint = false
     NavPath = nil
     pathIndex = 1
     DestX, DestY, DestZ = nil, nil, nil
+    WaypointX, WaypointY, WaypointZ = nil, nil, nil
     EndX, EndY, EndZ = nil, nil, nil
     safeX, safeY, safeZ = nil, nil, nil
     stuckCount = 0

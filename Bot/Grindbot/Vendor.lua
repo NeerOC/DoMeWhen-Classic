@@ -252,7 +252,7 @@ function Vendor:DoTask()
     if (BuyFood or BuyWater) and FoodVendorName == '' then Log:DebugInfo('Set Food Vendor with /DMW Food') return end
 
     if self:CanSell(MaxRarity) or self:GetDurability() < RepairPercent then
-        if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, RepairVendorX, RepairVendorY, RepairVendorZ) >= 200 then
+        if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, RepairVendorX, RepairVendorY, RepairVendorZ) >= 200 and not DMW.Player.Combat then
             if self:useHearthstone() then
                 return
             end
@@ -285,7 +285,7 @@ function Vendor:DoTask()
 
     if BuyFood and NeedFoodCount >= 10 then
         -- We need to buy food
-        if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, FoodVendorX, FoodVendorY, FoodVendorZ) >= 200 then
+        if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, FoodVendorX, FoodVendorY, FoodVendorZ) >= 200 and not DMW.Player.Combat then
             if self:useHearthstone() then
                 return
             end
@@ -320,7 +320,7 @@ function Vendor:DoTask()
 
     if BuyWater and NeedWaterCount >= 10 then
         -- We need to buy water
-        if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, FoodVendorX, FoodVendorY, FoodVendorZ) >= 200 then
+        if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, FoodVendorX, FoodVendorY, FoodVendorZ) >= 200 and not DMW.Player.Combat then
             if self:useHearthstone() then
                 return
             end
