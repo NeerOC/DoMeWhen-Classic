@@ -57,7 +57,7 @@ function Unit:Update()
         self.LoS = self:LineOfSight()
     end
     self.Rooted = self:HasMovementFlag(DMW.Enums.MovementFlags.Root)
-    self.Attackable = self.LoS and UnitCanAttack("player", self.Pointer) or false
+    self.Attackable = UnitCanAttack("player", self.Pointer) or false
     self.ValidEnemy = self.Attackable and self:IsEnemy() or false
     self.Target = UnitTarget(self.Pointer)
     self.Moving = self:HasMovementFlag(DMW.Enums.MovementFlags.Moving)
