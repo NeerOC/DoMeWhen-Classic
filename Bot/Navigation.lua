@@ -387,7 +387,7 @@ function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
         end 
     end
 
-    for i = 0, 3000 do
+    for i = 0, 180 do
         local rx, ry, rz = GetPositionFromPosition(x, y, z, -distance, i, i / 1000)
         local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
         local inWater = TraceLine(rx, ry, rz, rx, ry, rz - 100, 0x10000)
@@ -402,7 +402,7 @@ function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
         end
     end
  
-    for i = 0, 3000 do
+    for i = 0, 180 do
         local rx, ry, rz = GetPositionFromPosition(x, y, z, distance, i, i / 1000)
         local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
         local inWater = TraceLine(rx, ry, rz, rx, ry, rz - 100, 0x10000)
