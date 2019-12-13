@@ -294,7 +294,7 @@ function Combat:InitiateAttack(Unit)
             end
         end
 
-        if not UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance < DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() and not Kiting then
+        if not UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance < DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() and not DMW.Player.Moving then
             if not facePause then
                 FaceDirection(Unit.Pointer, true)
                 facePause = true

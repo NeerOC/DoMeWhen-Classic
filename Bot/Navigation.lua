@@ -406,7 +406,7 @@ function Navigation:GetSafetyPosition(x, y, z, distance, hdiff)
         local rx, ry, rz = GetPositionFromPosition(x, y, z, distance, i, i / 1000)
         local hasHostile = DMW.Bot.Combat:GetUnitsNear(rx, ry, rz)
         local inWater = TraceLine(rx, ry, rz, rx, ry, rz - 100, 0x10000)
-        local inCastLOS = TraceLine(DMW.Player.Target.PosX, DMW.Player.Target.PosY, DMW.Player.Target.PosZ + 1.5, rx, ry, rz + 1.5) == nil
+        local inCastLOS = TraceLine(DMW.Player.Target.PosX, DMW.Player.Target.PosY, DMW.Player.Target.PosZ + 1.5, rx, ry, rz + 1.5, 0x100111) == nil
 
         if not hasHostile and not inWater and (inCastLOS or not DMW.Player.Target) then
             rz = select(3, TraceLine(rx, ry, 9999, rx, ry, -9999, 0x110)) or 0
