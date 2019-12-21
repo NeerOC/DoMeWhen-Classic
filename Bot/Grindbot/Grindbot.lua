@@ -175,7 +175,7 @@ function Grindbot:Pulse()
     end
 
     -- Call the enable and disable function of rotation when going to and from vendor.
-    Misc:RotationToggle()
+    --Misc:RotationToggle()
     if DMW.Player.Casting then self:ResetMoveToLoot() end -- Reset if casting
     self:AntiCampfire()
 
