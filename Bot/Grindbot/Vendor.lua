@@ -364,7 +364,7 @@ function Vendor:DoTask()
         Bools.BuyingFood = false
         Bools.BuyingWater = false
         Bools.Talking = false
-        Repairing = false
+        Bools.Repairing = false
      end
 end
 
