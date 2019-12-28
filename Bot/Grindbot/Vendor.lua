@@ -339,7 +339,7 @@ function Vendor:DoTask()
                 if self:BuyItemWithName(WaterName, NeedWaterCount) then
                     Bools.BuyingWater = true
                     Log:DebugInfo('Buying Water With Name [' .. WaterName .. '] Amount [' .. NeedWaterCount .. ']')
-                    C_Timer.After(10, function() Bools.Buying = false end)
+                    C_Timer.After(10, function() Bools.BuyingWater = false end)
                 end
             end
 
