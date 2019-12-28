@@ -357,6 +357,14 @@ function Vendor:DoTask()
     end
 
     -- If we reach this part then we have everything.
-    if not TaskDone then Log:NormalInfo('Vendor run complete.') TaskDone = true end
+    if not TaskDone then 
+        Log:NormalInfo('Vendor run complete.') TaskDone = true
+        Bools.Interacted = false
+        Bools.Selling = false
+        Bools.BuyingFood = false
+        Bools.BuyingWater = false
+        Bools.Talking = false
+        Repairing = false
+     end
 end
 
