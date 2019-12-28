@@ -335,12 +335,11 @@ function Vendor:DoTask()
             return
         else
             -- We are close to vendor, do shit.
-            if Bools.BuyingWater then print('buying water bool') end
             if MerchantFrame:IsVisible() and NeedWaterCount >= 10 and not Bools.BuyingWater then
                 if self:BuyItemWithName(WaterName, NeedWaterCount) then
                     Bools.BuyingWater = true
                     Log:DebugInfo('Buying Water With Name [' .. WaterName .. '] Amount [' .. NeedWaterCount .. ']')
-                    C_Timer.After(10, function() Bools.Buying = falseWater end)
+                    C_Timer.After(10, function() Bools.Buying = false end)
                 end
             end
 
