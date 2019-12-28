@@ -220,7 +220,7 @@ function Vendor:DoTask()
     local FoodNPC = self:GetVendor(FoodVendorName)
     
     -- Hacky Solution for cache?
-    if MerchantFrame:IsVisible() then MerchantNextPageButton:Click() end
+    --if MerchantFrame:IsVisible() then MerchantNextPageButton:Click() end
 
     if DMW.Player.Class ~= 'MAGE' then
         if autoWater and MerchantFrame:IsVisible() then
