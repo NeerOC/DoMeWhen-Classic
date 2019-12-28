@@ -335,6 +335,7 @@ function Vendor:DoTask()
             return
         else
             -- We are close to vendor, do shit.
+            if Bools.BuyingWater then print('buying water bool') end
             if MerchantFrame:IsVisible() and NeedWaterCount >= 10 and not Bools.BuyingWater then
                 if self:BuyItemWithName(WaterName, NeedWaterCount) then
                     Bools.BuyingWater = true
@@ -357,14 +358,14 @@ function Vendor:DoTask()
     end
 
     -- If we reach this part then we have everything.
-    if not TaskDone then 
-        Log:NormalInfo('Vendor run complete.') TaskDone = true
+    if not TaskDone then
         Bools.Interacted = false
         Bools.Selling = false
         Bools.BuyingFood = false
         Bools.BuyingWater = false
         Bools.Talking = false
         Bools.Repairing = false
+        Log:NormalInfo('Vendor run complete.') TaskDone = true
      end
 end
 
