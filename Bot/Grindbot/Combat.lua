@@ -98,7 +98,7 @@ end
 function Combat:SearchAttackable()
     -- Search for hostiles around us and attack them first.
     for _, Unit in pairs(DMW.Attackable) do
-        if UnitClassification(Unit.Pointer) == 'normal' and UnitReaction(Unit.Pointer, 'player') < 4 and Unit.Distance <= Unit:AggroDistance() + 10 and (not UnitIsPVP(Unit.Pointer) or ObjectCreator(Unit.Pointer) and not UnitIsPVP(ObjectCreator(Unit.Pointer)) and not UnitIsTapDenied(Unit.Pointer) then
+        if UnitClassification(Unit.Pointer) == 'normal' and UnitReaction(Unit.Pointer, 'player') < 4 and Unit.Distance <= Unit:AggroDistance() + 10 and (not UnitIsPVP(Unit.Pointer) or ObjectCreator(Unit.Pointer) and not UnitIsPVP(ObjectCreator(Unit.Pointer))) and not UnitIsTapDenied(Unit.Pointer) then
             return true, Unit
         end
     end
