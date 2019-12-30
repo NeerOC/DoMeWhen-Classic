@@ -183,6 +183,9 @@ function Navigation:MoveTo(toX, toY, toZ, straight)
     straight = straight or false
     if DMW.Player.Swimming then straight = true end
 
+    -- lets do straight lines if distance is really far. (Untested)
+    if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ) > 500 then straight = true end
+
     pathIndex = 1
     NavPath = CalculatePath(GetMapId(), DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, toX, toY, toZ, straight, true, 1)
 
