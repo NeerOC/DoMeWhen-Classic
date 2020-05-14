@@ -46,7 +46,7 @@ end
 
 function Combat:BlacklistedUnit(name)
 for i=1, #DMW.Settings.profile.Grind.targetBlacklist do
-    if DMW.Settings.profile.Grind.targetBlacklist[i] == name then 
+    if DMW.Settings.profile.Grind.targetBlacklist[i] == name then
         return true
     end
 end
@@ -58,7 +58,7 @@ function Combat:IsGoodUnit(unit)
     local maxLvl = UnitLevel('player') + DMW.Settings.profile.Grind.maxNPCLevel
     local UnitFlags = UnitMovementFlags(unit)
     local uX, uY, uZ = ObjectPosition(unit)
-    
+
     local Flags = {
         --inLOS = TraceLine(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ + 1.5, uX, uY, uZ + 1.5, 0x100111) == nil,
         notSwimming = not UnitFlags or bit.band(UnitFlags, DMW.Enums.MovementFlags.Swimming) == 0,
@@ -69,7 +69,7 @@ function Combat:IsGoodUnit(unit)
         noTargetOrMeOrPet = UnitTarget(unit) == nil or UnitIsUnit(UnitTarget(unit), 'player') or UnitIsUnit(UnitTarget(unit), 'pet'),
         isLevel = DMW.Settings.profile.Grind.attackAny or UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
         isPVP = not UnitIsPVP(unit),
-        --inRange = self:UnitNearHotspot(unit),
+        inRange = self:UnitNearHotspot(unit),
         notDead = not UnitIsDeadOrGhost(unit),
         notPlayer = not ObjectIsPlayer(unit),
         canAttack = UnitCanAttack("player", unit),
@@ -88,7 +88,7 @@ end
 
 function Combat:UnitBad(unit)
     for i=1, #badBlacklist do
-        if badBlacklist[i] == unit then 
+        if badBlacklist[i] == unit then
             return true
         end
     end
@@ -117,7 +117,7 @@ function Combat:SearchAttackable()
             table.insert(Table, Unit)
         end
     end
-    
+
     if #Table > 1 then
         table.sort(
             Table,
@@ -188,11 +188,11 @@ function Combat:SearchEnemy()
         if not Unit.Player and Unit.Target == GetActivePlayer() and Unit.HP < 50 then
             return true, Unit
         end
-        
+
         if not Unit.Player and Unit.Target == GetActivePlayer() and Casting then
             return true, Unit
         end
-        
+
         if not Unit.Player and Unit.Target == GetActivePlayer() and PowerType == 0 then
             return true, Unit
         end
@@ -200,7 +200,7 @@ function Combat:SearchEnemy()
         if not Unit.Player and Unit.Target == GetActivePlayer() then
             return true, Unit
         end
-        
+
         if Unit.Player and Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer) and ObjectIsFacing(Unit.Pointer, GetActivePlayer()) then
             return true, Unit
         end
@@ -228,7 +228,7 @@ end
 function Combat:Grinding()
     if not DMW.Player.Casting then
         local hasEnemy, theEnemy = self:SearchAttackable()
-        if hasEnemy then 
+        if hasEnemy then
             self:InitiateAttack(theEnemy)
         end
     end
@@ -246,7 +246,7 @@ function Combat:InitiateAttack(Unit)
     BotTarget = Unit
     if (Unit.Distance > DMW.Settings.profile.Grind.CombatDistance or not Unit:LineOfSight()) then
         Navigation:MoveTo(Unit.PosX, Unit.PosY, Unit.PosZ)
-        
+
         if Navigation:ReturnPathEnd() ~= nil then
             local endX, endY, endZ = Navigation:ReturnPathEnd()
             local endPathToUnitDist = GetDistanceBetweenPositions(Unit.PosX, Unit.PosY, Unit.PosZ, endX, endY, endZ)
@@ -281,7 +281,7 @@ function Combat:InitiateAttack(Unit)
                     local _, safeX, safeY, safeZ = Navigation:GetSafetyPosition(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, 28, 5)
                     if not DMW.Player.Moving then
                         if safeX then
-                            Navigation:MoveTo(safeX, safeY, safeZ) 
+                            Navigation:MoveTo(safeX, safeY, safeZ)
                         end
                     end
                 end
@@ -316,7 +316,7 @@ function Combat:InitiateAttack(Unit)
                 C_Timer.After(0.1, function() facePause = false end)
             end
         elseif UnitIsFacing('player', Unit.Pointer, 60) and Unit.Distance <= DMW.Settings.profile.Grind.CombatDistance and Unit:LineOfSight() then
-            -- If random is true then if theres not adds around us, juggle the enemy(Strafe) 
+            -- If random is true then if theres not adds around us, juggle the enemy(Strafe)
             if math.random(1, 1000) < 4 and DMW.Settings.profile.Grind.beHuman and not DMW.Player.Casting then
                 if #DMW.Player:GetAttackable(27) <= 2 and not self:EnemyBehind() then self:JuggleEnemy() end
             end
