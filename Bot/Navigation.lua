@@ -95,7 +95,6 @@ function Navigation:DrawVisuals()
     LibDraw.SetWidth(4)
     LibDraw.SetColorRaw(0, 128, 128, 100)
 
-    
     if NavPath and DMW.Settings.profile.Grind.drawPath then
         for i = pathIndex, #NavPath do
             if i == pathIndex then
@@ -116,7 +115,7 @@ function Navigation:DrawVisuals()
                     if HotSpots[i] then
                         local x, y, z = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
                         LibDraw.Text("x", "GameFontNormalLarge", x, y, z)
-                        if DMW.Settings.profile.Grind.drawCircles then LibDraw.GroundCircle(x, y, z, DMW.Settings.profile.Grind.RoamDistance / 2) end
+                        if DMW.Settings.profile.Grind.drawCircles then LibDraw.GroundCircle(x, y, z, DMW.Settings.profile.Grind.RoamDistance * 1.5 / 2) end
                     end
                 end
             end
