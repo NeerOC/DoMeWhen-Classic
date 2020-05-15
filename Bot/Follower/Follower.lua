@@ -25,8 +25,14 @@ function Follower:Pulse()
         end
 
         -- Targetting
-        if theLeader.Target and (not Player.Target or Player.Target.GUID ~= theLeader.Target) then
-            TargetUnit(theLeader.Target)
+        if theLeader.Target then
+            if not Player.Target or Player.Target.GUID ~= theLeader.Target then
+                TargetUnit(theLeader.Target)
+            end
+
+            if not UnitIsFacing("player", theLeader.Target) then
+                FaceDirection(theLeader.Target, true)
+            end
         end
     end
 
