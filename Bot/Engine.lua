@@ -3,6 +3,7 @@ DMW.Bot.Engine = {}
 local Engine = DMW.Bot.Engine
 local Grindbot = DMW.Bot.Grindbot
 local Fishbot = DMW.Bot.Fishbot
+local Follower = DMW.Bot.Follower
 local Navigation = DMW.Bot.Navigation
 local Misc = DMW.Bot.Misc
 local Log = DMW.Bot.Log
@@ -32,6 +33,8 @@ function Engine:Pulse()
             Grindbot:Pulse()
         elseif DMW.Settings.profile.HUD.BotMode == 2 then
             Fishbot:Pulse()
+        elseif DMW.Settings.profile.HUD.BotMode == 3 then
+            Follower:Pulse()
         end
     else
         if Misc:WorldMapHook() then return end

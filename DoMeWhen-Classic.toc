@@ -70,6 +70,8 @@ Bot\Grindbot\Combat.lua
 Bot\Grindbot\Misc.lua
 Bot\Grindbot\Grindbot.lua
 
+Bot\Follower\Follower.lua
+
 Bot\Fishbot\Fishbot.lua
 Bot\Engine.lua
 
