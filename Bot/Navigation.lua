@@ -129,6 +129,8 @@ function Navigation:NodeDistance()
     if currentSpeed <= 7 then return 2 end
     if currentSpeed > 8 and currentSpeed < 13 then return 4 end
     if currentSpeed > 13 then return 5 end
+
+    return 2
 end
 
 function Navigation:Movement()
