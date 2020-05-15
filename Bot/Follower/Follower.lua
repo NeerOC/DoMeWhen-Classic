@@ -10,6 +10,12 @@ function Follower:Pulse()
     -- Add setting box for leaderName & followDistance and let it update in this loop
     leaderName = DMW.Settings.profile.Follower.LeaderName
     followDistance = DMW.Settings.profile.Follower.FollowDistance
+
+    if leaderName == "" then
+        print("Leader name not set (DoMeWhen - Lilium - Follower - Leader Name)!")
+        return
+    end
+
     local theLeader = self:GetLeader()
     local Player = DMW.Player
 
@@ -42,7 +48,7 @@ function Follower:Pulse()
         end
     else
         -- If no leader then show message
-        print("Leader not in party!")
+        print("Leader \"" .. leaderName .. "\" not in party!")
     end
 end
 
