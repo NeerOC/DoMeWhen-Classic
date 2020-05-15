@@ -4,13 +4,18 @@ local Follower = DMW.Bot.Follower
 local Navigation = DMW.Bot.Navigation
 local Log = DMW.Bot.Log
 
-local leaderName = "Neer"
-local followDistance = 10
+local leaderName, followDistance
 
 function Follower:Pulse()
     -- Add setting box for leaderName & followDistance and let it update in this loop
-    --leaderName = Settings.leaderName
-    --followDistance = Settings.followDistance
+    leaderName = DMW.Settings.profile.Follower.LeaderName
+    followDistance = DMW.Settings.profile.Follower.FollowDistance
+
+    if leaderName == "" then
+        print("Leader name not set (DoMeWhen - Lilium - Follower - Leader Name)!")
+        return
+    end
+
     local theLeader = self:GetLeader()
     local Player = DMW.Player
 
@@ -26,17 +31,25 @@ function Follower:Pulse()
 
         -- Targetting
         if theLeader.Target then
+            -- Target leader target
             if not Player.Target or Player.Target.GUID ~= theLeader.Target then
                 TargetUnit(theLeader.Target)
             end
 
-            if not UnitIsFacing("player", theLeader.Target) then
+            -- Face leader target
+            if not UnitIsFacing("player", theLeader.Target, 60) then
                 FaceDirection(theLeader.Target, true)
             end
+        else
+            -- If leader has no target then face leader
+            if not UnitIsFacing("player", theLeader.Pointer, 60) then
+                FaceDirection(theLeader.Pointer, true)
+            end
         end
+    else
+        -- If no leader then show message
+        print("Leader \"" .. leaderName .. "\" is not in party/near player/online!")
     end
-
-    -- If no leader then what should we do?
 end
 
 function Follower:GetLeader()

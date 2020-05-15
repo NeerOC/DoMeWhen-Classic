@@ -1564,6 +1564,42 @@ local Options = {
                         end
                     }
                 }
+            },
+            FollowerTab = {
+                name = "Follower",
+                type = "group",
+                order = 7,
+                args = {
+                    leader = {
+                        type = "input",
+                        order = 1,
+                        name = "Leader Name",
+                        desc = "Who are we following?",
+                        width = "full",
+                        get = function()
+                            return DMW.Settings.profile.Follower.LeaderName
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Follower.LeaderName = value
+                        end
+                    },
+                    followDistance = {
+                        type = "range",
+                        order = 2,
+                        name = "Follow Distance",
+                        desc = "How far are we following?",
+                        width = "full",
+                        min = 1,
+                        max = 100,
+                        step = 1,
+                        get = function()
+                            return DMW.Settings.profile.Follower.FollowDistance
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Follower.FollowDistance = value
+                        end
+                    }
+                }
             }
             }
         }

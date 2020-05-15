@@ -117,6 +117,10 @@ local defaults = {
             TrackPlayersEnemy = false,
             TrackPlayersAny = false,
             TrackObjectsMailbox = false
+        },
+        Follower = {
+            LeaderName = '',
+            FollowDistance = 10
         }
     },
     char = {
@@ -137,7 +141,7 @@ local function MigrateSettings()
         end
         if moveNew then
             DMW.Settings.profile.Tracker[k] = v
-            DMW.Settings.profile.Helpers[k] = nil 
+            DMW.Settings.profile.Helpers[k] = nil
             Reload = true
         end
     end
