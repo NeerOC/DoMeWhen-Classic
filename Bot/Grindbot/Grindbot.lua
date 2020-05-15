@@ -52,11 +52,11 @@ local Settings = {
 
 -- Just to show our mode
 local ModeFrame = CreateFrame("Frame",nil,UIParent)
-ModeFrame:SetWidth(1) 
-ModeFrame:SetHeight(1) 
+ModeFrame:SetWidth(1)
+ModeFrame:SetHeight(1)
 ModeFrame:SetAlpha(.90);
 ModeFrame:SetPoint("CENTER",0,-200)
-ModeFrame.text = ModeFrame:CreateFontString(nil,"ARTWORK") 
+ModeFrame.text = ModeFrame:CreateFontString(nil,"ARTWORK")
 ModeFrame.text:SetFont("Fonts\\ARIALN.ttf", 13, "OUTLINE")
 ModeFrame.text:SetPoint("CENTER",0,0)
 --
@@ -94,7 +94,7 @@ end
 
 function blackListContains(unit)
     for i=1, #skinBlacklist do
-        if skinBlacklist[i] == unit then 
+        if skinBlacklist[i] == unit then
            return true
         end
      end
@@ -114,7 +114,7 @@ end
 
 function Grindbot:OnLootBlacklist(unit)
     for i=1, #lootBlacklist do
-        if lootBlacklist[i] == unit then 
+        if lootBlacklist[i] == unit then
            return true
         end
      end
@@ -122,6 +122,7 @@ function Grindbot:OnLootBlacklist(unit)
 end
 
 function Grindbot:CanLoot()
+    if not DMW.Settings.profile.Helpers.AutoLoot then return false end
     if Misc:GetFreeSlots() == 0 then return false end
     if DMW.Player.Casting then return false end
     if PauseFlags.skinDelay then return end
@@ -132,7 +133,7 @@ function Grindbot:CanLoot()
                 table.insert(Table, Unit)
             end
         end
-    
+
         if #Table > 1 then
             table.sort(
                 Table,
@@ -165,11 +166,11 @@ function Grindbot:Pulse()
     -- Do stuff with timer end />
 
     if #DMW.Settings.profile.Grind.HotSpots < 2 then
-        if not PauseFlags.Information then 
+        if not PauseFlags.Information then
             Log:DebugInfo('You need atleast 2 hotspots.')
             PauseFlags.Information = true
             RunMacroText('/LILIUM HUD Grindbot 2')
-            C_Timer.After(1, function() PauseFlags.Information = false end) 
+            C_Timer.After(1, function() PauseFlags.Information = false end)
         end
         return
     end
@@ -180,7 +181,7 @@ function Grindbot:Pulse()
     -- self:AntiObject()
 
     if not InformationOutput then
-        Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]') 
+        Log:NormalInfo('Food Vendor [' .. DMW.Settings.profile.Grind.FoodVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.FoodVendorX, DMW.Settings.profile.Grind.FoodVendorY, DMW.Settings.profile.Grind.FoodVendorZ)) .. ' Yrds]')
         Log:NormalInfo('Repair Vendor [' .. DMW.Settings.profile.Grind.RepairVendorName .. '] Distance [' .. math.floor(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, DMW.Settings.profile.Grind.RepairVendorX, DMW.Settings.profile.Grind.RepairVendorY, DMW.Settings.profile.Grind.RepairVendorZ)) .. ' Yrds]')
         Log:NormalInfo('Number of hotspots: ' .. #DMW.Settings.profile.Grind.HotSpots)
         InformationOutput = true
@@ -307,7 +308,7 @@ function Grindbot:Rest()
     if DMW.Player.Casting then return end
 
     CancelShapeshiftForm()
-    
+
     if Settings.WaterName ~= '' then
         if UnitPower('player', 0) / UnitPowerMax('player', 0) * 100 < Settings.RestMana and not Drinking and not PauseFlags.CantDrink then
             UseItemByName(Settings.WaterName)
@@ -351,7 +352,7 @@ function Grindbot:SwapMode()
     if Navigation:NearHotspot(200) and hasEnemy then
         Grindbot.Mode = Modes.Combat
         return
-    end 
+    end
 
     -- if we dont have skip aggro enabled in pathing and we arent mounted and we are in combat, fight back.
     if not DMW.Settings.profile.Grind.SkipCombatOnTransport and not IsMounted() and hasEnemy then
@@ -417,7 +418,7 @@ function Grindbot:SwapMode()
 
     -- if there isnt anything to attack and we arent in combat then roam around till we find something.
     if not hasAttackable and (not DMW.Player.Combat or DMW.Player.Combat and (UnitIsTapDenied(DMW.Player.Target.Pointer) or not UnitAffectingCombat("DMW.Player.Target.Pointer"))) then
-        Grindbot.Mode = Modes.Roaming        
+        Grindbot.Mode = Modes.Roaming
         return
     end
 
