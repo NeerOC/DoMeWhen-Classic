@@ -26,7 +26,7 @@ function Follower:Pulse()
 
         -- Targetting
         if theLeader.Target and (not Player.Target or Player.Target.GUID ~= theLeader.Target) then
-            TargetUnit(theLeader.GUID)
+            TargetUnit(theLeader.Target)
         end
     end
 
