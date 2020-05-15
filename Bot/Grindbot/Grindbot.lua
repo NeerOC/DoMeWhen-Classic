@@ -266,7 +266,7 @@ function Grindbot:GetLoot()
                 if not PauseFlags.movingToLoot then PauseFlags.movingToLoot = true moveToLootTime = DMW.Time end
                 local endX, endY, endZ = Navigation:ReturnPathEnd()
                 local endPathToUnitDist = GetDistanceBetweenPositions(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ, endX, endY, endZ)
-                if endPathToUnitDist > 3 or DMW.Time - moveToLootTime > 6 then
+                if endPathToUnitDist > 3 or DMW.Time - moveToLootTime > 10 then
                     -- Blacklist unit
                     Log:SevereInfo('Added LootUnit to badBlacklist Dist: ' .. endPathToUnitDist .. ' Time: ' .. DMW.Time-moveToLootTime)
                     table.insert(lootBlacklist, LootUnit.Pointer)

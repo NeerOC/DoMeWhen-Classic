@@ -12,7 +12,7 @@ function Follower:Pulse()
     followDistance = DMW.Settings.profile.Follower.FollowDistance
 
     if leaderName == "" then
-        print("Leader name not set (DoMeWhen - Lilium - Follower - Leader Name)!")
+        Log:SevereInfo("Leader name not set (DoMeWhen - Lilium - Follower - Leader Name)!")
         return
     end
 
@@ -48,7 +48,7 @@ function Follower:Pulse()
         end
     else
         -- If no leader then show message
-        print("Leader \"" .. leaderName .. "\" is not in party/near player/online!")
+        Log:SevereInfo("Leader \"" .. leaderName .. "\" is not in party/near player/online!")
     end
 end
 
