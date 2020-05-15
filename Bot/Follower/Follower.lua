@@ -48,7 +48,7 @@ function Follower:Pulse()
         end
     else
         -- If no leader then show message
-        print("Leader \"" .. leaderName .. "\" not in party!")
+        print("Leader \"" .. leaderName .. "\" is not in party/near player/online!")
     end
 end
 
