@@ -25,7 +25,7 @@ function Follower:Pulse()
         end
 
         -- Targetting
-        if theLeader.Target and theLeader.Target ~= Player.Target.GUID then
+        if theLeader.Target and (not Player.Target or Player.Target.GUID ~= theLeader.Target) then
             TargetUnit(theLeader.GUID)
         end
     end
@@ -34,7 +34,7 @@ function Follower:Pulse()
 end
 
 function Follower:GetLeader()
-    for _, Unit in pairs(DMW.Friends) do
+    for _, Unit in pairs(DMW.Friends.Units) do
         if Unit.Name == leaderName then
             return Unit
         end
