@@ -247,7 +247,7 @@ end
 
 function Grindbot:AntiObject()
     for _, Object in pairs(DMW.GameObjects) do
-        if Object.Name == "Campfire" or Object.Name == "Pillar of Diamond" and Object.Distance <= 5 then
+        if (Object.Name == "Campfire" or Object.Name == "Pillar of Diamond") and Object.Distance <= 5 then
             local px, py, pz = ObjectPosition('player')
             MoveTo(px + 5, py + 5, pz + 1, true)
         end
@@ -260,7 +260,7 @@ function Grindbot:GetLoot()
     local lx, ly, lz = ObjectPosition(LootUnit)
 
     if hasLoot and ObjectExists(LootUnit.Pointer) then
-        if LootUnit.Distance >= 5 then
+        if LootUnit.Distance > 5 then
             Navigation:MoveTo(LootUnit.PosX, LootUnit.PosY, LootUnit.PosZ)
             if Navigation:ReturnPathEnd() ~= nil then
                 if not PauseFlags.movingToLoot then PauseFlags.movingToLoot = true moveToLootTime = DMW.Time end
