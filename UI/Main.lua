@@ -1278,7 +1278,7 @@ local Options = {
                         desc = "At what range can you attack the mobs?",
                         width = "full",
                         min = 3,
-                        max = 35,
+                        max = 45,
                         step = 1,
                         get = function()
                             return DMW.Settings.profile.Grind.CombatDistance
