@@ -411,13 +411,13 @@ function Grindbot:SwapMode()
     end
 
     -- if we arent in combat and we arent casting and there are units around us, start grinding em.  (If we arent in combat or if we are in combat and our target is denied(grey) then search for new.)
-    if (not DMW.Player.Combat or DMW.Player.Combat and (UnitIsTapDenied(DMW.Player.Target.Pointer) or not UnitAffectingCombat("DMW.Player.Target.Pointer"))) and not DMW.Player.Casting and hasAttackable then
+    if (not DMW.Player.Combat or DMW.Player.Combat and DMW.Player.Target and (UnitIsTapDenied(DMW.Player.Target.Pointer) or not UnitAffectingCombat("DMW.Player.Target.Pointer"))) and not DMW.Player.Casting and hasAttackable then
         Grindbot.Mode = Modes.Grinding
         return
     end
 
     -- if there isnt anything to attack and we arent in combat then roam around till we find something.
-    if not hasAttackable and (not DMW.Player.Combat or DMW.Player.Combat and (UnitIsTapDenied(DMW.Player.Target.Pointer) or not UnitAffectingCombat("DMW.Player.Target.Pointer"))) then
+    if not hasAttackable and (not DMW.Player.Combat or DMW.Player.Combat and DMW.Player.Target and (UnitIsTapDenied(DMW.Player.Target.Pointer) or not UnitAffectingCombat("DMW.Player.Target.Pointer"))) then
         Grindbot.Mode = Modes.Roaming
         return
     end
