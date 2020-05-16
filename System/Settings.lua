@@ -88,7 +88,8 @@ local defaults = {
             gatherHerb = false,
             targetBlacklist = {},
             itemSaveList = {},
-            rangeKite = false
+            rangeKite = false,
+            firstAid = false,
         },
         Tracker = {
             Herbs = false,

@@ -1368,6 +1368,19 @@ local Options = {
                         set = function(info, value)
                             DMW.Settings.profile.Grind.rangeKite = value
                         end
+                    },
+                    firstAid = {
+                        type = "toggle",
+                        order = 12,
+                        name = "First Aid (BETA)",
+                        desc = "Use first aid when resting (best usable bandage in bag)",
+                        width = 1,
+                        get = function()
+                            return DMW.Settings.profile.Grind.firstAid
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.firstAid = value
+                        end
                     }
                 }
                 },

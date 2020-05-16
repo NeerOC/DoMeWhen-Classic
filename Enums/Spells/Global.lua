@@ -18,7 +18,8 @@ DMW.Enums.Spells = {
         },
         Debuffs = {
             Daze = {Ranks = {1604}},
-            LivingBomb = {Ranks = {20475}}
+            LivingBomb = {Ranks = {20475}},
+            RecentlyBandaged = {Ranks = {11196}}
         },
         Talents = {}
     }

@@ -303,14 +303,24 @@ end
 function Grindbot:Rest()
     local Eating = DMW.Player.Eating
     local Drinking = DMW.Player.Drinking
+    local Bandaging = DMW.Player.Bandaging
+    local RecentlyBandaged = DMW.Player.RecentlyBandaged
 
     if DMW.Player.Moving then Navigation:StopMoving() return end
     if DMW.Player.Casting then return end
 
     CancelShapeshiftForm()
 
+    if DMW.Settings.profile.Grind.firstAid then
+        bandage = getBestUsableBandage()
+        if DMW.Player.HP < Settings.RestHP and not Eating and not Drinking and not RecentlyBandaged and bandage then
+            UseItemByName(bandage.Name, 'player')
+            return
+        end
+    end
+
     if Settings.WaterName ~= '' then
-        if UnitPower('player', 0) / UnitPowerMax('player', 0) * 100 < Settings.RestMana and not Drinking and not PauseFlags.CantDrink then
+        if UnitPower('player', 0) / UnitPowerMax('player', 0) * 100 < Settings.RestMana and not Drinking and not Bandaging and not PauseFlags.CantDrink then
             UseItemByName(Settings.WaterName)
             PauseFlags.CantDrink = true
             C_Timer.After(1, function() PauseFlags.CantDrink = false end)
@@ -318,7 +328,7 @@ function Grindbot:Rest()
     end
 
     if Settings.FoodName ~= '' then
-        if DMW.Player.HP < Settings.RestHP and not Eating and not PauseFlags.CantEat then
+        if DMW.Player.HP < Settings.RestHP and not Eating and not Bandaging and not PauseFlags.CantEat then
             UseItemByName(Settings.FoodName)
             PauseFlags.CantEat = true
             C_Timer.After(1, function() PauseFlags.CantEat = false end)

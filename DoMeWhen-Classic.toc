@@ -96,6 +96,7 @@ Enums\Interrupts.lua
 Enums\CC.lua
 Enums\Gatherables.lua
 Enums\Consumeables.lua
+Enums\Bandages.lua
 Enums\BuffLevels.lua
 
 UI\Main.lua
