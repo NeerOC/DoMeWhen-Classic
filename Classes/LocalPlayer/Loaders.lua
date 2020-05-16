@@ -90,6 +90,8 @@ function LocalPlayer:UpdateProfessions()
             self.Professions.Skinning = Rank
         elseif Name == "Lockpicking" then
             self.Professions.Lockpicking = Rank
+        elseif Name == "First Aid" then
+            self.Professions.FirstAid = Rank
         end
     end
 end

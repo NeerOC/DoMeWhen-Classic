@@ -40,10 +40,12 @@ function LocalPlayer:Update()
     self.Casting = CastingInfo(self.Pointer) or ChannelInfo(self.Pointer)
     self.Drinking = AuraUtil.FindAuraByName('Drink', 'player')
     self.Eating = AuraUtil.FindAuraByName('Food', 'player')
+    self.Bandaging = AuraUtil.FindAuraByName('First Aid', 'player')
     self.Wanding = IsAutoRepeatSpell(self.Spells.Shoot.SpellName)
     self.Rooted = self:HasMovementFlag(DMW.Enums.MovementFlags.Root)
     self.Disabled = self:HasMovementFlag(bit.bor(DMW.Enums.UnitFlags.Stunned, DMW.Enums.UnitFlags.Confused, DMW.Enums.UnitFlags.Pacified, DMW.Enums.UnitFlags.Feared))
     self.Dazed = self.Debuffs.Daze:Exist(self, false)
+    self.RecentlyBandaged = self.Debuffs.RecentlyBandaged:Exist(self, false)
     self.Power = UnitPower(self.Pointer)
     self.Power = self:PredictedPower()
     self.PowerMax = UnitPowerMax(self.Pointer)
@@ -80,7 +82,7 @@ function LocalPlayer:Update()
                 self.DOTed[spell] = nil
             end
         end
-        if count == 0 then 
+        if count == 0 then
             self.DOTed = nil
         end
     end
@@ -187,13 +189,13 @@ function LocalPlayer:Dispel(Spell)
     local AuraReturn
     for _, Aura in pairs(AuraCache) do
         if Aura.Type == "HARMFUL" then
-            AuraReturn = Aura.AuraReturn 
+            AuraReturn = Aura.AuraReturn
             Elapsed = AuraReturn[5] - (AuraReturn[6] - DMW.Time)
             if AuraReturn[4] and DispelTypes[AuraReturn[4]] and Elapsed > Delay then
                 if DMW.Enums.NoDispel[AuraReturn[10]] then
                     ReturnValue = false
-                    break                
-                elseif DMW.Enums.SpecialDispel[AuraReturn[10]] and DMW.Enums.SpecialDispel[AuraReturn[10]].Stacks then 
+                    break
+                elseif DMW.Enums.SpecialDispel[AuraReturn[10]] and DMW.Enums.SpecialDispel[AuraReturn[10]].Stacks then
                     if AuraReturn[3] >= DMW.Enums.SpecialDispel[AuraReturn[10]].Stacks then
                         ReturnValue = true
                     else

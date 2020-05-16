@@ -17,5 +17,16 @@ DMW.Enums.Items = {
     GreaterSoulstone = 16895,
     MajorSoulstone = 16896,
     --Trinkets
-    Luffa = 19141
+    Luffa = 19141,
+    --Bandages
+    LinenBandage = 1251,
+    HeavyLinenBandage = 2581,
+    WoolBandage = 3530,
+    HeavyWoolBandage = 3531,
+    SilkBandage = 6450,
+    HeavySilkBandage = 6451,
+    MageweaveBandage = 8544,
+    HeavyMageweaveBandage = 8545,
+    RuneclothBandage = 14529,
+    HeavyRuneclothBandage = 14530
 }
