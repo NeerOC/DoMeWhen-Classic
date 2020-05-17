@@ -185,23 +185,23 @@ function Combat:SearchEnemy()
         local PowerType = UnitPowerType(Unit.Pointer)
         local Casting = Unit:CastingInfo() ~= nil
 
-        if not Unit.Player and Unit.Target == GetActivePlayer() and Unit.HP < 50 then
+        if not Unit.PVP and Unit.Target == GetActivePlayer() and Unit.HP < 50 then
             return true, Unit
         end
 
-        if not Unit.Player and Unit.Target == GetActivePlayer() and Casting then
+        if not Unit.PVP and Unit.Target == GetActivePlayer() and Casting then
             return true, Unit
         end
 
-        if not Unit.Player and Unit.Target == GetActivePlayer() and PowerType == 0 then
+        if not Unit.PVP and Unit.Target == GetActivePlayer() and PowerType == 0 then
             return true, Unit
         end
 
-        if not Unit.Player and Unit.Target == GetActivePlayer() then
+        if not Unit.PVP and Unit.Target == GetActivePlayer() then
             return true, Unit
         end
 
-        if Unit.Player and Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer) and ObjectIsFacing(Unit.Pointer, GetActivePlayer()) then
+        if Unit.PVP and Unit.Target == GetActivePlayer() and UnitAffectingCombat(Unit.Pointer) and ObjectIsFacing(Unit.Pointer, GetActivePlayer()) then
             return true, Unit
         end
     end
