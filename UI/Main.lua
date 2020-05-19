@@ -1625,6 +1625,8 @@ function LoadProfile()
         local check, content = serializer:Deserialize(base64:decode(profileContent))
         if profileContent and check then
             DMW.Settings.profile.Grind = content
+            DMW.Settings.profile.Grind.HotSpots = MigratePoints(DMW.Settings.profile.Grind.HotSpots)
+            DMW.Settings.profile.Grind.VendorWaypoints = MigratePoints(DMW.Settings.profile.Grind.VendorWaypoints)
             DMW.Bot.Log:DebugInfo('Loaded Profile ' .. currentLoadedProfiles[currentProfile])
         end
     end
