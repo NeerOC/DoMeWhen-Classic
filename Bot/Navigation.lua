@@ -46,7 +46,7 @@ end
 
 
 function DrawWaypoints(points, radius, text)
-    if points and #points == 0 then return end
+    if not points or #points == 0 then return end
 
     for i = 1, #points do
         if points[i] then
@@ -267,6 +267,8 @@ end
 function Navigation:VendorSafePath()
     local VendorWaypoints = DMW.Settings.profile.Grind.VendorWaypoints
     local nextWaypoint = VendorWaypoints[VendorWaypointIndex]
+
+    if not nextWaypoint then return false end
 
     self:MoveTo(nextWaypoint.X, nextWaypoint.Y, nextWaypoint.Z)
 
