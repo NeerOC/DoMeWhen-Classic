@@ -260,8 +260,10 @@ end
 
 function Navigation:InitVendorSafePath()
     Log:DebugInfo("VendorSafePath initiating")
-    VendorWaypointIndex = 1
     self:SortVendorWaypoints()
+    VendorWaypointIndex = 1
+    Log:DebugInfo("VendorSafePath VendorWaypointIndex: " .. VendorWaypointIndex)
+    Log:DebugInfo("VendorSafePath waypoints #: " .. #DMW.Settings.profile.Grind.VendorWaypoints)
 end
 
 function Navigation:VendorSafePath()

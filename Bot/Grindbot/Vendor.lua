@@ -23,6 +23,10 @@ local slots = {
 }
 
 local Bools = {
+    InitiatedToSafePath = false,
+    FinishedToSafePath = false,
+    InitiatedFromSafePath = false,
+    FinishedFromSafePath = false,
     Interacted = false,
     Selling = false,
     BuyingFood = false,
@@ -70,6 +74,11 @@ end
 
 function Vendor:TaskDone()
     return TaskDone
+end
+
+function Vendor:Reset()
+    Log:NormalInfo('Vendor run started.')
+    TaskDone = false
 end
 
 function Vendor:CanSell(maxrarity)
@@ -387,6 +396,7 @@ function Vendor:DoTask()
     end
 
     if not Bools.InitiatedFromSafePath then
+        Log:DebugInfo('Repair vendor initiating from safe path.')
         Navigation:InitVendorSafePath()
         Bools.InitiatedFromSafePath = true
     end
@@ -394,7 +404,10 @@ function Vendor:DoTask()
     if not Bools.FinishedFromSafePath then
         Bools.FinishedFromSafePath = not Navigation:VendorSafePath()
         return
+    else
+        Log:DebugInfo('Repair vendor finished from safe path.')
     end
+
 
     -- If we reach this part then we have everything.
     if not TaskDone then
@@ -409,6 +422,6 @@ function Vendor:DoTask()
         Bools.Talking = false
         Bools.Repairing = false
         Log:NormalInfo('Vendor run complete.') TaskDone = true
-     end
+    end
 end
 
