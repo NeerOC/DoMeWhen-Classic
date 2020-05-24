@@ -12,6 +12,8 @@ DMW.Enums.Bandages = {
 }
 
 function getBestUsableBandage()
+    if not DMW.Player.Professions.FirstAid then return end
+
     local bestBandage = false
 
     for key, bandage in pairs(DMW.Enums.Bandages) do
