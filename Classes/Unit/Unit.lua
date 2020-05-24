@@ -12,6 +12,7 @@ function Unit:New(Pointer)
     self.Name = not UnitIsUnit(Pointer, "player") and UnitName(Pointer) or "LocalPlayer"
     self.GUID = UnitGUID(Pointer)
     self.Player = UnitIsPlayer(Pointer)
+    self.PVP = UnitIsPVP(Pointer)
     if self.Player then
         self.Class = select(2, UnitClass(Pointer)):gsub("%s+", "")
     end

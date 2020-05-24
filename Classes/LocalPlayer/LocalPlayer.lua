@@ -1,10 +1,12 @@
 local DMW = DMW
 local LocalPlayer = DMW.Classes.LocalPlayer
+local Point = DMW.Classes.Point
 
 function LocalPlayer:New(Pointer)
     self.Pointer = Pointer
     self.CombatReach = UnitCombatReach(Pointer)
     self.PosX, self.PosY, self.PosZ = ObjectPosition(Pointer)
+    self.Position = Point(self.PosX, self.PosY, self.PosZ)
     self.GUID = ObjectGUID(Pointer)
     self.Class = select(2, UnitClass(Pointer)):gsub("%s+", "")
     self.Distance = 0
@@ -34,6 +36,7 @@ end
 
 function LocalPlayer:Update()
     self.PosX, self.PosY, self.PosZ = ObjectPosition(self.Pointer)
+    self.Position = Point(self.PosX, self.PosY, self.PosZ)
     DMW.Functions.AuraCache.Refresh(self.Pointer)
     self.Health = UnitHealth(self.Pointer)
     self.HealthMax = UnitHealthMax(self.Pointer)

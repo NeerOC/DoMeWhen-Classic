@@ -4,6 +4,7 @@ local LibDraw = LibStub("LibDraw-1.0")
 local Misc = DMW.Bot.Misc
 local Log = DMW.Bot.Log
 local Navigation = DMW.Bot.Navigation
+local Point = DMW.Classes.Point
 
 local PauseFlags = {
     Hotspotting = false,
@@ -21,11 +22,11 @@ function Misc:ClamTask()
                 if CurrentItemLink then
                     name = GetItemInfo(CurrentItemLink)
                     if string.find(name, 'Clam Meat') then
-                        PickupContainerItem(BagID,BagSlot); 
+                        PickupContainerItem(BagID,BagSlot);
                         DeleteCursorItem();
                         return
                     end
-                    
+
                     if name == 'Big-mouth Clam' or name == 'Thick-shelled Clam' or name == 'Small Barnacled Clam' then
                         UseContainerItem(BagID, BagSlot)
                         return
@@ -53,7 +54,7 @@ function Misc:DeleteTask()
             if CurrentItemLink then
                 name = GetItemInfo(CurrentItemLink)
                 if string.find(name, 'Distress') then
-                    PickupContainerItem(BagID, BagSlot); 
+                    PickupContainerItem(BagID, BagSlot);
                     DeleteCursorItem();
                 end
             end
@@ -67,76 +68,96 @@ function Misc:DeleteTask()
 end
 
 function Misc:Hotspotter()
-    local cx, cy, cz = GetLastClickInfo()
     local altDown = IsAltKeyDown()
     local shiftDown = IsShiftKeyDown()
     local ctrlDown = IsControlKeyDown()
+    local vDown = GetKeyState(0x56)
     local middleMouseDown = GetKeyState(0x04)
     local roamSize = DMW.Settings.profile.Grind.RoamDistance / 2
     local deleteSize = 10
     local x, y = GetMousePosition()
     local mx, my, mz = ScreenToWorld(x, y)
-    
-    if mx and my and mz then
-        if shiftDown and altDown then
-            LibDraw.SetColor(255, 0, 0, 100)
-            LibDraw.GroundCircle(mx, my, mz, deleteSize)
-            LibDraw.Text("DELETE", "GameFontNormalLarge", mx, my, mz + 3)
-            if middleMouseDown and mx ~= 0 and not PauseFlags.Hotspotting then
-                if self:RemoveClickSpot(mx, my, mz) then
-                    Log:DebugInfo('Removed Grind Hotspot [X: ' .. Round(cx) .. '] [Y: ' .. Round(cy) .. '] [Z: ' .. Round(cz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, mx, my, mz)) .. ']')
-                end
-            end
-        end
+    local engageSpot = middleMouseDown and mx ~= 0 and not PauseFlags.Hotspotting
+    local point = Point(mx, my, mz)
 
-        if altDown and not shiftDown then
-            LibDraw.GroundCircle(mx, my, mz, roamSize)
-            LibDraw.Text("x", "GameFontNormalLarge", mx, my, mz + 1)
-            if middleMouseDown and mx ~= 0 and not PauseFlags.Hotspotting then
-                if self:AddClickSpot(mx, my, mz) then
-                    Log:DebugInfo('Added Grind Hotspot [X: ' .. Round(mx) .. '] [Y: ' .. Round(my) .. '] [Z: ' .. Round(mz) .. '] [Distance: ' .. Round(GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, mx, my, mz)) .. ']')
-                end
-            end
+    -- Return early
+    if not point or not (point.X and point.Y and point.Z) then return end
+
+    if altDown and shiftDown then
+        -- Delete vendor waypoints and grind hotspots
+        LibDraw.SetColor(255, 0, 0, 100)
+        LibDraw.GroundCircle(mx, my, mz, deleteSize)
+        LibDraw.Text("DELETE", "GameFontNormalLarge", mx, my, mz + 3)
+
+        if not engageSpot then return end
+
+        removedVendorWaypoint = self:RemoveClickSpot(point, DMW.Settings.profile.Grind.VendorWaypoints)
+        if removedVendorWaypoint then
+            Log:DebugInfo('Removed Vendor Waypoint: ' .. removedVendorWaypoint:ToString())
+        end
+        removedHotspotSpot = self:RemoveClickSpot(point, DMW.Settings.profile.Grind.HotSpots)
+        if removedHotspotSpot then
+            Log:DebugInfo('Removed Grind Hotspot: ' .. removedHotspotSpot:ToString())
+        end
+    elseif altDown and vDown then
+        -- Add vendor waypoint
+        LibDraw.SetColor(32, 178, 170, 100)
+        LibDraw.GroundCircle(mx, my, mz, 5)
+        LibDraw.Text("v", "GameFontNormalLarge", mx, my, mz + 1)
+
+        if not engageSpot then return end
+
+        addedPoint = self:AddClickSpot(point, DMW.Settings.profile.Grind.VendorWaypoints)
+        if addedPoint then
+            Log:DebugInfo('Added Vendor Waypoint: ' .. addedPoint:ToString())
+        end
+    elseif altDown then
+        -- Add hotspot
+        LibDraw.SetColor(0, 100, 0, 100)
+        LibDraw.GroundCircle(mx, my, mz, roamSize)
+        LibDraw.Text("x", "GameFontNormalLarge", mx, my, mz + 1)
+
+        if not engageSpot then return end
+
+        addedPoint = self:AddClickSpot(point, DMW.Settings.profile.Grind.HotSpots)
+        if addedPoint then
+            Log:DebugInfo('Added Grind Hotspot: ' .. addedPoint:ToString())
         end
     end
 end
 
-function Misc:RemoveClickSpot(x, y, z)
-    local keyremove
-    for k in pairs (DMW.Settings.profile.Grind.HotSpots) do
-        local hx, hy, hz = DMW.Settings.profile.Grind.HotSpots[k].x, DMW.Settings.profile.Grind.HotSpots[k].y, DMW.Settings.profile.Grind.HotSpots[k].z
-        local dist = GetDistanceBetweenPositions(x, y, z, hx, hy, hz)
-        if dist < 20 then
-            keyremove = k
-            break
+function Misc:RemoveClickSpot(point, spotTable)
+    for k, spot in pairs(spotTable) do
+        if point:Distance(spot) < 20 then
+            spotTable[k] = nil
+
+            PauseFlags.Hotspotting = true
+            C_Timer.After(0.3, function()
+                PauseFlags.Hotspotting = false
+            end)
+
+            CleanNils(spotTable)
+
+            return spot
         end
     end
-    if keyremove then
-        DMW.Settings.profile.Grind.HotSpots [keyremove] = nil
-        PauseFlags.Hotspotting = true
-        C_Timer.After(0.3, function()
-            PauseFlags.Hotspotting = false
-        end)
-        return true
-    end
+
     return false
 end
 
-function Misc:AddClickSpot(xx, yy, zz)
-    local Spot = {x = xx, y = yy, z = zz}
-    for k in pairs (DMW.Settings.profile.Grind.HotSpots) do
-        local hx, hy, hz = DMW.Settings.profile.Grind.HotSpots[k].x, DMW.Settings.profile.Grind.HotSpots[k].y, DMW.Settings.profile.Grind.HotSpots[k].z
-        local dist = GetDistanceBetweenPositions(xx, yy, zz, hx, hy, hz)
-        if dist < DMW.Settings.profile.Grind.RoamDistance then
-            return false
-        end
+function Misc:AddClickSpot(point, spotTable)
+    if point:NearAny(spotTable, DMW.Settings.profile.Grind.RoamDistance) then
+        return false
     end
-    table.insert(DMW.Settings.profile.Grind.HotSpots, Spot)
+
+    table.insert(spotTable, point)
+
     PauseFlags.Hotspotting = true
     C_Timer.After(0.3, function()
         PauseFlags.Hotspotting = false
     end)
-    return true
+
+    return point
 end
 
 function Misc:RotationToggle()

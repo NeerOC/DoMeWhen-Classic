@@ -83,9 +83,17 @@ end)
 -- < Global functions
 function ClearHotspot()
     for k in pairs (DMW.Settings.profile.Grind.HotSpots) do
-        DMW.Settings.profile.Grind.HotSpots [k] = nil
+        DMW.Settings.profile.Grind.HotSpots[k] = nil
     end
     Log:DebugInfo('Hotspots Cleared!')
+end
+
+-- < Global functions
+function ClearVendorWaypoints()
+    for k in pairs (DMW.Settings.profile.Grind.VendorWaypoints) do
+        DMW.Settings.profile.Grind.VendorWaypoints[k] = nil
+    end
+    Log:DebugInfo('VendorWaypoints Cleared!')
 end
 
 function addSkinBlacklist()
@@ -397,14 +405,20 @@ function Grindbot:SwapMode()
     -- If our durability is less than we decided or our bag slots is less than decided, vendor task :)
     if (Vendor:GetDurability() <= Settings.RepairPercent or Misc:GetFreeSlots() < Settings.MinFreeSlots) then
         Grindbot.Mode = Modes.Vendor
-        if not VendorTask then VendorTask = true end
+        if not VendorTask then
+            Vendor:Reset()
+            VendorTask = true
+        end
         return
     end
 
     -- if we chose to buy food and we dont have any food, if we chose to buy water and we dont have any water, Vendor task.
     if (Settings.BuyFood and not Misc:HasItem(Settings.FoodName)) or (Settings.BuyWater and not Misc:HasItem(Settings.WaterName)) then
         Grindbot.Mode = Modes.Vendor
-        if not VendorTask then VendorTask = true end
+        if not VendorTask then
+            Vendor:Reset()
+            VendorTask = true
+        end
         return
     end
 
