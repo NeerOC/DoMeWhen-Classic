@@ -286,6 +286,8 @@ end
 
 function Navigation:CanMount()
     return (
+        DMW.Player.Spells.SummonMount and
+        DMW.Player.Spells.SummonMount:IsReady() and
         not unStucking and
         not DMW.Player.Swimming and
         not UnitIsDeadOrGhost('player') and
