@@ -285,7 +285,7 @@ function Navigation:VendorSafePath()
 end
 
 function Navigation:CanMount()
-    return (
+    if (
         DMW.Player.Spells.SummonMount and
         DMW.Player.Spells.SummonMount:IsReady() and
         not unStucking and
@@ -295,7 +295,11 @@ function Navigation:CanMount()
         not IsMounted() and
         not DMW.Player.Position:NearAny(DMW.Settings.profile.Grind.MountBlacklist, 15) and
         not DMW.Player.Combat
-    )
+    ) then
+        return true
+    end
+
+    return false
 end
 
 function Navigation:Mount()
