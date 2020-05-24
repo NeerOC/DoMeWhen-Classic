@@ -289,7 +289,7 @@ function Navigation:CanMount()
         GetItemCooldown(GetItemInfoInstant(DMW.Settings.profile.Grind.MountName)) == 0
     local hasSummonMount = DMW.Player.Spells.SummonMount and DMW.Player.Spells.SummonMount:IsReady()
 
-    if (
+    return (
         (hasMount or hasSummonMount) and
         not unStucking and
         not DMW.Player.Swimming and
@@ -298,11 +298,7 @@ function Navigation:CanMount()
         not IsMounted() and
         not DMW.Player.Position:NearAny(DMW.Settings.profile.Grind.MountBlacklist, 15) and
         not DMW.Player.Combat
-    ) then
-        return true
-    end
-
-    return false
+    )
 end
 
 function Navigation:Mount()
