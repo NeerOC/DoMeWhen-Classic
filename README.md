@@ -9,12 +9,14 @@
 - Put that folder (mmaps) inside the EWT folder. (WHERE FIREFOX/CHROME) is.
 
 ## Grindbot
-- Target repair vendor and type /lil Repair to set repair vendor
-- Target food vendor and type /lil Food to set Food vendor.
-- Target a monster and type /Lil Blacklist to not attack any monsters with that name. 
-- ALT + MIDDLE CLICK WHILE BOT IS DISABLED marks the location you clicked as a hotspot.
-- ALT + SHIFT + MIDDLE CLICK Will remove the hotspot closest to the position you clicked.
-- Clear all current hotspots with /lil clear
+- Target repair vendor and type `/lil repair` to set repair vendor
+- Target food vendor and type `/lil food` to set Food vendor.
+- Target a monster and type `/lil blacklist` to not attack any monsters with that name.
+- `ALT + MIDDLE CLICK` ❗WHILE BOT IS DISABLED❗ marks the location you clicked as a hotspot.
+- `ALT + V + MIDDLE CLICK` ❗WHILE BOT IS DISABLED❗ marks the location you clicked as a vendor waypoint to follow for additional safety.
+- `ALT + SHIFT + MIDDLE CLICK` ❗WHILE BOT IS DISABLED❗ Will remove the hotspot closest to the position you clicked.
+- Clear all current hotspots with `/lil clear`
+- Clear all vendor waypoints with `/lil clearvendor`
 - Press the Heroic Strike icon near your Minimap and there you can find the "Lilium" Tab.
 - Choose your preferred settings.
 
