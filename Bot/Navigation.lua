@@ -285,7 +285,12 @@ function Navigation:VendorSafePath()
 end
 
 function Navigation:CanMount()
+    local hasMount = DMW.Settings.profile.Grind.MountName ~= "" and
+        GetItemCooldown(GetItemInfoInstant(DMW.Settings.profile.Grind.MountName)) == 0
+    local hasSummonMount = DMW.Player.Spells.SummonMount and DMW.Player.Spells.SummonMount:IsReady()
+
     return (
+        (hasMount or hasSummonMount) and
         not unStucking and
         not DMW.Player.Swimming and
         not UnitIsDeadOrGhost('player') and

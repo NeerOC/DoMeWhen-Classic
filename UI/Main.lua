@@ -1676,6 +1676,7 @@ function LoadProfile()
             DMW.Settings.profile.Grind = content
             DMW.Settings.profile.Grind.HotSpots = MigratePoints(DMW.Settings.profile.Grind.HotSpots)
             DMW.Settings.profile.Grind.VendorWaypoints = MigratePoints(DMW.Settings.profile.Grind.VendorWaypoints)
+            DMW.Settings.profile.Grind.MountBlacklist = MigratePoints(DMW.Settings.profile.Grind.MountBlacklist)
             DMW.Bot.Log:DebugInfo('Loaded Profile ' .. currentLoadedProfiles[currentProfile])
         end
     end

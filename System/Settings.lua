@@ -152,6 +152,7 @@ local function MigrateSettings()
     -- Update waypoints to Point
     DMW.Settings.profile.Grind.HotSpots = MigratePoints(DMW.Settings.profile.Grind.HotSpots)
     DMW.Settings.profile.Grind.VendorWaypoints = MigratePoints(DMW.Settings.profile.Grind.VendorWaypoints)
+    DMW.Settings.profile.Grind.MountBlacklist = MigratePoints(DMW.Settings.profile.Grind.MountBlacklist)
 
     if Reload then
         ReloadUI()
