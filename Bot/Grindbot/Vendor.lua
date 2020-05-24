@@ -398,7 +398,9 @@ function Vendor:DoTask()
     if not Bools.InitiatedFromSafePath then
         Log:DebugInfo('Repair vendor initiating from safe path.')
         Navigation:InitVendorSafePath()
+        Bools.FinishedFromSafePath = false
         Bools.InitiatedFromSafePath = true
+        return
     end
 
     if not Bools.FinishedFromSafePath then

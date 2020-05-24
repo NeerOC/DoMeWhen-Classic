@@ -259,11 +259,8 @@ function Navigation:GrindRoam()
 end
 
 function Navigation:InitVendorSafePath()
-    Log:DebugInfo("VendorSafePath initiating")
     self:SortVendorWaypoints()
     VendorWaypointIndex = 1
-    Log:DebugInfo("VendorSafePath VendorWaypointIndex: " .. VendorWaypointIndex)
-    Log:DebugInfo("VendorSafePath waypoints #: " .. #DMW.Settings.profile.Grind.VendorWaypoints)
 end
 
 function Navigation:VendorSafePath()
@@ -280,6 +277,7 @@ function Navigation:VendorSafePath()
         VendorWaypointIndex = VendorWaypointIndex + 1
         return true
     elseif Distance > 5 then
+        -- continue moving to the current hotspot
         return true
     end
 

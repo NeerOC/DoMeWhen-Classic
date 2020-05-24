@@ -83,9 +83,17 @@ end)
 -- < Global functions
 function ClearHotspot()
     for k in pairs (DMW.Settings.profile.Grind.HotSpots) do
-        DMW.Settings.profile.Grind.HotSpots [k] = nil
+        DMW.Settings.profile.Grind.HotSpots[k] = nil
     end
     Log:DebugInfo('Hotspots Cleared!')
+end
+
+-- < Global functions
+function ClearVendorWaypoints()
+    for k in pairs (DMW.Settings.profile.Grind.VendorWaypoints) do
+        DMW.Settings.profile.Grind.VendorWaypoints[k] = nil
+    end
+    Log:DebugInfo('VendorWaypoints Cleared!')
 end
 
 function addSkinBlacklist()
