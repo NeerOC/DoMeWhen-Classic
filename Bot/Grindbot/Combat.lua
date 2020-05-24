@@ -4,6 +4,7 @@ local Combat = DMW.Bot.Combat
 local Navigation = DMW.Bot.Navigation
 local Grindbot = DMW.Bot.Grindbot
 local Log = DMW.Bot.Log
+local Point = DMW.Classes.Point
 
 local blackListPause = false
 local facePause = false
@@ -33,24 +34,19 @@ function Combat:EnemyPlayerNearby()
 end
 
 function Combat:UnitNearHotspot(unit)
-    local HotSpots = DMW.Settings.profile.Grind.HotSpots
     local ux, uy, uz = ObjectPosition(unit)
-    for i = 1, #HotSpots do
-        local hx, hy, hz = HotSpots[i].x, HotSpots[i].y, HotSpots[i].z
-        if GetDistanceBetweenPositions(ux, uy, uz, hx, hy, hz) < DMW.Settings.profile.Grind.RoamDistance * 1.5 then
+    local unitPos = Point(ux, uy, uz)
+
+    return unitPos:NearAny(DMW.Settings.profile.Grind.HotSpots, DMW.Settings.profile.Grind.RoamDistance * 1.5)
+end
+
+function Combat:BlacklistedUnit(name)
+    for i=1, #DMW.Settings.profile.Grind.targetBlacklist do
+        if DMW.Settings.profile.Grind.targetBlacklist[i] == name then
             return true
         end
     end
     return false
-end
-
-function Combat:BlacklistedUnit(name)
-for i=1, #DMW.Settings.profile.Grind.targetBlacklist do
-    if DMW.Settings.profile.Grind.targetBlacklist[i] == name then
-        return true
-    end
-end
-return false
 end
 
 function Combat:IsGoodUnit(unit)
@@ -68,7 +64,7 @@ function Combat:IsGoodUnit(unit)
         notPet = ObjectCreator(unit) == nil,
         noTargetOrMeOrPet = UnitTarget(unit) == nil or UnitIsUnit(UnitTarget(unit), 'player') or UnitIsUnit(UnitTarget(unit), 'pet'),
         isLevel = DMW.Settings.profile.Grind.attackAny or UnitLevel(unit) >= minLvl and UnitLevel(unit) <= maxLvl,
-        isPVP = not UnitIsPVP(unit),
+        isPVP = not unit.PVP,
         inRange = self:UnitNearHotspot(unit),
         notDead = not UnitIsDeadOrGhost(unit),
         notPlayer = not ObjectIsPlayer(unit),

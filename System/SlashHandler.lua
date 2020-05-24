@@ -44,6 +44,8 @@ function DMW:ChatCommand(Input)
            SetFoodVendor()
         elseif Commands[1] == "CLEAR" then
             ClearHotspot()
+        elseif Commands[1] == "CLEARVENDOR" then
+            ClearVendorWaypoints()
         elseif Commands[1] == "BLACKLIST" then
             if DMW.Player.Target then
                 local Name = DMW.Player.Target.Name

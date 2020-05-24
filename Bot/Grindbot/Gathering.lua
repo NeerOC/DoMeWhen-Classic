@@ -8,7 +8,7 @@ function Gathering:NodeNearHotspot(Node)
     local Hotspots = DMW.Settings.profile.Grind.HotSpots
 
     for i = 1, #Hotspots do
-        local hx, hy, hz = Hotspots[i].x, Hotspots[i].y, Hotspots[i].z
+        local hx, hy, hz = Hotspots[i].X, Hotspots[i].Y, Hotspots[i].Z
         if GetDistanceBetweenPositions(Node.PosX, Node.PosY, Node.PosZ, hx, hy, hz) <= 100 and GetDistanceBetweenPositions(Node.PosX, Node.PosY, Node.PosZ, DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ) < 80 then
             return true
         end
@@ -23,7 +23,7 @@ function Gathering:HerbSearch()
             table.insert(Table, Object)
         end
     end
-    
+
     if #Table > 1 then
         table.sort(
             Table,
@@ -47,7 +47,7 @@ function Gathering:OreSearch()
             table.insert(Table, Object)
         end
     end
-    
+
     if #Table > 1 then
         table.sort(
             Table,

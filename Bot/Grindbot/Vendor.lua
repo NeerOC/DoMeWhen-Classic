@@ -23,6 +23,10 @@ local slots = {
 }
 
 local Bools = {
+    InitiatedToSafePath = false,
+    FinishedToSafePath = false,
+    InitiatedFromSafePath = false,
+    FinishedFromSafePath = false,
     Interacted = false,
     Selling = false,
     BuyingFood = false,
@@ -60,7 +64,7 @@ end
 
 function ArrayContains(arr, name)
     for key, value in pairs(arr) do
-        if value == name then 
+        if value == name then
             return true end
      end
      return false
@@ -70,6 +74,11 @@ end
 
 function Vendor:TaskDone()
     return TaskDone
+end
+
+function Vendor:Reset()
+    Log:NormalInfo('Vendor run started.')
+    TaskDone = false
 end
 
 function Vendor:CanSell(maxrarity)
@@ -114,25 +123,25 @@ function Vendor:BuyItemWithName(name, count)
     end
 
     if LoopCount > 0 then
-        for i=1,GetMerchantNumItems() do 
-            local l=GetMerchantItemLink(i) 
+        for i=1,GetMerchantNumItems() do
+            local l=GetMerchantItemLink(i)
             if l then
                 if l:find(name) then
                     for d = 1, LoopCount do
                         BuyMerchantItem(i, 20)
                     end
-                end 
+                end
             end
         end
         return true
     else
-        for i=1,GetMerchantNumItems() do 
-            local l=GetMerchantItemLink(i) 
+        for i=1,GetMerchantNumItems() do
+            local l=GetMerchantItemLink(i)
             if l then
                 if l:find(name) then
                     BuyMerchantItem(i, count)
                     return true
-                end 
+                end
             end
         end
     end
@@ -177,12 +186,12 @@ function Vendor:GetDurability()
 			end
 		end
     end
-    
+
     return totalDurability
 end
 
 function Vendor:HasItem(name)
-    
+
 end
 
 function Vendor:useHearthstone()
@@ -218,14 +227,14 @@ function Vendor:DoTask()
 
     local RepairNPC = self:GetVendor(RepairVendorName)
     local FoodNPC = self:GetVendor(FoodVendorName)
-    
+
     -- Hacky Solution for cache?
     --if MerchantFrame:IsVisible() then MerchantNextPageButton:Click() end
 
     if DMW.Player.Class ~= 'MAGE' then
         if autoWater and MerchantFrame:IsVisible() then
-            for i = 1, GetMerchantNumItems() do 
-                local vitem = GetMerchantItemLink(i) 
+            for i = 1, GetMerchantNumItems() do
+                local vitem = GetMerchantItemLink(i)
                 if vitem then
                     if vitem:find(bestWater) and DMW.Settings.profile.Grind.WaterName ~= bestWater then
                         WaterName = bestWater
@@ -235,9 +244,9 @@ function Vendor:DoTask()
                 end
             end
         end
-    
+
         if autoFood and MerchantFrame:IsVisible() then
-            for i = 1, GetMerchantNumItems() do 
+            for i = 1, GetMerchantNumItems() do
                 local vitem = GetMerchantItemLink(i)
                 if vitem then
                     local itemName = GetItemInfo(vitem)
@@ -263,7 +272,17 @@ function Vendor:DoTask()
         -- Go sell and repair at repair vendor if either we have something to sell or we are below durability threshold
         if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, RepairVendorX, RepairVendorY, RepairVendorZ) >= 5 then
             -- Walk to vendor if we arent close.
-            Navigation:MoveTo(RepairVendorX, RepairVendorY, RepairVendorZ)
+            if not Bools.InitiatedToSafePath then
+                Navigation:InitVendorSafePath()
+                Bools.InitiatedToSafePath = true
+            end
+
+            if not Bools.FinishedToSafePath then
+                Bools.FinishedToSafePath = not Navigation:VendorSafePath()
+            else
+                Navigation:MoveTo(RepairVendorX, RepairVendorY, RepairVendorZ)
+            end
+
             return
         else
             -- We are close to vendor, do shit.
@@ -293,10 +312,20 @@ function Vendor:DoTask()
                 return
             end
         end
-        
+
         if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, FoodVendorX, FoodVendorY, FoodVendorZ) >= 5 then
             -- Walk to vendor if we arent close.
-            Navigation:MoveTo(FoodVendorX, FoodVendorY, FoodVendorZ)
+            if not Bools.InitiatedToSafePath then
+                Navigation:InitVendorSafePath()
+                Bools.InitiatedToSafePath = true
+            end
+
+            if not Bools.FinishedToSafePath then
+                Bools.FinishedToSafePath = not Navigation:VendorSafePath()
+            else
+                Navigation:MoveTo(FoodVendorX, FoodVendorY, FoodVendorZ)
+            end
+
             return
         else
             -- We are close to vendor, do shit.
@@ -331,7 +360,17 @@ function Vendor:DoTask()
 
         if GetDistanceBetweenPositions(DMW.Player.PosX, DMW.Player.PosY, DMW.Player.PosZ, FoodVendorX, FoodVendorY, FoodVendorZ) >= 5 then
             -- Walk to vendor if we arent close.
-            Navigation:MoveTo(FoodVendorX, FoodVendorY, FoodVendorZ)
+            if not Bools.InitiatedToSafePath then
+                Navigation:InitVendorSafePath()
+                Bools.InitiatedToSafePath = true
+            end
+
+            if not Bools.FinishedToSafePath then
+                Bools.FinishedToSafePath = not Navigation:VendorSafePath()
+            else
+                Navigation:MoveTo(FoodVendorX, FoodVendorY, FoodVendorZ)
+            end
+
             return
         else
             -- We are close to vendor, do shit.
@@ -356,8 +395,28 @@ function Vendor:DoTask()
         return
     end
 
+    if not Bools.InitiatedFromSafePath then
+        Log:DebugInfo('Repair vendor initiating from safe path.')
+        Navigation:InitVendorSafePath()
+        Bools.FinishedFromSafePath = false
+        Bools.InitiatedFromSafePath = true
+        return
+    end
+
+    if not Bools.FinishedFromSafePath then
+        Bools.FinishedFromSafePath = not Navigation:VendorSafePath()
+        return
+    else
+        Log:DebugInfo('Repair vendor finished from safe path.')
+    end
+
+
     -- If we reach this part then we have everything.
     if not TaskDone then
+        Bools.InitiatedToSafePath = false
+        Bools.FinishedToSafePath = false
+        Bools.InitiatedFromSafePath = false
+        Bools.FinishedFromSafePath = false
         Bools.Interacted = false
         Bools.Selling = false
         Bools.BuyingFood = false
@@ -365,6 +424,6 @@ function Vendor:DoTask()
         Bools.Talking = false
         Bools.Repairing = false
         Log:NormalInfo('Vendor run complete.') TaskDone = true
-     end
+    end
 end
 

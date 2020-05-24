@@ -52,6 +52,7 @@ Classes\Aura\Aura.lua
 Classes\Aura\Cache.lua
 Classes\Item\Item.lua
 Classes\GameObject\GameObject.lua
+Classes\Point\Point.lua
 
 Helpers\Gatherers.lua
 Helpers\Trackers.lua

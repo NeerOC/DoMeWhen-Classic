@@ -1,5 +1,6 @@
 local DMW = DMW
 local AceGUI = LibStub("AceGUI-3.0")
+local Point = DMW.Classes.Point
 
 local defaults = {
     profile = {
@@ -47,6 +48,7 @@ local defaults = {
             RepairVendorZ = 0,
             RepairVendorName = '',
             HotSpots = {},
+            VendorWaypoints = {},
             FoodName = '',
             WaterName = '',
             FoodAmount = 60,
@@ -146,9 +148,36 @@ local function MigrateSettings()
             Reload = true
         end
     end
+
+    -- Update waypoints to Point
+    DMW.Settings.profile.Grind.HotSpots = MigratePoints(DMW.Settings.profile.Grind.HotSpots)
+    DMW.Settings.profile.Grind.VendorWaypoints = MigratePoints(DMW.Settings.profile.Grind.VendorWaypoints)
+
     if Reload then
         ReloadUI()
     end
+end
+
+function MigratePoints(spots)
+    points = {}
+    if not spots then
+        return points
+    end
+
+    for i = 1, #spots do
+        local spot = spots[i]
+        if not spot then return end
+
+        if spot.x then
+            -- old format
+            points[i] = Point(spot.x, spot.y, spot.z)
+        elseif spot.X then
+            -- new format
+            points[i] = Point(spot.X, spot.Y, spot.Z)
+        end
+    end
+
+    return points
 end
 
 function DMW.InitSettings()
