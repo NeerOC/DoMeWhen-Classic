@@ -1541,9 +1541,57 @@ local Options = {
                             profileName = value
                         end
                     },
+                    nextProfileName = {
+                        type = "select",
+                        order = 5,
+                        name = "Next Profile Name",
+                        desc = "Name of the next profile to load at the set level",
+                        width = "full",
+                        values = {},
+                        style = "dropdown",
+                        get = function()
+                            for i = 1, #currentLoadedProfiles do
+                                if currentLoadedProfiles[i] == DMW.Settings.profile.Grind.nextProfileName then
+                                    return i
+                                end
+                            end
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.nextProfileName = currentLoadedProfiles[value]
+                        end
+                    },
+                    nextProfileLevel = {
+                        type = "range",
+                        order = 6,
+                        name = "Next Profile Level",
+                        desc = "At what level should we load the next profile?",
+                        width = "full",
+                        min = 2,
+                        max = 60,
+                        step = 1,
+                        get = function()
+                            return DMW.Settings.profile.Grind.nextProfileLevel
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.nextProfileLevel = value
+                        end
+                    },
+                    loadNextProfile = {
+                        type = "toggle",
+                        order = 7,
+                        name = "Auto load next profile",
+                        desc = "Do you want to automatically load the next profile at the set level?",
+                        width = "full",
+                        get = function()
+                            return DMW.Settings.profile.Grind.loadNextProfile
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Grind.loadNextProfile = value
+                        end
+                    },
                     saveProfile = {
                         type = "execute",
-                        order = 5,
+                        order = 8,
                         name = "Save Profile",
                         desc = "Save Your Profile",
                         width = "full",
@@ -1624,10 +1672,34 @@ function LoadProfile()
         local profileContent = ReadFile(GetHackDirectory() .. "/Lilium/Grindbot/Profiles/" .. currentLoadedProfiles[currentProfile])
         local check, content = serializer:Deserialize(base64:decode(profileContent))
         if profileContent and check then
+            profileName = currentLoadedProfiles[currentProfile]:gsub(".txt", "")
             DMW.Settings.profile.Grind = content
             DMW.Settings.profile.Grind.HotSpots = MigratePoints(DMW.Settings.profile.Grind.HotSpots)
             DMW.Settings.profile.Grind.VendorWaypoints = MigratePoints(DMW.Settings.profile.Grind.VendorWaypoints)
             DMW.Bot.Log:DebugInfo('Loaded Profile ' .. currentLoadedProfiles[currentProfile])
+        end
+    end
+end
+
+function CheckNextProfile()
+    local loadNextProfile = DMW.Settings.profile.Grind.loadNextProfile
+    local nextProfileLevel = DMW.Settings.profile.Grind.nextProfileLevel
+
+    if not loadNextProfile or not nextProfileLevel or nextProfileLevel > DMW.Player.Level then return end
+
+    LoadNextProfile()
+end
+
+function LoadNextProfile()
+    local nextProfileName = DMW.Settings.profile.Grind.nextProfileName
+
+    if not nextProfileName then return end
+
+    for i = 1, #currentLoadedProfiles do
+        if currentLoadedProfiles[i] == nextProfileName then
+            currentProfile = i
+            LoadProfile()
+            break
         end
     end
 end
@@ -1639,6 +1711,7 @@ function SetProfiles()
 
     currentLoadedProfiles = Files
     Options.args.GrindTab.args.ProfilesTab.args.loadedProfiles.values = Pleasant
+    Options.args.GrindTab.args.ProfilesTab.args.nextProfileName.values = Pleasant
 end
 
 function SaveProfile(name)

@@ -471,6 +471,8 @@ function Grindbot:SetFoodAndWater()
 end
 
 function Grindbot:LoadSettings()
+    CheckNextProfile()
+
     if Settings.BuyWater ~= DMW.Settings.profile.Grind.BuyWater then
         Settings.BuyWater = DMW.Settings.profile.Grind.BuyWater
     end

@@ -30,6 +30,7 @@ function LocalPlayer:New(Pointer)
     end
     self.SwingMH = 0
     self.SwingOH = false
+    self.LastCastTime = DMW.Time
     DMW.Helpers.Queue.GetBindings()
 end
 
@@ -40,7 +41,11 @@ function LocalPlayer:Update()
     self.Health = UnitHealth(self.Pointer)
     self.HealthMax = UnitHealthMax(self.Pointer)
     self.HP = self.Health / self.HealthMax * 100
+    self.Level = UnitLevel(self.Pointer)
     self.Casting = CastingInfo(self.Pointer) or ChannelInfo(self.Pointer)
+    if self.Casting then
+        self.LastCastTime = DMW.Time
+    end
     self.Drinking = AuraUtil.FindAuraByName('Drink', 'player')
     self.Eating = AuraUtil.FindAuraByName('Food', 'player')
     self.Bandaging = AuraUtil.FindAuraByName('First Aid', 'player')
