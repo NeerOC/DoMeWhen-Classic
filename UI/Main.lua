@@ -1780,6 +1780,29 @@ function UI.Init()
     UI.MinimapIcon:Register("DMWMinimapIcon", MinimapIcon, DMW.Settings.profile.MinimapIcon)
 end
 
+function UI.AddTextBox(Name, Multiline, FullWidth, Desc, Default)
+    local Width = FullWidth and "full" or 0.9
+    Options.args.RotationTab.args[CurrentTab].args[Name] = {
+        type = "input",
+        order = RotationOrder,
+        name = Name,
+        desc = Desc,
+        width = Width,
+        multiline = Multiline,
+        get = function()
+            return DMW.Settings.profile.Rotation[Name]
+        end,
+        set = function(info, value)
+            DMW.Settings.profile.Rotation[Name] = value
+        end
+
+    }
+    if Default and DMW.Settings.profile.Rotation[Name] == nil then
+        DMW.Settings.profile.Rotation[Name] = Default
+    end
+    RotationOrder = RotationOrder + 1
+end
+
 function UI.AddHeader(Text)
     if RotationOrder > 1 then
         Options.args.RotationTab.args[CurrentTab].args["Blank" .. RotationOrder] = {
