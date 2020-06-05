@@ -36,6 +36,7 @@ local defaults = {
             AutoGather = false,
         },
         Lilium = {
+            Relog = false,
             Password = ""
         },
         Grind = {

@@ -1611,9 +1611,22 @@ local Options = {
                 type = "group",
                 order = 6,
                 args = {
+                    relog = {
+                        type = "toggle",
+                        order = 1,
+                        name = "Auto Relog",
+                        desc = "Do you want to automatically Relog?",
+                        width = "full",
+                        get = function()
+                            return DMW.Settings.profile.Lilium.Relog
+                        end,
+                        set = function(info, value)
+                            DMW.Settings.profile.Lilium.Relog = value
+                        end
+                    },
                     userPass = {
                         type = "input",
-                        order = 1,
+                        order = 2,
                         name = "Account Password",
                         desc = "Password to your account. (RELOG IS ENABLED BY DEFAULT)",
                         width = "full",
