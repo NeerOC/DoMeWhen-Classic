@@ -82,7 +82,7 @@ evFrame:SetScript("OnEvent",function(self,event,msg,ply)
         if DMW.Settings.profile.Helpers.AutoLoot then
             if event == "COMBAT_LOG_EVENT_UNFILTERED" then
                 local _, type = CombatLogGetCurrentEventInfo()
-                if type == "UNIT_DIED" then
+                if type == "PARTY_KILL" then
                     PauseFlags.waitingForLootable = true C_Timer.After(1, function() PauseFlags.waitingForLootable = false end)
                 end
             end 
