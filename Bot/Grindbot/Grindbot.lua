@@ -22,7 +22,8 @@ local PauseFlags = {
     Information = false,
     CantEat = false,
     CantDrink = false,
-    skinDelay = false
+    skinDelay = false,
+    waitingForLootable = false,
 }
 
 local Modes = {
@@ -64,6 +65,7 @@ ModeFrame.text:SetPoint("CENTER",0,0)
 local evFrame=CreateFrame("Frame");
 evFrame:RegisterEvent("CHAT_MSG_WHISPER");
 evFrame:RegisterEvent("LOOT_CLOSED");
+evFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 evFrame:SetScript("OnEvent",function(self,event,msg,ply)
     if DMW.Settings.profile then
         if DMW.Settings.profile.Grind.ignoreWhispers then
@@ -76,6 +78,14 @@ evFrame:SetScript("OnEvent",function(self,event,msg,ply)
             if event == "LOOT_CLOSED" then
                 PauseFlags.skinDelay = true C_Timer.After(1.8, function() PauseFlags.skinDelay = false end)
             end
+        end
+        if DMW.Settings.profile.Helpers.AutoLoot then
+            if event == "COMBAT_LOG_EVENT_UNFILTERED" then
+                local _, type = CombatLogGetCurrentEventInfo()
+                if type == "UNIT_DIED" then
+                    PauseFlags.waitingForLootable = true C_Timer.After(1, function() PauseFlags.waitingForLootable = false end)
+                end
+            end 
         end
     end
 end)
@@ -196,7 +206,8 @@ function Grindbot:Pulse()
     end
 
     -- This sets our state
-    if not PauseFlags.skinDelay or not DMW.Settings.profile.Grind.doSkin then self:SwapMode() end
+    if not (PauseFlags.skinDelay and DMW.Settings.profile.Grind.doSkin) and not (PauseFlags.waitingForLootable and DMW.Settings.profile.Helpers.AutoLoot) then self:SwapMode() end
+
     if Grindbot.Mode ~= Modes.Looting then Grindbot:ResetMoveToLoot() end
     -- Do whatever our mode says.
     if Grindbot.Mode == Modes.Dead then
